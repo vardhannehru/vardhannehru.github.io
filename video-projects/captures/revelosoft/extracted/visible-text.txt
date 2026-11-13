@@ -1,0 +1,60 @@
+[a] Products
+[a] Training
+[button] Consult Now
+[span] ReveloSoft
+[span] Building Intelligent
+[span] for Tomorrow
+[p] Innovating the future with Software & AI. We build cutting-edge software and intelligent AI products, delivering tailored solutions that empower businesses to transform, scale, and thrive.
+[button] Explore Our Solutions
+[button] Talk to Our AI Agent
+[h2] 3D Project Showcase
+[p] Explore our cutting-edge AI and software projects in an immersive 3D environment
+[h3] Document Intelligence Assistant
+[p] AI-powered document understanding platform for extracting, summarizing, classifying, and managing business documents with speed and accuracy.
+[span] LLM
+[span] OCR
+[span] Python
+[span] FastAPI
+[h2] Our AI Solutions
+[p] Cutting-edge artificial intelligence products designed to transform your business operations
+[h3] AI Analytics Suite
+[p] Advanced machine learning algorithms for real-time data insights and predictive modeling.
+[div] Real-time Processing
+[div] Predictive Models
+[div] Custom Dashboards
+[h3] Neural Networks
+[p] Deep learning solutions for complex pattern recognition and automated decision making.
+[div] Pattern Recognition
+[div] Auto Decision Making
+[div] Scalable Architecture
+[h3] Smart Automation
+[p] Intelligent process automation that adapts and learns from your business workflows.
+[div] Process Optimization
+[div] Smart Workflows
+[div] Adaptive Learning
+[h3] AI Security
+[p] Next-generation cybersecurity powered by artificial intelligence and threat prediction.
+[div] Threat Detection
+[div] Real-time Monitoring
+[div] Predictive Security
+[h3] Cloud Intelligence
+[p] Seamless cloud integration with AI-powered optimization and resource management.
+[div] Auto Scaling
+[div] Cost Optimization
+[div] Performance Monitoring
+[h3] Business Intelligence
+[p] Transform your data into actionable insights with our advanced analytics platform.
+[div] Data Visualization
+[div] Custom Reports
+[div] ROI Analysis
+[p] AI Products | AI Solutions | AI Training
+[span] contact@revelosoft.com
+[span] +91 9553 84 85 85
+[span] 201, Hemadurga Plaza, Allwyn X Roads, Miyapur, Hyderabad, Telangana 500049
+[h3] Quick Links
+[h3] Products
+[a] AI Job Assistant
+[a] Talent Assistant
+[a] CRM Automation
+[a] Support Chatbot
+[div] © 2026 ReveloSoft Pvt Ltd. All rights reserved.

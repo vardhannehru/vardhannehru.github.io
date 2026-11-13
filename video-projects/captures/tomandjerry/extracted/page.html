@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en" class="js">
+<head>
+<style>
+  /* ── Tokens: light ── */
+  :root {
+    --ground:      #F5F7F9;
+    --surface:     #FFFFFF;
+    --surface-2:   #EEF1F5;
+    --ink:         #0E1523;
+    --ink-soft:    #3A4557;
+    --muted-solid: #5C6675;
+    --line:        #DFE4EB;
+    --line-strong: #C9D1DA;
+
+    --tom:         #B45F09;   /* amber, tuned for contrast on light */
+    --tom-wash:    #B45F0914;
+    --jerry:       #0C7A6D;   /* teal, tuned for contrast on light */
+    --jerry-wash:  #0C7A6D14;
+
+    --shadow:      0 1px 2px #0e152308, 0 12px 32px -12px #0e152314;
+    --shadow-lift: 0 1px 2px #0e152310, 0 24px 56px -20px #0e15231f;
+
+    --display: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", "Segoe UI Mono", Consolas, "Liberation Mono", monospace;
+
+    --step--1: clamp(0.78rem, 0.76rem + 0.10vw, 0.84rem);
+    --step-0:  clamp(1.00rem, 0.96rem + 0.20vw, 1.10rem);
+    --step-1:  clamp(1.20rem, 1.12rem + 0.40vw, 1.40rem);
+    --step-2:  clamp(1.55rem, 1.35rem + 0.95vw, 2.10rem);
+    --step-3:  clamp(2.30rem, 1.75rem + 2.70vw, 4.05rem);
+
+    --edge: clamp(1.25rem, 5vw, 3rem);
+
+    /* One easing for entrances, one for settles. */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-soft: cubic-bezier(0.33, 0, 0.15, 1);
+  }
+
+  /* ── Tokens: dark ── */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground:      #0A0F18;
+      --surface:     #111926;
+      --surface-2:   #16202F;
+      --ink:         #E8EDF4;
+      --ink-soft:    #AAB6C6;
+      --muted-solid: #8593A5;
+      --line:        #1F2A3A;
+      --line-strong: #2C3A4E;
+
+      --tom:         #F0A03C;
+      --tom-wash:    #F0A03C1A;
+      --jerry:       #45C4B2;
+      --jerry-wash:  #45C4B21A;
+
+      --shadow:      0 1px 2px #0006, 0 16px 40px -16px #0009;
+      --shadow-lift: 0 1px 2px #0008, 0 28px 64px -24px #000b;
+    }
+  }
+
+  /* The viewer's explicit toggle must win over the media query, both ways. */
+  :root[data-theme="dark"] {
+    --ground:      #0A0F18;
+    --surface:     #111926;
+    --surface-2:   #16202F;
+    --ink:         #E8EDF4;
+    --ink-soft:    #AAB6C6;
+    --muted-solid: #8593A5;
+    --line:        #1F2A3A;
+    --line-strong: #2C3A4E;
+    --tom:         #F0A03C;
+    --tom-wash:    #F0A03C1A;
+    --jerry:       #45C4B2;
+    --jerry-wash:  #45C4B21A;
+    --shadow:      0 1px 2px #0006, 0 16px 40px -16px #0009;
+    --shadow-lift: 0 1px 2px #0008, 0 28px 64px -24px #000b;
+  }
+  :root[data-theme="light"] {
+    --ground:      #F5F7F9;
+    --surface:     #FFFFFF;
+    --surface-2:   #EEF1F5;
+    --ink:         #0E1523;
+    --ink-soft:    #3A4557;
+    --muted-solid: #5C6675;
+    --line:        #DFE4EB;
+    --line-strong: #C9D1DA;
+    --tom:         #B45F09;
+    --tom-wash:    #B45F0914;
+    --jerry:       #0C7A6D;
+    --jerry-wash:  #0C7A6D14;
+    --shadow:      0 1px 2px #0e152308, 0 12px 32px -12px #0e152314;
+    --shadow-lift: 0 1px 2px #0e152310, 0 24px 56px -20px #0e15231f;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Ambient waveform behind the hero. Never intercepts clicks. */
+  #wave {
+    position: fixed;
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 64vh;
+    min-height: 380px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .shell {
+    position: relative;
+    z-index: 1;
+    max-width: 68rem;
+    margin: 0 auto;
+    padding: 0 var(--edge);
+  }
+
+  /* ── Orchestrated page-load entrance ──
+     One gesture, staggered. Everything rises from the same direction. */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .js .rise {
+    opacity: 0;
+    animation: rise 0.9s var(--ease-out) forwards;
+    animation-delay: var(--in, 0ms);
+  }
+
+  /* ── Masthead ── */
+  .masthead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.75rem 0;
+  }
+
+  .wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.05em;
+    font-family: var(--display);
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+  }
+  .wordmark .amp {
+    color: var(--muted-solid);
+    font-style: italic;
+    padding: 0 0.22em;
+  }
+  .wordmark .tom   { color: var(--tom); }
+  .wordmark .jerry { color: var(--jerry); }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-solid);
+  }
+  .pulse {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--jerry);
+    animation: pulse 2.8s var(--ease-soft) infinite;
+    flex: none;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 var(--jerry-wash); }
+    70%  { box-shadow: 0 0 0 0.6rem transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  /* ── Hero ── */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(2rem, 5vw, 3.5rem);
+    max-width: 44rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: var(--step-3);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+
+  .lede {
+    margin: 0;
+    max-width: 34rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  .lede b { font-weight: 600; color: var(--ink); }
+
+  /* ── Transcript: the centerpiece ── */
+  .transcript {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow-lift);
+    overflow: hidden;
+  }
+  @media (max-width: 46rem) {
+    .transcript { grid-template-columns: 1fr; }
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    padding: clamp(1.25rem, 3vw, 1.9rem);
+    min-width: 0;
+    transition: background 0.7s var(--ease-soft);
+  }
+  .side + .side { border-left: 1px solid var(--line); }
+  @media (max-width: 46rem) {
+    .side + .side { border-left: 0; border-top: 1px solid var(--line); }
+  }
+
+  /* The side that currently holds the floor lifts, very slightly. */
+  .side-tom[data-speaking="true"]   { background: var(--tom-wash); }
+  .side-jerry[data-speaking="true"] { background: var(--jerry-wash); }
+
+  .side-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .side-head .who { font-weight: 700; }
+  .side-head .for { color: var(--muted-solid); letter-spacing: 0.05em; }
+  .side-tom   .side-head .who { color: var(--tom); }
+  .side-jerry .side-head .who { color: var(--jerry); }
+
+  /* Level meter: flat when the side is silent, alive when it speaks. */
+  .meter {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 0.85rem;
+    margin-left: auto;
+  }
+  .meter i {
+    display: block;
+    width: 2px;
+    height: 2px;
+    border-radius: 1px;
+    opacity: 0.35;
+    transform-origin: center;
+    transition: opacity 0.4s var(--ease-soft), height 0.4s var(--ease-soft);
+  }
+  .side-tom   .meter i { background: var(--tom); }
+  .side-jerry .meter i { background: var(--jerry); }
+
+  .side[data-speaking="true"] .meter i {
+    height: 0.85rem;
+    opacity: 1;
+    animation: bob 1s var(--ease-soft) infinite;
+  }
+  .meter i:nth-child(2) { animation-delay: 0.12s; }
+  .meter i:nth-child(3) { animation-delay: 0.24s; }
+  .meter i:nth-child(4) { animation-delay: 0.36s; }
+  .meter i:nth-child(5) { animation-delay: 0.48s; }
+  @keyframes bob {
+    0%, 100% { transform: scaleY(0.28); }
+    50%      { transform: scaleY(1); }
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    line-height: 1.65;
+    /* Reserve the full height so nothing below jumps as lines type in. */
+    min-height: 9.5rem;
+  }
+
+  .line {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+  }
+  .js .line { opacity: 0; }
+  .js .line.in {
+    opacity: 1;
+    transition: opacity 0.35s var(--ease-out);
+  }
+  .line .tag {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .line .tag.you { color: var(--muted-solid); }
+  .side-tom   .line .tag.ai { color: var(--tom); }
+  .side-jerry .line .tag.ai { color: var(--jerry); }
+  .line .say { color: var(--ink-soft); min-width: 0; }
+
+  /* Caret rides the end of whichever line is being spoken. */
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    background: currentColor;
+    animation: blink 1s steps(1) infinite;
+  }
+  .side-tom   .caret { background: var(--tom); }
+  .side-jerry .caret { background: var(--jerry); }
+  @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+  /* What the conversation turns into — stamped in as it's produced. */
+  .yield {
+    margin-top: auto;
+    padding-top: 1.15rem;
+    border-top: 1px dashed var(--line-strong);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    min-height: 3.4rem;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    padding: 0.28rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .js .chip {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  .js .chip.in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .side-tom .chip {
+    color: var(--tom);
+    background: var(--tom-wash);
+    border: 1px solid var(--tom-wash);
+  }
+  .side-jerry .chip {
+    color: var(--jerry);
+    background: var(--jerry-wash);
+    border: 1px solid var(--jerry-wash);
+  }
+
+  /* ── Scroll reveal for everything below the fold ── */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .js .reveal.in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    transition-delay: var(--in, 0ms);
+  }
+
+  /* ── Signup ── */
+  .signup {
+    padding: clamp(2.75rem, 7vw, 4.5rem) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    max-width: 34rem;
+  }
+  .signup h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  .signup p {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 30rem;
+  }
+
+  form {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  input[type="email"] {
+    flex: 1 1 16rem;
+    min-width: 0;
+    font: inherit;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    padding: 0.72rem 0.85rem;
+    transition: border-color 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
+  }
+  input[type="email"]::placeholder { color: var(--muted-solid); opacity: 0.75; }
+  input[type="email"]:hover { border-color: var(--muted-solid); }
+  input[type="email"]:focus {
+    border-color: var(--jerry);
+    box-shadow: 0 0 0 3px var(--jerry-wash);
+  }
+  input[type="email"]:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--jerry);
+    outline-offset: 2px;
+  }
+
+  /* Button: a light sweep passes across on hover, then settles. */
+  button {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    font: inherit;
+    font-weight: 600;
+    color: var(--ground);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 3px;
+    padding: 0.72rem 1.35rem;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.25s var(--ease-out);
+  }
+  button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(100deg, transparent 20%, #ffffff2e 50%, transparent 80%);
+    transform: translateX(-100%);
+  }
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+  }
+  button:hover::after {
+    animation: sweep 0.8s var(--ease-soft);
+  }
+  @keyframes sweep {
+    to { transform: translateX(100%); }
+  }
+  button:active { transform: translateY(0); }
+  button[disabled] { cursor: default; opacity: 0.6; transform: none; }
+
+  .note {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    color: var(--muted-solid);
+    min-height: 1.4em;
+  }
+  .note.ok  { color: var(--jerry); }
+  .note.err { color: #D24B3E; }
+  .js .note.shout { animation: nudge 0.4s var(--ease-soft); }
+  @keyframes nudge {
+    0%, 100% { transform: none; }
+    25%      { transform: translateX(-3px); }
+    75%      { transform: translateX(3px); }
+  }
+
+  /* ── Two sides, spelled out ── */
+  .sides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .panel {
+    background: var(--surface);
+    padding: clamp(1.4rem, 3vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    transition: background 0.5s var(--ease-soft);
+  }
+  .panel-tom:hover   { background: var(--tom-wash); }
+  .panel-jerry:hover { background: var(--jerry-wash); }
+  .panel h3 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: var(--step-1);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .panel-tom h3 strong   { color: var(--tom); font-weight: 400; font-style: italic; }
+  .panel-jerry h3 strong { color: var(--jerry); font-weight: 400; font-style: italic; }
+  .panel ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .panel li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+  .panel li::before {
+    content: "";
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    transform: translateY(-0.1em);
+    transition: transform 0.4s var(--ease-out);
+  }
+  .panel-tom   li::before { background: var(--tom); }
+  .panel-jerry li::before { background: var(--jerry); }
+  .panel:hover li::before { transform: translateY(-0.1em) scale(1.5); }
+
+  /* ── Footer ── */
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: clamp(2.5rem, 6vw, 4rem) 0 2.5rem;
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    color: var(--muted-solid);
+  }
+  footer a {
+    color: var(--muted-solid);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 1px;
+    transition: color 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft);
+  }
+  footer a:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ── Motion off: everything still reads, nothing moves ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .js .rise,
+    .js .line,
+    .js .chip,
+    .js .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .caret { display: none; }
+  }
+</style>
+<script>
+  /* Set before first paint: lets CSS hide what JS is about to animate in,
+     while a visitor with JS disabled still sees the full page. */
+  document.documentElement.classList.add("js");
+</script>
+</head>
+<body>
+
+<canvas id="wave" aria-hidden="true" width="1920" height="691"></canvas>
+
+<div class="shell">
+
+  <header class="masthead">
+    <div class="wordmark rise" style="--in: 80ms">
+      <span class="tom">Tom</span><span class="amp">&amp;</span><span class="jerry">Jerry</span>
+    </div>
+    <div class="status rise" style="--in: 220ms">
+      <span class="pulse" aria-hidden="true"></span>
+      <span>Private beta · launching soon</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="rise" style="--in: 320ms">Hiring begins with a&#160;conversation, <em>not a form.</em></h1>
+      <p class="lede rise" style="--in: 480ms">
+        <b>Tom</b> is your AI career coach. <b>Jerry</b> is your AI hiring partner.
+        Each one listens, asks the questions a good recruiter would, and turns the answer
+        into the work you'd otherwise spend a weekend on.
+      </p>
+    </section>
+
+    <section class="transcript rise" style="--in: 640ms" aria-label="How Tom and Jerry work">
+
+      <div class="side side-tom" data-side="tom" data-speaking="false">
+        <div class="side-head">
+          <span class="who">Tom</span>
+          <span class="for">for candidates</span>
+          <span class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="lines">
+          <p class="line in" data-turn="0">
+            <span class="tag ai">Tom</span>
+            <span class="say">Tell me about a piece of work you were actually proud of.</span>
+          </p>
+          <p class="line in" data-turn="2">
+            <span class="tag you">You</span>
+            <span class="say">I led the payments migration — six months, four teams.</span>
+          </p>
+          <p class="line in" data-turn="4">
+            <span class="tag ai">Tom</span>
+            <span class="say">Good. What broke, and what did you do about it?</span>
+          </p>
+        </div>
+        <div class="yield">
+          <span class="chip">Tailored CV</span>
+          <span class="chip">Cover letter</span>
+          <span class="chip">Mock interview</span>
+          <span class="chip">Job matches</span>
+        </div>
+      </div>
+
+      <div class="side side-jerry" data-side="jerry" data-speaking="false">
+        <div class="side-head">
+          <span class="who">Jerry</span>
+          <span class="for">for companies</span>
+          <span class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="lines">
+          <p class="line in" data-turn="1">
+            <span class="tag ai">Jerry</span>
+            <span class="say">What does great look like in this role after ninety days?</span>
+          </p>
+          <p class="line in" data-turn="3">
+            <span class="tag you">You</span>
+            <span class="say">Someone who can own the payments stack end to end.</span>
+          </p>
+          <p class="line in" data-turn="5">
+            <span class="tag ai">Jerry</span>
+            <span class="say">Understood. I have eleven candidates who've done exactly that.</span>
+          </p>
+        </div>
+        <div class="yield">
+          <span class="chip">Written brief</span>
+          <span class="chip">Ranked shortlist</span>
+          <span class="chip">Screening calls</span>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="signup reveal in">
+      <h2>Be first through the door.</h2>
+      <p>We're launching the private beta to a small group at a time — candidates and companies both. Leave your email and we'll come to you.</p>
+
+      <form id="notify" novalidate>
+        <label for="email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Email address</label>
+        <input id="email" name="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+        <button type="submit" id="submit">Notify me</button>
+      </form>
+      <p class="note" id="note" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="sides" aria-label="What each side gets">
+      <div class="panel panel-tom reveal in">
+        <h3>Talk to <strong>Tom</strong> if you're looking for a role.</h3>
+        <ul>
+          <li><span>A CV and cover letter rewritten for the specific job, ready to download.</span></li>
+          <li><span>Mock interviews with a voice interviewer, and a report you can share.</span></li>
+          <li><span>The questions you'll actually be asked, and the certifications worth your time.</span></li>
+          <li><span>Every application tracked in one board, without the spreadsheet.</span></li>
+        </ul>
+      </div>
+      <div class="panel panel-jerry reveal in" style="--in: 120ms">
+        <h3>Talk to <strong>Jerry</strong> if you're looking for a person.</h3>
+        <ul>
+          <li><span>Describe the role out loud; get a written brief back you can send to your team.</span></li>
+          <li><span>A shortlist of real candidates, ranked against that brief, not against keywords.</span></li>
+          <li><span>Screening handled up front, so the first call you take is one worth taking.</span></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="reveal in">
+    <span>© 2026 Tom &amp; Jerry AI Ltd.</span>
+    <span><a href="mailto:hello@tomandjerry.ai">hello@tomandjerry.ai</a></span>
+  </footer>
+
+</div>
+
+<script>
+  /* ── SIGNUP ───────────────────────────────────────────────────
+     DUMMY_SIGNUP = true  → nothing is sent anywhere. The form
+     validates the address, pretends to save it, and says thanks.
+     NOTHING IS STORED. Anyone who signs up is not on any list.
+
+     To make it real: set DUMMY_SIGNUP = false and point
+     SIGNUP_ENDPOINT at something that accepts POST {"email": "..."}
+       Formspree:  https://formspree.io/f/xxxxxxx
+       Your API:   https://api.tomandjerry.ai/api/waitlist
+     With DUMMY_SIGNUP off and no endpoint set, the form falls back
+     to opening the visitor's mail client to CONTACT.
+     ───────────────────────────────────────────────────────────── */
+  var DUMMY_SIGNUP = true;
+  var SIGNUP_ENDPOINT = "";
+  var CONTACT = "hello@tomandjerry.ai";
+
+  var REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ═══════════════════════════════════════════════════════════════
+     THE CONDUCTOR
+
+     One clock drives the whole hero: the transcript types itself out
+     turn by turn, and whichever side currently holds the floor is
+     published on `speaking` — which the waveform reads every frame.
+     Tom talks, his half of the wave swells and Jerry's falls quiet;
+     then they trade. The page performs a real turn-taking exchange
+     instead of looping ambient noise.
+     ═══════════════════════════════════════════════════════════════ */
+
+  var speaking = { tom: 0, jerry: 0 };   // 0 → silent, 1 → holding the floor
+
+  (function conductor() {
+    var sides = {
+      tom:   document.querySelector('.side[data-side="tom"]'),
+      jerry: document.querySelector('.side[data-side="jerry"]')
+    };
+    if (!sides.tom || !sides.jerry) return;
+
+    /* Collect the turns and sort them into the order they're spoken. */
+    var turns = [];
+    Object.keys(sides).forEach(function (key) {
+      var lines = sides[key].querySelectorAll(".line");
+      for (var i = 0; i < lines.length; i++) {
+        turns.push({
+          side: key,
+          el: lines[i],
+          say: lines[i].querySelector(".say"),
+          order: parseInt(lines[i].getAttribute("data-turn"), 10)
+        });
+      }
+    });
+    turns.sort(function (a, b) { return a.order - b.order; });
+
+    /* Stash the full text, then clear it — JS types it back in. */
+    turns.forEach(function (t) {
+      t.text = t.say.textContent;
+      t.say.textContent = "";
+    });
+
+    var chips = document.querySelectorAll(".chip");
+    var timers = [];
+
+    function after(ms, fn) { timers.push(window.setTimeout(fn, ms)); }
+
+    function hold(side, on) {
+      speaking[side] = on ? 1 : 0;
+      sides[side].setAttribute("data-speaking", on ? "true" : "false");
+    }
+
+    function type(turn, done) {
+      var caret = document.createElement("span");
+      caret.className = "caret";
+      turn.el.classList.add("in");
+      turn.say.textContent = "";
+      turn.say.appendChild(caret);
+      hold(turn.side, true);
+
+      var i = 0;
+      var CHAR_MS = 22;
+
+      function tick() {
+        i++;
+        caret.insertAdjacentText("beforebegin", turn.text.charAt(i - 1));
+        if (i < turn.text.length) {
+          /* Land on punctuation a beat longer — speech has rhythm. */
+          var c = turn.text.charAt(i - 1);
+          var pause = (c === "." || c === "?" || c === "," || c === "—") ? 260 : 0;
+          after(CHAR_MS + pause, tick);
+        } else {
+          hold(turn.side, false);
+          caret.remove();
+          after(420, done);
+        }
+      }
+      after(CHAR_MS, tick);
+    }
+
+    function reset() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      hold("tom", false);
+      hold("jerry", false);
+      turns.forEach(function (t) {
+        t.el.classList.remove("in");
+        t.say.textContent = "";
+      });
+      for (var i = 0; i < chips.length; i++) chips[i].classList.remove("in");
+    }
+
+    function run(index) {
+      if (index < turns.length) {
+        type(turns[index], function () { run(index + 1); });
+        return;
+      }
+      /* Conversation's done — the outputs it produced stamp in. */
+      for (var i = 0; i < chips.length; i++) {
+        (function (chip, n) { after(n * 90, function () { chip.classList.add("in"); }); })(chips[i], i);
+      }
+      after(2400 + chips.length * 90, function () {   /* let it rest, then replay */
+        reset();
+        after(700, function () { run(0); });
+      });
+    }
+
+    /* Motion off: show the finished conversation, don't perform it. */
+    if (REDUCED.matches) {
+      turns.forEach(function (t) { t.el.classList.add("in"); t.say.textContent = t.text; });
+      for (var j = 0; j < chips.length; j++) chips[j].classList.add("in");
+      return;
+    }
+
+    /* Start once the hero has finished rising in. */
+    after(1500, function () { run(0); });
+
+    /* Don't run the conversation to an empty room. */
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { timers.forEach(clearTimeout); timers = []; hold("tom", false); hold("jerry", false); }
+      else { reset(); after(400, function () { run(0); }); }
+    });
+  })();
+
+  /* ═══════════════════════════════════════════════════════════════
+     THE WAVEFORM
+
+     Two voices. Tom's bands travel from the left, Jerry's from the
+     right, and they meet in the middle. Each side's amplitude eases
+     toward whether that side is currently speaking, so the wave is a
+     readout of the conversation above it, not decoration beside it.
+     ═══════════════════════════════════════════════════════════════ */
+  (function () {
+    var canvas = document.getElementById("wave");
+    if (!canvas) return;
+    var ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    var w = 0, h = 0, dpr = 1;
+    var css = getComputedStyle(document.documentElement);
+
+    function color(name, fallback) {
+      return (css.getPropertyValue(name) || "").trim() || fallback;
+    }
+    var tom = color("--tom", "#F0A03C");
+    var jerry = color("--jerry", "#45C4B2");
+
+    /* Eased levels: what's drawn chases what's spoken. */
+    var level = { tom: 0, jerry: 0 };
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth;
+      h = canvas.clientHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      css = getComputedStyle(document.documentElement);
+      tom = color("--tom", tom);
+      jerry = color("--jerry", jerry);
+      if (REDUCED.matches) draw(0);
+    }
+
+    /* dir  +1 → the voice enters from the left (Tom), -1 → right (Jerry). */
+    function band(t, hue, dir, amp, freq, phase, yBase, alpha) {
+      ctx.beginPath();
+      for (var x = 0; x <= w; x += 3) {
+        var p = x / w;
+        var edge = Math.sin(p * Math.PI);            // fade out at both edges
+        var own = dir > 0 ? (1 - p) : p;             // each voice owns one half
+        var reach = edge * own;
+        var y = yBase
+          + Math.sin(p * freq + t * dir + phase) * amp * reach
+          + Math.sin(p * freq * 2.3 + t * dir * 1.6 + phase) * amp * 0.35 * reach;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = hue;
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    function voice(t, hue, dir, lvl, yShift) {
+      /* Idle breathing, so a silent side is still alive — then the swell. */
+      var breathe = 1 + Math.sin(t * 0.5 + (dir > 0 ? 0 : 1.7)) * 0.06;
+      var amp = (9 + lvl * 46) * breathe;
+      var alpha = 0.16 + lvl * 0.30;
+      for (var i = 0; i < 5; i++) {
+        var k = i / 4;
+        band(t, hue, dir,
+             amp * (0.55 + k * 0.9),      // stacked bands, each a little wider
+             7 + i * 0.6,                 // and a little busier
+             i * 0.8,
+             h * (0.44 + k * 0.10) + yShift,
+             alpha * (1 - k * 0.45));     // and a little fainter
+      }
+    }
+
+    function draw(t) {
+      ctx.clearRect(0, 0, w, h);
+      voice(t, tom,    1, level.tom,   0);
+      voice(t, jerry, -1, level.jerry, h * 0.035);
+    }
+
+    var start = null, last = 0;
+    function frame(ts) {
+      if (start === null) start = ts;
+      var dt = Math.min((ts - last) || 16, 50) / 1000;
+      last = ts;
+
+      /* Rise fast when a voice comes in, fall slower when it stops. */
+      ["tom", "jerry"].forEach(function (k) {
+        var target = speaking[k];
+        var rate = target > level[k] ? 6 : 2.2;
+        level[k] += (target - level[k]) * Math.min(1, dt * rate);
+      });
+
+      draw((ts - start) / 1400);
+      window.requestAnimationFrame(frame);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    if (REDUCED.matches) {
+      level.tom = level.jerry = 0.35;   /* a still, balanced portrait */
+      draw(0);
+    } else {
+      window.requestAnimationFrame(frame);
+    }
+  })();
+
+  /* ── Reveal on scroll ── */
+  (function () {
+    var targets = document.querySelectorAll(".reveal");
+    if (REDUCED.matches || !("IntersectionObserver" in window)) {
+      for (var i = 0; i < targets.length; i++) targets[i].classList.add("in");
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+    for (var j = 0; j < targets.length; j++) io.observe(targets[j]);
+  })();
+
+  /* ── Waitlist form ── */
+  (function () {
+    var form = document.getElementById("notify");
+    var input = document.getElementById("email");
+    var button = document.getElementById("submit");
+    var note = document.getElementById("note");
+
+    function say(msg, kind) {
+      note.textContent = msg;
+      note.className = "note" + (kind ? " " + kind : "");
+      if (kind === "err") {
+        note.classList.remove("shout");
+        void note.offsetWidth;           /* restart the nudge */
+        note.classList.add("shout");
+      }
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var email = input.value.trim();
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        say("That email doesn't look right — check it and try again.", "err");
+        input.focus();
+        return;
+      }
+
+      if (DUMMY_SIGNUP) {
+        button.disabled = true;
+        say("Adding you…");
+        window.console && console.warn(
+          "[tomandjerry] DUMMY_SIGNUP is on — this email was NOT saved anywhere:", email);
+        window.setTimeout(function () {
+          form.reset();
+          button.disabled = false;
+          say("You're on the list. We'll email you when it's your turn.", "ok");
+        }, 650);
+        return;
+      }
+
+      if (!SIGNUP_ENDPOINT) {
+        window.location.href = "mailto:" + CONTACT
+          + "?subject=" + encodeURIComponent("Add me to the Tom & Jerry beta")
+          + "&body=" + encodeURIComponent(email);
+        say("Opening your mail app…");
+        return;
+      }
+
+      button.disabled = true;
+      say("Adding you…");
+
+      fetch(SIGNUP_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ email: email })
+      }).then(function (res) {
+        if (!res.ok) throw new Error(res.status);
+        form.reset();
+        say("You're on the list. We'll email you when it's your turn.", "ok");
+      }).catch(function () {
+        say("That didn't save. Email " + CONTACT + " and we'll add you by hand.", "err");
+      }).then(function () {
+        button.disabled = false;
+      });
+    });
+  })();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+[span] Tom
+[span] Jerry
+[span] Private beta · launching soon
+[h1] Hiring begins with a conversation,
+[em] not a form.
+[b] Tom
+[p] is your AI career coach.
+[b] Jerry
+[p] is your AI hiring partner.
+        Each one listens, asks the questions a good recruiter would, and turns the answer
+        into the work you'd otherwise spend a weekend on.
+[span] Tom
+[span] for candidates
+[span] Tom
+[span] You
+[span] Tom
+[span] Jerry
+[span] for companies
+[span] Jerry
+[span] You
+[span] Jerry
+[h2] Be first through the door.
+[p] We're launching the private beta to a small group at a time — candidates and companies both. Leave your email and we'll come to you.
+[label] Email address
+[button] Notify me
+[h3] Talk to
+[strong] Tom
+[h3] if you're looking for a role.
+[span] A CV and cover letter rewritten for the specific job, ready to download.
+[span] Mock interviews with a voice interviewer, and a report you can share.
+[span] The questions you'll actually be asked, and the certifications worth your time.
+[span] Every application tracked in one board, without the spreadsheet.
+[h3] Talk to
+[strong] Jerry
+[h3] if you're looking for a person.
+[span] Describe the role out loud; get a written brief back you can send to your team.
+[span] A shortlist of real candidates, ranked against that brief, not against keywords.
+[span] Screening handled up front, so the first call you take is one worth taking.
+[span] © 2026 Tom & Jerry AI Ltd.
+[a] hello@tomandjerry.ai

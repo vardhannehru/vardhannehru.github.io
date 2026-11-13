@@ -1,0 +1,189 @@
+/*
+ * "Get in touch": the fluorescent tube, its light and its wall switch (TubeLight.tsx).
+ *
+ * The fixture and the light on the wall are one photograph, screen-blended onto a black stage so the photo's black
+ * surround disappears. The lit frame sits over the unlit one at opacity --tube (set by TubeLight.tsx), so the tube
+ * and the wall dim together when it flickers or is switched off. Both themes show exactly the same black section.
+ *
+ * Geometry, in fractions of the photo (2000 x 857):
+ *   --fx-top     where the fixture's top edge sits, as a share of the photo's height
+ *   --fx-h       the fixture's height, as a share of the photo's width (for the padding under it)
+ */
+
+.contact-stage {
+  --tube: 1;
+  --photo-w: 128%;
+  --fixture-top: clamp(40px, 7vw, 64px);
+  --fx-top: 23%;
+  --fx-h: 0.0686;
+  --gap: clamp(64px, 8vw, 92px);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* ================= Dark theme: the tube (everything down to "Light theme" below is dark only) ================= */
+
+html.dark .contact-stage {
+  min-height: clamp(480px, 72vh, 700px);
+  /* Content starts a set distance below the fixture's bottom edge, at any width. */
+  padding: calc(var(--fixture-top) + var(--fx-h) * var(--photo-w) + var(--gap)) 20px clamp(96px, 12vw, 140px);
+  background: #07040f;
+  /* The black runs the full width of the screen, past the page container. Painted as an outset border image, so
+     it adds no width to the page. */
+  border-image: linear-gradient(#07040f 0 0) fill 0 / / 0 100vmax;
+}
+
+/* On the home page the section's wrapper (with its top and bottom padding) is black edge to edge too. */
+html.dark .contact-band {
+  background: #07040f;
+  border-image: linear-gradient(#07040f 0 0) fill 0 / / 0 100vmax;
+}
+
+/* ---------- The photograph ---------- */
+
+.tube-photo {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: var(--fixture-top);
+  width: var(--photo-w);
+  aspect-ratio: 2000 / 857;
+  /* Lift it so the fixture's top edge, not the photo's, lands at --fixture-top. */
+  transform: translate(-50%, calc(-1 * var(--fx-top)));
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: screen;
+  /* The lit wall runs to the photo's bottom edge; let it fade out instead of stopping. */
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 70%, transparent 99%);
+  mask-image: linear-gradient(180deg, #000 0, #000 70%, transparent 99%);
+}
+.tube-photo img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.tube-photo-on {
+  opacity: var(--tube);
+  will-change: opacity;
+}
+
+/* ---------- Heading and links: lit by the tube, from above, and dimming with it ---------- */
+
+.contact-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+html.dark .contact-content {
+  filter: brightness(calc(0.28 + 0.72 * var(--tube)));
+}
+html.dark .contact-title {
+  background-image: linear-gradient(180deg, #ffffff 0%, #f4f4f1 40%, #c7c8c4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Its shadow falls on the wall just below it */
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.55));
+}
+.contact-link {
+  border-radius: 8px;
+}
+html.dark .contact-link {
+  color: #d9d9d4;
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.6));
+  transition: color 0.25s ease;
+}
+html.dark .contact-link:hover,
+html.dark .contact-link:focus-visible {
+  color: #ffffff;
+}
+.contact-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 6px;
+}
+
+/* ---------- The wall switch ---------- */
+
+/* On the wall off the fixture's right end, at hand height. Real proportions: the plate is about a fourteenth of
+   the tube's length. It's lit by the tube like the wall, and keeps a little ambient light when the tube is off. */
+.light-switch {
+  position: absolute;
+  z-index: 6;
+  left: calc(50% + 0.25 * var(--photo-w));
+  top: calc(var(--fixture-top) + var(--fx-h) * var(--photo-w) + var(--gap) + 6px);
+  width: clamp(64px, 7.4vw, 84px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  mix-blend-mode: screen;
+  filter: brightness(calc(0.3 + 0.7 * var(--tube)));
+  /* Only the plate: the patch of wall around it in the photo fades out into the wall behind */
+  -webkit-mask-image: radial-gradient(closest-side, #000 80%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 80%, transparent 100%);
+  -webkit-tap-highlight-color: transparent;
+}
+.light-switch-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+/* The two photos have the same plate, pixel for pixel; only the rocker differs, so only the rocker moves. */
+.light-switch-img[data-shown='true'] { opacity: 1; }
+.light-switch:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: -6px;
+}
+
+/* ---------- The fixed header while it's over this section ---------- */
+
+/* ContactSection.tsx puts .over-contact on <html> while the section is under the header. In the dark theme the
+   theme switch fades away over the black section. */
+/* (Keeps the switch's own colour transitions, which its Tailwind class would otherwise be the only ones.) */
+header .theme-switch {
+  transition: opacity 0.45s ease, color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+html.dark.over-contact .theme-switch {
+  opacity: 0;
+  pointer-events: none !important;
+}
+
+/* Dark theme, small screens */
+@media (max-width: 640px) {
+  /* Bigger photo and a tighter gap, so the heading and links stay in the light. */
+  html.dark .contact-stage { --photo-w: 166%; --gap: 52px; min-height: clamp(440px, 66vh, 600px); }
+  /* Here the lit wall is wider than the screen. Keep the fixture's band whole, and let the light on the wall
+     fade out before the section's sides instead of being cut off by them. */
+  .tube-photo {
+    -webkit-mask-image:
+      linear-gradient(180deg, #000 0, #000 40%, transparent 44%),
+      radial-gradient(ellipse 30% 80% at 50% 22%, #000 45%, transparent 100%);
+    mask-image:
+      linear-gradient(180deg, #000 0, #000 40%, transparent 44%),
+      radial-gradient(ellipse 30% 80% at 50% 22%, #000 45%, transparent 100%);
+  }
+  /* No room beside the heading: lower on the wall, at the right */
+  .light-switch {
+    left: auto;
+    right: 14px;
+    top: auto;
+    bottom: 22px;
+    width: 64px;
+  }
+}
+

@@ -1,0 +1,475 @@
+{
+  "summary": {
+    "webAnimations": 39,
+    "cssDeclarations": 53,
+    "scrollTargets": 28,
+    "cdpAnimations": 97,
+    "canvases": 2
+  },
+  "namedAnimations": [
+    "glow-pulse"
+  ],
+  "scrollTriggeredElements": 28,
+  "representativeAnimations": [
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.absolute.inset-0.bg-gradient-to-r",
+      "targetRect": {
+        "x": 976,
+        "y": 468,
+        "width": 416,
+        "height": 384,
+        "top": 468,
+        "right": 1392,
+        "bottom": 852,
+        "left": 976
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 369,
+        "y": 2431,
+        "width": 8,
+        "height": 8,
+        "top": 2431,
+        "right": 377,
+        "bottom": 2439,
+        "left": 369
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 369,
+        "y": 2459,
+        "width": 8,
+        "height": 8,
+        "top": 2459,
+        "right": 377,
+        "bottom": 2467,
+        "left": 369
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 369,
+        "y": 2487,
+        "width": 8,
+        "height": 8,
+        "top": 2487,
+        "right": 377,
+        "bottom": 2495,
+        "left": 369
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 790.328125,
+        "y": 2431,
+        "width": 8,
+        "height": 8,
+        "top": 2431,
+        "right": 798.328125,
+        "bottom": 2439,
+        "left": 790.328125
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 790.328125,
+        "y": 2459,
+        "width": 8,
+        "height": 8,
+        "top": 2459,
+        "right": 798.328125,
+        "bottom": 2467,
+        "left": 790.328125
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 790.328125,
+        "y": 2487,
+        "width": 8,
+        "height": 8,
+        "top": 2487,
+        "right": 798.328125,
+        "bottom": 2495,
+        "left": 790.328125
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 1211.65625,
+        "y": 2431,
+        "width": 8,
+        "height": 8,
+        "top": 2431,
+        "right": 1219.65625,
+        "bottom": 2439,
+        "left": 1211.65625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 1211.65625,
+        "y": 2459,
+        "width": 8,
+        "height": 8,
+        "top": 2459,
+        "right": 1219.65625,
+        "bottom": 2467,
+        "left": 1211.65625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSAnimation",
+      "playState": "running",
+      "animationName": "glow-pulse",
+      "targetSelector": "div.w-2.h-2.bg-primary",
+      "targetRect": {
+        "x": 1211.65625,
+        "y": 2487,
+        "width": 8,
+        "height": 8,
+        "top": 2487,
+        "right": 1219.65625,
+        "bottom": 2495,
+        "left": 1211.65625
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 0.5,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.8) 0px 0px 20px 0px, rgba(0, 200, 255, 0.4) 0px 0px 40px 0px",
+          "computedOffset": 0.5
+        },
+        {
+          "offset": 1,
+          "easing": "ease-in-out",
+          "composite": "auto",
+          "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 5px 0px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 2000,
+        "delay": 0,
+        "iterations": null,
+        "easing": "linear",
+        "direction": "normal"
+      }
+    }
+  ]
+}

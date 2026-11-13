@@ -1,0 +1,268 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "Inter",
+      "fontSize": "72px",
+      "fontWeight": "700",
+      "lineHeight": "72px",
+      "letterSpacing": "normal",
+      "color": "#F8FAFC",
+      "sampleText": "Building IntelligentSoftware + AI ProductsSoftware + AI Prod"
+    },
+    {
+      "role": "heading",
+      "fontFamily": "Inter",
+      "fontSize": "48px",
+      "fontWeight": "700",
+      "lineHeight": "48px",
+      "letterSpacing": "normal",
+      "color": "#F8FAFC",
+      "sampleText": "3D Project Showcase"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Inter",
+      "fontSize": "30px",
+      "fontWeight": "700",
+      "lineHeight": "36px",
+      "letterSpacing": "normal",
+      "color": "#F8FAFC",
+      "sampleText": "Document Intelligence Assistant"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Inter",
+      "fontSize": "24px",
+      "fontWeight": "700",
+      "lineHeight": "32px",
+      "letterSpacing": "normal",
+      "color": "#F8FAFC",
+      "sampleText": "AI Analytics Suite"
+    },
+    {
+      "role": "body",
+      "fontFamily": "Inter",
+      "fontSize": "24px",
+      "fontWeight": "400",
+      "lineHeight": "32px",
+      "letterSpacing": "normal",
+      "color": "#94A3B8",
+      "sampleText": "Innovating the future with Software & AI. We build cutting-e"
+    },
+    {
+      "role": "link",
+      "fontFamily": "Inter",
+      "fontSize": "20px",
+      "fontWeight": "700",
+      "lineHeight": "28px",
+      "letterSpacing": "normal",
+      "color": "#F8FAFC",
+      "sampleText": "ReveloSoft"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      8,
+      12,
+      16,
+      24,
+      32,
+      48,
+      64,
+      80
+    ],
+    "baseUnit": 8
+  },
+  "radius": [
+    "14px",
+    "16px",
+    "9999px"
+  ],
+  "shadows": [
+    {
+      "value": "rgba(0, 200, 255, 0.3) 0px 0px 20px 0px",
+      "count": 11
+    },
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "count": 7
+    },
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "count": 3
+    },
+    {
+      "value": "rgba(0, 200, 255, 0.725) 0px 0px 17.7798px 0px, rgba(0, 200, 255, 0.34) 0px 0px 34.0794px 0px",
+      "count": 1
+    }
+  ],
+  "buttons": [
+    {
+      "label": "Consult Now",
+      "background": "transparent",
+      "backgroundImage": "linear-gradient(135deg, rgb(0, 200, 255), rgb(204, 102, 255))",
+      "backdropFilter": "",
+      "color": "#FFFFFF",
+      "padding": "8px 16px",
+      "borderRadius": "14px",
+      "border": "0px solid rgb(41, 46, 61)",
+      "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 20px 0px",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "height": "40px"
+    },
+    {
+      "label": "Talk to Our AI Agent",
+      "background": "#06070A",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#00C8FF",
+      "padding": "24px 32px",
+      "borderRadius": "14px",
+      "border": "1px solid rgba(0, 200, 255, 0.5)",
+      "boxShadow": "none",
+      "fontSize": "18px",
+      "fontWeight": "500",
+      "height": "50px"
+    },
+    {
+      "label": "button",
+      "background": "transparent",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#94A3B8",
+      "padding": "0px",
+      "borderRadius": "0px",
+      "border": "0px solid rgb(41, 46, 61)",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "24px"
+    },
+    {
+      "label": "button",
+      "background": "#00C8FF",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#F8FAFC",
+      "padding": "0px",
+      "borderRadius": "9999px",
+      "border": "0px solid rgb(41, 46, 61)",
+      "boxShadow": "rgba(0, 200, 255, 0.3) 0px 0px 20px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "16px"
+    },
+    {
+      "label": "button",
+      "background": "#94A3B8",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#F8FAFC",
+      "padding": "0px",
+      "borderRadius": "9999px",
+      "border": "0px solid rgb(41, 46, 61)",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "16px"
+    }
+  ],
+  "cards": [
+    {
+      "label": "card",
+      "background": "transparent",
+      "backgroundImage": "linear-gradient(145deg, rgb(16, 18, 24) 0%, rgb(20, 23, 31) 100%)",
+      "backdropFilter": "",
+      "color": "#F8FAFC",
+      "padding": "0px",
+      "borderRadius": "16px",
+      "border": "0px solid rgb(41, 46, 61)",
+      "boxShadow": "none",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "384px"
+    },
+    {
+      "label": "card",
+      "background": "transparent",
+      "backgroundImage": "linear-gradient(145deg, rgb(16, 18, 24) 0%, rgb(20, 23, 31) 100%)",
+      "backdropFilter": "",
+      "color": "#F8FAFC",
+      "padding": "0px",
+      "borderRadius": "16px",
+      "border": "1px solid rgba(41, 46, 61, 0.5)",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "358px"
+    }
+  ],
+  "nav": {
+    "label": "navigation",
+    "background": "#06070A",
+    "backgroundImage": "",
+    "backdropFilter": "blur(24px)",
+    "color": "#F8FAFC",
+    "padding": "0px",
+    "borderRadius": "0px",
+    "border": "",
+    "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "fontSize": "16px",
+    "fontWeight": "400",
+    "height": "73px"
+  },
+  "chips": [
+    {
+      "label": "LLM",
+      "background": "#00C8FF",
+      "color": "#00C8FF",
+      "padding": "4px 12px",
+      "borderRadius": "9999px",
+      "border": "0px solid rgb(41, 46, 61)",
+      "boxShadow": "none",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "height": "28px"
+    }
+  ],
+  "statCells": [],
+  "tabs": [],
+  "backgrounds": [
+    {
+      "value": "linear-gradient(rgb(6, 7, 10) 0%, rgb(16, 18, 24) 50%, rgb(6, 7, 10) 100%)",
+      "area": 6508800
+    },
+    {
+      "value": "linear-gradient(to right bottom, rgba(6, 7, 10, 0.8), rgba(6, 7, 10, 0.6), rgba(6, 7, 10, 0.8))",
+      "area": 2073600
+    },
+    {
+      "value": "linear-gradient(rgb(6, 7, 10), rgba(31, 34, 46, 0.2))",
+      "area": 1413120
+    },
+    {
+      "value": "linear-gradient(145deg, rgb(16, 18, 24) 0%, rgb(20, 23, 31) 100%)",
+      "area": 1200032
+    },
+    {
+      "value": "linear-gradient(to right bottom, rgba(31, 34, 46, 0.3), rgb(6, 7, 10), rgba(31, 34, 46, 0.2))",
+      "area": 956160
+    },
+    {
+      "value": "linear-gradient(to right, rgba(0, 200, 255, 0.2), rgba(0, 0, 0, 0), rgba(204, 102, 255, 0.2))",
+      "area": 159744
+    }
+  ],
+  "glass": [
+    {
+      "backdropFilter": "blur(24px)",
+      "background": "rgba(6, 7, 10, 0.8)",
+      "border": "",
+      "borderRadius": "0px",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "area": 140160
+    }
+  ]
+}

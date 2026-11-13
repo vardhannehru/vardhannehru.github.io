@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- A refresh starts at the top: the browser mustn't put the page back where it was (index.tsx finishes this). -->
+    <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
+    <!-- Tab icon: the face portrait alone, no wording (public/favicon/). -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <!-- The loading screen's face lines (public/loader/face.json, 13 KB), fetched while its dots orbit. -->
+    <link rel="preload" href="/loader/face.json" as="fetch" crossorigin="anonymous" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penkey Vardhan Sai Raghavendra Nehru — AI Engineer</title>
+    <script>
+      // Theme before first paint: the pastel theme (lavender, green, yellow) unless the visitor picked the dark one.
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme-v2'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') t = 'light';
+        if (t === 'dark') document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = t;
+      })();
+    </script>
+    <!-- Tailwind CDN is OK for now, but it must not block app boot.
+         Use defer so React can mount even if CDN is slow/unavailable.
+         IMPORTANT: configure darkMode='class' so `dark:` variants work. -->
+    <script>
+      // Tailwind CDN config (must exist before the CDN script runs)
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = { darkMode: 'class' };
+    </script>
+    <!-- The CDN replaces any config set before it loads, so set darkMode again once it has (otherwise
+         `dark:` styles follow the device setting instead of the site's light/dark switch). -->
+    <script src="https://cdn.tailwindcss.com" defer onload="tailwind.config = { darkMode: 'class' }"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,500&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@700&family=Antic&family=Press+Start+2P&family=Noto+Sans+Devanagari&family=Noto+Sans+JP&family=Noto+Sans+SC&family=Noto+Sans+Telugu&family=Dancing+Script:wght@700&family=Geist+Sans:wght@400;700&family=Geist+Mono:wght@700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" />
+<!-- Handwriting for the notes on the About page -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" />
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=ranade@300,400,500,300i,400i,500i&display=swap" />
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+  /* The TV glow's colour (WorkSection.tsx), registered so it can fade between channels inside a gradient. */
+  @property --tv-glow {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: transparent;
+  }
+  /* Lenis drives the scroll itself; the browser's own smoothing on top of it makes it stutter. */
+  html.lenis, html.lenis body { height: auto; }
+  html.lenis { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: clip; }
+  .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
+  /* The traffic-light pole is the page's scrollbar (components/signal/TrafficLight.tsx): while it's on, the
+     browser's own scrollbar is hidden. The page still scrolls exactly as before. */
+  html.signal-scrollbar { scrollbar-width: none; }
+  html.signal-scrollbar::-webkit-scrollbar, html.signal-scrollbar body::-webkit-scrollbar { display: none; width: 0; height: 0; }
+  
+  body {
+    font-family: 'Inter', 'Geist Sans', sans-serif;
+    /* Dark-first to avoid any flash on refresh/navigation */
+    background: #07040f;
+    color-scheme: dark;
+  }
+
+  html.dark body {
+    background: #07040f;
+  }
+
+  :root {
+    --separator-color: #d1d5db; /* gray-300 */
+  }
+
+  html.dark {
+    --separator-color: #b69df8;
+  }
+
+  @keyframes fade-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in-down {
+    animation: fade-in-down 0.8s ease-out forwards;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+  
+  .animation-delay-800 {
+    animation-delay: 0.8s;
+  }
+  
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  @keyframes shine {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+  
+  .animate-shine {
+    animation: shine 3s linear infinite;
+  }
+
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .scroll-container {
+    animation: scroll linear infinite;
+    will-change: transform;
+  }
+
+  .scroll-text-item:not(:last-child)::after {
+    content: '•';
+    margin-left: 1.5rem; /* Corresponds to mx-6 in Tailwind */
+    font-weight: bold;
+    color: var(--separator-color);
+  }
+
+  @keyframes sdb06 {
+    0% {
+      transform: rotateY(0) rotateZ(-45deg) translate(0, 0);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotateY(720deg) rotateZ(-45deg) translate(-20px, 20px);
+      opacity: 0;
+    }
+  }
+
+  .animate-sdb06 {
+    animation: sdb06 1.5s infinite;
+  }
+
+  @keyframes confetti-pop {
+    0% {
+      transform: translate(var(--x-start), var(--y-start)) rotate(var(--rotation-start)) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--x-end), var(--y-end)) rotate(var(--rotation-end)) scale(var(--scale-end));
+      opacity: 0;
+    }
+  }
+
+  /* Seasonal effects */
+  .seasonal-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .snowflake {
+    position: absolute;
+    top: -10vh;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.85);
+    animation: snow-fall var(--snow-duration, 10s) linear var(--snow-delay, 0s) infinite;
+    will-change: transform;
+  }
+
+  @keyframes snow-fall {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    50% {
+      transform:
+        translate3d(
+          calc((var(--snow-drift, 0vw) * 0.5) + var(--snow-sway, 10vw)),
+          60vh,
+          0
+        )
+        rotate(calc(var(--snow-spin, 10deg) * 0.5));
+    }
+    100% {
+      transform: translate3d(var(--snow-drift, 0vw), 120vh, 0) rotate(var(--snow-spin, 10deg));
+    }
+  }
+
+  /* Monsoon */
+  .raindrop {
+    position: absolute;
+    top: -15vh;
+    width: 2px;
+    background: linear-gradient(to bottom, rgba(160, 220, 255, 0.0), rgba(160, 220, 255, 0.8));
+    border-radius: 9999px;
+    animation: rain-fall var(--rain-duration, 1s) linear var(--rain-delay, 0s) infinite;
+    will-change: transform;
+  }
+
+  @keyframes rain-fall {
+    0% {
+      transform: translate3d(0, 0, 0) skewX(-12deg);
+    }
+    50% {
+      transform:
+        translate3d(
+          calc((var(--rain-drift, -6vw) * 0.5) + var(--rain-sway, 2vw)),
+          65vh,
+          0
+        )
+        skewX(-12deg);
+    }
+    100% {
+      transform: translate3d(var(--rain-drift, -6vw), 130vh, 0) skewX(-12deg);
+    }
+  }
+
+  /* Autumn leaves */
+  .leaf {
+    position: absolute;
+    top: -12vh;
+    border-radius: 9999px 9999px 9999px 0;
+    background: rgba(182,157,248, 0.28);
+    animation: leaf-fall var(--leaf-duration, 12s) ease-in-out var(--leaf-delay, 0s) infinite;
+    will-change: transform;
+  }
+
+  @keyframes leaf-fall {
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    100% { transform: translate3d(var(--leaf-drift, 0vw), 125vh, 0) rotate(520deg); }
+  }
+
+  /* Spring petals */
+  .petal {
+    position: absolute;
+    top: -12vh;
+    border-radius: 9999px 9999px 9999px 9999px;
+    background: rgba(196, 181, 253, 0.20);
+    animation: petal-fall var(--petal-duration, 12s) ease-in-out var(--petal-delay, 0s) infinite;
+    will-change: transform;
+  }
+
+  @keyframes petal-fall {
+    0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    100% { transform: translate3d(var(--petal-drift, 0vw), 125vh, 0) rotate(420deg); }
+  }
+
+  /* Summer heat haze (very subtle) */
+  .heat-haze {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 45;
+    background:
+      radial-gradient(60% 50% at 30% 20%, rgba(255, 255, 255, 0.04), transparent 60%),
+      radial-gradient(50% 40% at 70% 40%, rgba(255, 255, 255, 0.03), transparent 65%);
+    mix-blend-mode: overlay;
+    animation: haze 5s ease-in-out infinite;
+  }
+
+  @keyframes haze {
+    0% { transform: translate3d(-1vw, -0.5vh, 0); }
+    50% { transform: translate3d(1vw, 0.5vh, 0); }
+    100% { transform: translate3d(-1vw, -0.5vh, 0); }
+  }
+
+  /* Wind overlay removed: snow now carries the breeze motion itself. */
+  
+  body.hide-smooth-cursor .smooth-cursor {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Over the Work section the cursor is the 3D TV remote (RemoteCursor.tsx), so the dot hides. */
+  .smooth-cursor { transition: opacity 0.2s ease; }
+  body.remote-cursor-on .smooth-cursor { opacity: 0; }
+  /* Over the About section the cursor is the 3D pencil (components/about/pencil/PencilCursor.tsx). */
+  body.pencil-cursor-on .smooth-cursor { opacity: 0; }
+
+  /* A butterfly resting on a nav button (GlowNav.tsx): settling down onto it, then slowly fanning its wings. */
+  @keyframes gnav-land {
+    from { opacity: 0; transform: translateY(-16px) scale(0.85); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes gnav-fan-r {
+    0%, 100% { transform: rotateY(0deg); }
+    50% { transform: rotateY(58deg); }
+  }
+  @keyframes gnav-fan-l {
+    0%, 100% { transform: rotateY(0deg); }
+    50% { transform: rotateY(-58deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [style*="gnav-fan"] { animation: none !important; }
+  }
+  
+  * {
+    cursor: none !important;
+  }
+
+  /* Navbar "V" 3D hover + tiny hi tooltip */
+  .v-hi {
+    position: relative;
+    display: inline-block;
+    transform-style: preserve-3d;
+    transition: transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .v-hi:hover {
+    transform: rotateY(180deg) translateZ(8px);
+  }
+
+  .v-hi::after {
+    content: "hii";
+    position: absolute;
+    left: 50%;
+    top: -1.6em;
+    transform: translateX(-50%) translateY(6px);
+    opacity: 0;
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #111827; /* gray-900 */
+    border: 1px solid rgba(17, 24, 39, 0.12);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    transition: opacity 180ms ease, transform 180ms ease;
+    backface-visibility: hidden;
+  }
+
+  html.dark .v-hi::after {
+    background: rgba(2, 0, 5, 0.85);
+    color: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.45);
+  }
+
+  .v-hi:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @keyframes fire-flicker {
+    0% {
+      filter: drop-shadow(0 0 3px rgba(196, 181, 253, 0.8)) drop-shadow(0 -2px 5px rgba(182,157,248, 0.6));
+      -webkit-text-stroke-color: #c8b6ff;
+    }
+    25% {
+       filter: drop-shadow(0 0 5px rgba(221, 214, 254, 0.8)) drop-shadow(0 -4px 8px rgba(157, 134, 233, 0.6));
+      -webkit-text-stroke-color: #c4b5fd;
+    }
+    50% {
+       filter: drop-shadow(0 0 3px rgba(167, 139, 250, 0.8)) drop-shadow(0 -3px 6px rgba(182,157,248, 0.6));
+      -webkit-text-stroke-color: #b69df8;
+    }
+    75% {
+       filter: drop-shadow(0 0 6px rgba(233, 213, 255, 0.8)) drop-shadow(0 -5px 10px rgba(157, 134, 233, 0.6));
+      -webkit-text-stroke-color: #c8b6ff;
+    }
+    100% {
+      filter: drop-shadow(0 0 3px rgba(196, 181, 253, 0.8)) drop-shadow(0 -2px 5px rgba(182,157,248, 0.6));
+      -webkit-text-stroke-color: #c8b6ff;
+    }
+  }
+
+  .fire-outline {
+    color: transparent;
+    -webkit-text-stroke-width: 2px;
+    animation: fire-flicker 2.5s infinite linear;
+  }
+
+  .cap-title {
+    color: rgba(255,255,255,0.85);
+    transition: color .3s ease, -webkit-text-stroke-color .3s ease, filter .3s ease;
+    -webkit-text-stroke: 2px transparent;
+  }
+  .cap-item:hover .cap-title {
+    color: transparent;
+    -webkit-text-stroke: 2px #c8b6ff;
+    filter: drop-shadow(0 0 28px rgba(182,157,248,0.55));
+  }
+
+  /* Picture showing through the hero letters, slowly panning. */
+  .hero-fill-letter {
+    background-position: var(--bx, 0px) 20%;
+    animation: hero-fill-pan 24s ease-in-out infinite alternate;
+  }
+  @keyframes hero-fill-pan {
+    from { background-position: var(--bx, 0px) 15%; }
+    to { background-position: calc(var(--bx, 0px) - var(--pan, 0px)) 85%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-fill-letter { animation: none; }
+  }
+
+
+  /* ---------- Pastel theme (html without .dark) ----------
+     The palette of three Pantone swatches, used exactly:
+       Soft Lavender 7443 C  #EBDEFC  (main)    ink #743BBE
+       Summer Green  317 C   #B1E4E3  (second)  ink #08746B
+       Limencello    122 C   #FED141  (third)   ink #3F260C
+     Body text is a deep lavender (#2A1650). The site was built dark, so classes like text-white or bg-[#07040f]
+     are remapped here; white text on a dark background (bg-black...) is left alone. Sections opt into a colour
+     block with .pastel-green. The dark theme ignores all of this. */
+  html:not(.dark) {
+    --p-lav: #EBDEFC;
+    --p-green: #B1E4E3;
+    --p-yellow: #FED141;
+    --p-lav-ink: #743BBE;
+    --p-green-ink: #08746B;
+    --p-yellow-ink: #3F260C;
+    --p-text: #2A1650;
+    --accent: #743BBE;
+    --accent-rgb: 116,59,190;
+    --accent-35: rgba(116,59,190,0.35);
+    --accent-60: rgba(116,59,190,0.6);
+    --separator-color: #743BBE;
+
+    /* Hero name (HeroName.tsx): the lavender ink, like the purple PANTONE lettering on the lavender swatch */
+    --hn-face: radial-gradient(120% 90% at 18% 0%, rgba(255,255,255,0.28), transparent 55%), linear-gradient(165deg, #9466D6 0%, #8148C8 38%, #743BBE 70%, #6631AF 100%);
+    --hn-slab-top: #5B2CA0;
+    --hn-slab-bottom: #2A1150;
+    --hn-slab-lip: #A983E0;
+    --hn-stroke: rgba(235,222,252,0.55);
+    --hn-shadow: rgba(70,30,130,0.35);
+    --hn-shadow-core: rgba(52,21,95,0.6);
+    --hn-floor-line: rgba(116,59,190,0.09);
+    --hn-floor-glow: rgba(116,59,190,0.06);
+
+    /* Hero stickers (HeroStickers.tsx): the three swatches with their inks. The ones lying on the purple letters
+       are the light swatches; "Ship it" on the floor is the ink. */
+    --st-engineer: #FED141;
+    --st-engineer-ink: #3F260C;
+    --st-human: #EBDEFC;
+    --st-human-ink: #743BBE;
+    --st-ship: #743BBE;
+    --st-ship-ink: #FFFFFF;
+    --st-rag: #B1E4E3;
+    --st-rag-ink: #08746B;
+    --st-rag-lens: #743BBE;
+
+    /* About page tape band (AboutCollage.tsx) */
+    --tape-bg: #743BBE;
+    --tape-ink: #EBDEFC;
+    --tape-star-a: #FED141;
+    --tape-star-b: #B1E4E3;
+  }
+  html:not(.dark) body { background: #EBDEFC; color-scheme: light; }
+  html:not(.dark) ::selection { background: #FED141; color: #3F260C; }
+  html:not(.dark) .bg-\[\#07040f\] { background-color: #EBDEFC; }
+  html:not(.dark) .bg-\[\#07040f\]\/95 { background-color: rgba(235,222,252,0.95); }
+  html:not(.dark) .bg-\[\#07040f\]\/90 { background-color: rgba(235,222,252,0.92); }
+  html:not(.dark) .text-gray-100 { color: #2A1650; }
+  html:not(.dark) .text-white:not([class*="bg-black"]) { color: #2A1650; }
+  html:not(.dark) .hover\:text-white:hover:not([class*="bg-black"]) { color: #2A1650; }
+  html:not(.dark) .border-zinc-800 { border-color: rgba(42,22,80,0.12); }
+  html:not(.dark) .text-zinc-300, html:not(.dark) .text-zinc-400 { color: rgba(42,22,80,0.62); }
+  html:not(.dark) .text-white\/90:not([class*="bg-black"]) { color: rgba(42,22,80,0.90); }
+  html:not(.dark) .text-white\/85:not([class*="bg-black"]) { color: rgba(42,22,80,0.85); }
+  html:not(.dark) .text-white\/80:not([class*="bg-black"]) { color: rgba(42,22,80,0.80); }
+  html:not(.dark) .text-white\/75:not([class*="bg-black"]) { color: rgba(42,22,80,0.75); }
+  html:not(.dark) .text-white\/70:not([class*="bg-black"]) { color: rgba(42,22,80,0.72); }
+  html:not(.dark) .text-white\/65:not([class*="bg-black"]) { color: rgba(42,22,80,0.68); }
+  html:not(.dark) .text-white\/60:not([class*="bg-black"]) { color: rgba(42,22,80,0.64); }
+  html:not(.dark) .text-white\/55:not([class*="bg-black"]) { color: rgba(42,22,80,0.62); }
+  html:not(.dark) .text-white\/50:not([class*="bg-black"]) { color: rgba(42,22,80,0.60); }
+  html:not(.dark) .text-white\/45:not([class*="bg-black"]) { color: rgba(42,22,80,0.58); }
+  html:not(.dark) .text-white\/40:not([class*="bg-black"]) { color: rgba(42,22,80,0.55); }
+  html:not(.dark) .text-white\/35:not([class*="bg-black"]) { color: rgba(42,22,80,0.50); }
+  html:not(.dark) .text-white\/30:not([class*="bg-black"]) { color: rgba(42,22,80,0.45); }
+  html:not(.dark) .text-white\/25:not([class*="bg-black"]) { color: rgba(42,22,80,0.38); }
+  html:not(.dark) .border-white\/10 { border-color: rgba(116,59,190,0.16); }
+  html:not(.dark) .border-white\/15 { border-color: rgba(116,59,190,0.22); }
+  html:not(.dark) .border-white\/20 { border-color: rgba(116,59,190,0.26); }
+  html:not(.dark) .border-white\/40 { border-color: rgba(116,59,190,0.40); }
+  html:not(.dark) .border-white\/60 { border-color: rgba(116,59,190,0.55); }
+  html:not(.dark) .border-white\/\[0\.08\] { border-color: rgba(116,59,190,0.14); }
+  html:not(.dark) .border-white\/\[0\.07\] { border-color: rgba(116,59,190,0.12); }
+  html:not(.dark) .bg-white\/\[0\.03\] { background-color: rgba(255,255,255,0.55); }
+  html:not(.dark) .bg-white\/\[0\.04\] { background-color: rgba(255,255,255,0.55); }
+  html:not(.dark) .bg-white\/\[0\.05\] { background-color: rgba(255,255,255,0.6); }
+  /* Lavender accents become the lavender ink, so they read on the pale backgrounds */
+  html:not(.dark) .text-\[\#c8b6ff\], html:not(.dark) .text-\[\#b69df8\] { color: #743BBE; }
+  html:not(.dark) .bg-\[\#c8b6ff\] { background-color: #743BBE; }
+  html:not(.dark) .bg-\[\#c8b6ff\].text-\[\#07040f\], html:not(.dark) .hover\:bg-\[color\:var\(--accent\2c \#c8b6ff\)\]:hover { color: #FFFFFF; }
+  html:not(.dark) .hover\:text-\[\#07040f\]:hover, html:not(.dark) .group:hover .group-hover\:text-\[\#07040f\] { color: #FFFFFF; }
+
+  /* Colour blocks */
+  html:not(.dark) body .pastel-green { background-color: #B1E4E3; }
+  /* (The contact section styles itself in both themes: components/contact/contactLight.css.) */
+  html:not(.dark) .pastel-green .pastel-heading { color: #08746B; }
+  html:not(.dark) .pastel-green .text-gray-700 { color: #08746B; }
+  /* Things only the pastel theme shows (the Pantone captions) */
+  .pastel-only { display: none !important; }
+  html:not(.dark) .pastel-only { display: block !important; }
+
+  /* Die-cut sticker border: every shape of the icon traced in thick white (or --diecut-color, for
+     the sticker's backing and shadows). */
+  .diecut *, .diecut-mask *, .diecut-fill * {
+    fill: var(--diecut-color, #fff) !important;
+    stroke: var(--diecut-color, #fff) !important;
+    stroke-width: var(--diecut) !important;
+    stroke-linejoin: round !important;
+    stroke-linecap: round !important;
+  }
+
+  /* ---------- Loading screen: the signature intro ----------
+     Shown from the first byte (plain HTML, before any JavaScript), so there's never a blank or half-styled page.
+     The wordmark below (logo/svg/vardhan-wordmark-*.svg: VARDHAN, a rule, SAI RAGHAVENDRA NEHRU) stands on its own.
+     On the first visit of a session public/loader/vardhan-loader.js plays the story over it: the face appears as
+     one thread, which unwinds onto a loading bar (sitting where the wordmark's rule is) as the site really loads;
+     at 100% the face is gone, the bar is the rule, and VARDHAN rises out of it. Once the site is ready the screen
+     opens from the middle (--pl-r). */
+  @property --pl-r { syntax: '<length>'; inherits: false; initial-value: 0px; }
+  #preloader {
+    --pl-bg: #EBDEFC; --pl-bg2: #F6F0FE; --pl-ink: #2A1650; --pl-sub: rgba(42,22,80,0.62);
+    position: fixed; inset: 0; z-index: 2147483000;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(120% 90% at 50% 46%, var(--pl-bg2) 0%, var(--pl-bg) 64%);
+    color: var(--pl-ink);
+    --pl-r: 0px;
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent calc(var(--pl-r) - 1px), #000 var(--pl-r));
+    mask-image: radial-gradient(circle at 50% 50%, transparent calc(var(--pl-r) - 1px), #000 var(--pl-r));
+    transition: --pl-r .85s cubic-bezier(0.7, 0, 0.18, 1);
+  }
+  html.dark #preloader { --pl-bg: #07040f; --pl-bg2: #150c2b; --pl-ink: #EDE7FF; --pl-sub: rgba(237,231,255,0.58); }
+  #preloader .pl-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  /* --pl-shift: the story moves the wordmark down so its rule (the loading bar) sits under the face, then glides
+     it back to the middle as the name rises. */
+  #preloader .pl-brand { position: relative; width: min(82vw, 600px); transform: translate3d(0, var(--pl-shift, 0px), 0); transition: transform .65s cubic-bezier(0.65, 0, 0.25, 1), opacity .4s ease; }
+  #preloader .pl-mark { display: block; width: 100%; height: auto; overflow: visible; }
+  #preloader .pl-mark path { fill: currentColor; }
+  #preloader .pl-mark .pl-l { fill-rule: evenodd; }
+  #preloader .pl-mark .pl-subt { fill: var(--pl-sub); }
+  /* The story: letters wait below the rule (clipped there) and rise out of it once .pl-name is set. */
+  #preloader.pl-story .pl-l { transform: translate3d(0, 440px, 0); transition: transform .55s cubic-bezier(0.2, 0.85, 0.25, 1); transition-delay: calc(var(--i) * 35ms); }
+  #preloader.pl-story .pl-rule { opacity: 0; }
+  #preloader.pl-story .pl-subt { opacity: 0; transform: translate3d(0, -60px, 0); transition: opacity .45s ease .25s, transform .5s cubic-bezier(0.2, 0.85, 0.25, 1) .2s; }
+  #preloader.pl-story.pl-name .pl-l { transform: none; }
+  #preloader.pl-story.pl-name .pl-rule { opacity: 1; }
+  #preloader.pl-story.pl-name .pl-subt { opacity: 1; transform: none; }
+  #preloader.pl-out { --pl-r: 150vmax; pointer-events: none; }
+  #preloader.pl-out .pl-brand { opacity: 0; transform: scale(1.05); transition-delay: 0s; }
+  /* No @property (older browsers): the opening can't animate, so it fades instead. */
+  #preloader.pl-nomask { -webkit-mask-image: none; mask-image: none; transition: opacity .7s ease .15s; }
+  #preloader.pl-nomask.pl-out { opacity: 0; }
+  #preloader .pl-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* Shown only if the site hasn't started after 8 s (a failed download, say). */
+  #preloader .pl-stall { position: absolute; left: 50%; bottom: max(9vh, 48px); transform: translateX(-50%); display: flex; align-items: center; gap: 14px; font: 500 13px/1.3 'Inter', system-ui, sans-serif; color: var(--pl-sub); white-space: nowrap; }
+  #preloader .pl-stall[hidden] { display: none; }
+  #preloader .pl-stall button { font: inherit; color: var(--pl-ink); background: transparent; border: 1px solid currentColor; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+  html.is-loading, html.is-loading body { overflow: hidden; }
+  @media (prefers-reduced-motion: reduce) {
+    #preloader { -webkit-mask-image: none; mask-image: none; transition: opacity .4s ease; }
+    #preloader.pl-out { opacity: 0; }
+    #preloader .pl-brand { transition: opacity .3s ease; }
+    #preloader.pl-out .pl-brand { transform: none; }
+  }
+</style>
+</head>
+  <body>
+    <div id="preloader">
+      <canvas class="pl-canvas" aria-hidden="true"></canvas>
+      <!-- The wordmark (from logo/svg/vardhan-wordmark-transparent.svg): one path per letter of VARDHAN (clipped
+           just above the rule, so in the story they rise out of it), the rule, the subtitle. -->
+      <div class="pl-brand" aria-hidden="true">
+        <svg class="pl-mark" viewBox="200 200 2900 650" focusable="false">
+          <defs><clipPath id="pl-rise"><rect x="200" y="200" width="2900" height="424"/></clipPath></defs>
+          <g clip-path="url(#pl-rise)">
+            <path class="pl-l" style="--i:0" d="M240.8,240.4L300.8,240.4L402.3,442.3L503.6,240.4L562.4,240.4L422.7,517.9L381.6,517.9L243.5,246.8L240.8,240.4Z"/>
+            <path class="pl-l" style="--i:1" d="M967.5,517.9L913.3,517.9L880,448.3L754.2,448.3L720.6,517.9L665.8,517.9L665.7,511.9L794.3,240.4L838.1,240.4L968.1,512.5L967.5,517.9ZM816.8,311.5L776,399L857.6,399L816.8,311.5Z"/>
+            <path class="pl-l" style="--i:2" d="M1133,240.4L1274.2,240.4C1278.7,240.4 1283.6,241.8 1288.2,242.6C1315.9,247.3 1342.6,260.8 1356.2,286.5C1376.4,324.7 1368.4,373.9 1333.8,400.5C1328.1,404.9 1321.7,410.1 1314.9,412.4L1293.6,419.6L1375.7,512.9L1376.3,517.9L1312.1,517.9L1230.1,424.4C1225.8,419.4 1214.6,421.2 1208.8,421.2L1185.4,421.2L1185.4,517.9L1133,517.9L1133,240.4ZM1185.5,291.3L1185.5,371.3L1271.5,371.3C1275.9,371.3 1280,369.9 1284.2,368.7C1330.4,355.1 1320.1,291.3 1271.5,291.3L1185.5,291.3Z"/>
+            <path class="pl-l" style="--i:3" d="M1533.7,517.9L1533.7,240.4L1662.8,240.4C1665.8,240.4 1669.7,241.6 1672.8,242.2C1686.9,244.7 1700.5,248 1713.5,254.2C1735.2,264.6 1754.9,280.2 1768.2,300.5C1798.3,346.7 1796.7,410.9 1768,457.2C1749.6,486.8 1716.8,507.8 1682.8,514.5C1667.8,517.5 1652,517.9 1636.8,517.9L1533.7,517.9ZM1586.3,467.4L1650.8,467.4C1657.6,467.4 1664.3,466 1670.8,464.5C1680.3,462.4 1689.1,459.7 1697.5,454.7C1720.6,440.7 1734,412.7 1736.5,386.5C1740.3,345.8 1716,305.1 1675.5,294.8C1670.4,293.5 1664.8,291.3 1659.5,291.3L1586.3,291.3L1586.3,467.4Z"/>
+            <path class="pl-l" style="--i:4" d="M2201.6,240.4L2201.6,517.9L2149.3,517.9L2149.3,404.2L2007.1,404.2L2007.1,517.9L1953.9,517.9L1953.9,240.4L2007.3,240.4L2007.3,354.6L2149.3,354.6L2149.3,240.4L2201.6,240.4Z"/>
+            <path class="pl-l" style="--i:5" d="M2349,517.9L2480.9,240.4L2525.8,240.4L2656.4,517.9L2598.4,517.9L2566.4,448.3L2440,448.3L2406.3,517.9L2349,517.9ZM2502.9,311.4L2462.7,399L2543.5,399L2534.3,376.3L2502.9,311.4Z"/>
+            <path class="pl-l" style="--i:6" d="M2806,240.4L2834.9,240.4L3003.8,418.7L3006.6,415.2L3006.6,240.4L3059.5,240.4L3059.5,517.9L3028.5,517.9L2858.4,336.8L2858.4,517.9L2806,517.9L2806,240.4Z"/>
+          </g>
+          <path class="pl-rule" d="M502.5,626.7L2797.3,626.7L2797.3,636.7L502.5,636.7L502.5,626.7Z"/>
+          <path class="pl-subt" d="M287.5,786.6L293.2,782.4C297.2,779.4 301.3,784.9 304.4,786.7C310.4,790.2 320.2,792.6 326.8,790.1C336.3,786.6 339.1,778.6 329.4,772.9C327.3,771.7 325,771.5 322.8,770.7L299.7,762.6C297.4,761.8 294.5,759.2 292.8,757.4C284.6,748.6 283.2,735.5 291.6,726.1C300.9,715.8 317,713.8 330,716.6C334.3,717.6 357.3,726.1 349,733.4L342.6,738.9C336.9,739.8 333.2,735 328,733C324.5,731.6 320.1,731.6 316.4,731.8C314.1,731.9 310.9,732.2 309.2,733.9L304,738.7L307.9,747.2L337.6,757.4C354.6,763.2 360,784.9 347.2,797.8C336.5,808.6 321.7,809.9 307.2,806.9C301.4,805.7 277.2,794.3 287.5,786.6ZM1077.5,733.4L1069.6,740.7C1063.7,741.9 1063.4,738.4 1058.8,736.2C1056,734.8 1052.4,734.1 1049.2,733.6C1036.5,731.5 1022.5,739.1 1018.4,751.7C1017,755.9 1017,760.6 1017.4,764.9C1018.6,778.4 1031.2,790.4 1044.8,790.7C1052.4,790.8 1066.7,787.4 1066.1,777.3C1065.9,773.5 1062.8,773.1 1062.6,772.5C1062.4,771.8 1062.9,770.9 1062.4,770.2L1043.9,770.2L1043.9,756L1078,756C1079.8,756 1081.8,757.3 1082.5,758.9C1084,762.9 1083.7,787 1081.6,790.5C1079.1,794.7 1074.8,798 1070.8,800.6C1047.6,815.8 1013.9,806.7 1002.8,780.9C1001.8,778.7 1001.4,776.3 1000.8,773.9C999.8,769.7 998.8,765.7 998.8,761.3C998.7,735.8 1019.9,715 1045.2,715.4C1049.2,715.4 1053.4,715.6 1057.2,716.6C1063,718 1075.5,723.6 1078,729.3C1078.6,730.8 1077.9,732 1077.5,733.4ZM454.5,716.8L459.4,717.6C462.9,720.9 464.1,725.5 466.1,729.8L497.2,799C498.7,802.3 498.7,804.7 495.6,806.7L481.7,806.7L472.7,788.6C471.3,785.7 462,786.7 459.2,786.7C454.3,786.7 440.8,785.5 437.1,788.5C431.9,792.9 432.6,802.3 425.6,806.7L415.2,806.7L410.9,804.3L447,722.6C448.2,720 451.1,716.3 454.5,716.8ZM727.9,717.4L769.2,717.4C771.7,717.4 774.1,718.5 776.4,719.1C795.5,724.1 802,744.6 793.2,761.3C791.3,765 787.6,768.8 784,770.9C782.3,771.8 780.1,772.1 778.8,773.7C778,774.8 778.2,775.9 778,777.1L797.3,801L797.5,806.7L779.6,806.7L756.7,777.7C754,774.3 747.7,774.4 745.4,778.5L745.4,802.9C745.4,808.1 733.4,807.3 730.4,806C729.2,805.4 728.7,804.3 727.9,803.3L727.9,717.4ZM943.8,806.7L930,806.7C922.2,802.2 922.7,786.8 913.6,786.8L882.8,786.8L873,806.8L861.3,806.2C859.6,806.2 857.8,805.9 857.6,803.7C857.3,800.9 866,782.8 867.7,779L895.4,717.5L905.7,716.7L944,801.3L943.8,806.7ZM1499.2,717.4L1464.6,791.7C1463.4,794.4 1458.7,804.7 1456.8,806.2C1455.8,807 1454.4,807 1453.2,806.3C1452.6,806 1451.4,804.9 1451.1,804.3L1415.5,726.8C1414.5,724.6 1412.1,722.2 1413.5,719.3C1415.2,715.8 1429.7,717.1 1431.6,721.3L1455.4,772.3L1480.8,717.4L1499.2,717.4ZM1624.6,806.7L1561.4,806.7L1561.4,717.4L1624.4,717.4L1624.4,733.8L1583.6,733.8C1578,733.8 1578.8,739.5 1578.9,743.3C1578.9,746.4 1577.9,752.7 1582.8,752.7L1611.2,752.7C1618,752.7 1618.7,764.4 1616,767.7C1614.9,769.2 1613.5,769 1612,769.6C1611.7,769.8 1611.6,770.2 1611.2,770.2L1578.8,770.2L1578.8,789.5L1624.6,789.5L1624.6,806.7ZM1764,805.6L1713.4,754.2L1711.4,757.7L1711.4,806.7L1694.1,806.7L1694.1,724.5C1694.1,712.2 1701,717.7 1706.5,723.3L1751,768.4L1753.4,764.9L1753.4,717.4L1770.2,717.4L1770.2,806.4L1764,805.6ZM1841.5,717.4L1878.4,717.4C1881.3,717.4 1884.1,718.2 1886.8,718.8C1912.4,724.3 1923.6,752.8 1916.6,776.5C1911,795.2 1893,806.7 1874,806.7L1841.5,806.7L1841.5,717.4ZM1985.7,717.4L2028.4,717.4C2030,717.4 2032.4,718.4 2034,718.8C2046.1,721.7 2052.6,729.4 2054.8,741.4C2055.8,746.6 2055.4,753.2 2052.8,758C2050.3,762.8 2046.6,767.5 2042,770.5C2040.5,771.5 2038.5,772 2037.1,773.3C2036,774.5 2036.2,775.6 2035.9,777L2054.7,801.3C2059.9,808.1 2050.4,806.6 2046.8,806.5C2044.6,806.5 2042.2,806.9 2040,806.3C2038.7,806 2036,804.9 2035.1,803.9L2016.7,779.6C2015.1,777.5 2009.5,774.2 2006.8,775.7L2002.9,777.7L2002.9,806.7L1985.7,806.7L1985.7,717.4ZM2200.4,806.7L2189.6,806.7C2182.1,802.1 2183.1,786.8 2172.8,786.8L2142.7,786.8L2133,806.7L2120.4,806.7C2113.6,806.7 2119,798.3 2120.1,795.8L2155.5,717.4L2161.6,717.4C2165.5,717.4 2171.3,731.2 2172.9,734.5L2197,787.7C2198.3,790.6 2203.7,801.8 2203.3,804.1C2203.1,805.5 2201.4,806.1 2200.4,806.7ZM2435.1,806L2385.5,754.2L2383,758.1L2383,806.7L2365.9,806.7L2365.9,720.9C2365.9,713.9 2373.4,718.6 2375.8,721L2421.8,767.6L2424.7,764.1L2424.7,717.4L2441.9,717.4L2441.9,806.5L2435.1,806ZM2576.6,806.7L2512.6,806.7L2512.6,717.4L2575.8,717.4L2575.8,733.8L2533.6,733.8C2528.8,733.8 2529.9,740.5 2530,743.3C2530,746.2 2529,752.7 2533.6,752.7L2568.7,752.7L2568.7,770.2L2533.2,770.2C2528.9,770.2 2529.2,785.1 2530.8,787.8C2532.9,791.4 2538.1,789.5 2541.2,789.5L2576.6,789.5L2576.6,806.7ZM2797.5,717.4L2836.4,717.4C2839.3,717.4 2842.1,718.2 2844.8,718.8C2846.8,719.3 2849,719.5 2850.8,720.2C2861.8,724.8 2867.1,736.1 2866.8,747.3C2866.7,751.1 2866.5,755.5 2864.8,758.9C2862.6,763.6 2858.6,768.3 2854,770.9C2852.4,771.9 2850.1,772.1 2848.8,773.7C2848,774.6 2848.4,775.5 2848.2,776.6L2867.7,801.4L2867.9,806.7L2849.5,806.7L2827.9,779.7C2826.8,778.4 2825.4,776.9 2823.8,776.1C2821.4,775.1 2814.7,774.5 2814.7,778.5L2814.7,806.7L2797.5,806.7L2797.5,717.4ZM2936.9,717.4L2954,717.4L2954,771.7C2954,774.6 2955.5,777.1 2956.8,779.6C2964.9,793.9 2986.8,795.1 2994.8,780C2995.7,778.5 2997.5,775.9 2997.5,774.1L2997.5,718.1L3014.7,717.2L3014.7,772.9C3014.7,778.2 3012.9,783.1 3010.7,787.7C2997.5,815.7 2953.9,815.2 2940.5,787.7C2938.6,783.8 2936.9,778.5 2936.9,774.1L2936.9,717.4ZM566.1,717.4L583.8,717.4L583.8,798.5C583.8,802.1 584.3,806.7 579.2,806.7L566.1,806.7L566.1,717.4ZM1225.7,806.7L1208.1,806.7L1208.1,770.2L1168.1,770.2L1168.1,806.7L1150.1,806.7L1150.1,740.5C1150.1,736.2 1149.5,723.6 1150.8,720.1C1151.3,718.8 1152.6,718.1 1153.6,717.4L1168,717.4L1168,752.7L1208.6,752.7L1208.6,717.4L1225.7,717.4L1225.7,806.7ZM1288.1,798.2L1321.6,726.2C1322.3,724.7 1322.3,723 1323.2,721.6C1327.8,714.4 1334.1,717.9 1337,724.2L1374.9,806.7L1356,806.7L1348.1,788.4C1346.7,787.7 1345.3,786.9 1343.6,786.6C1339.1,785.8 1320.9,786.1 1316,786.8C1314.5,787 1313.2,787.6 1311.9,788.3L1303.1,806.3L1290.4,806.9C1283.3,807.3 1286.5,801.5 1288.1,798.2ZM2647.8,806.4L2647.8,717.4L2665.4,717.4L2665.4,752.7L2706.2,752.7L2706.2,717.4L2723.6,717.4L2723.6,800.1L2722.2,806.7L2706.1,806.7L2706.1,770.2L2665.4,770.2L2665.4,807.3L2647.8,806.4ZM2002.8,737.3L2002.8,753.7C2002.8,759.3 2008.9,758.9 2012.8,759C2021.3,759.2 2030.1,760.9 2035.6,753.2C2036.3,752.2 2037.8,750.2 2037.8,748.9L2037.8,743.7C2037.8,742.5 2036.4,740.7 2035.6,739.8C2034.3,738.2 2033.1,736.5 2031.2,735.5C2027,733.5 2010.3,732.6 2006,734.3C2004.4,734.9 2003.8,736 2002.8,737.3ZM1858.8,738.9L1858.8,784.9C1858.8,791.4 1876.9,789.6 1880.8,788.9C1894.5,786.2 1901.9,774.2 1901.9,760.9C1901.9,748.1 1892.2,736 1879.2,734.5C1874,733.9 1858.8,731.1 1858.8,738.9ZM2843.7,757L2847.2,753C2848.9,751 2849.3,747.5 2849.1,744.9C2848.2,733 2833.4,733.8 2824.8,733.8C2821.2,733.8 2814.4,733.1 2814.4,738.5L2814.4,756.1C2815.2,757.1 2815.6,758.1 2816.8,758.6C2821.1,760.1 2840.7,760.5 2843.7,757ZM745.6,738.9L745.6,756.1C746.2,757.2 746.5,758.2 747.6,758.8C750,760 753.8,759.3 756.4,759.3C760.7,759.4 765.5,759.8 769.6,758.8C775.4,757.4 780.1,751.3 779.8,745.3C779.2,732.8 765.8,734 756.8,734.3C753.1,734.4 745.6,733.1 745.6,738.9ZM452.2,751.5L444,770.2L466.5,770.2L456.6,748.5L452.2,751.5ZM2155.2,770.2L2170.3,770.2L2162.8,751.3C2158.7,741.1 2151.5,767.5 2151.6,768.1C2152.3,770.3 2153.7,770.2 2155.2,770.2ZM898.5,749.7L889.6,770.2L908,770.2C909,769.6 910,769.8 910.3,768.1C910.7,765.9 903.6,751 901.6,749.7C900.4,748.8 899.7,749.5 898.5,749.7ZM1325.9,755.8L1320.4,768L1324.8,770.2L1336,770.2C1337.1,770.2 1338.1,769.8 1338.2,768.1C1338.6,764.5 1335.8,761.7 1334.6,758.5C1333.5,755.9 1333.7,750.4 1329.6,750.3C1328.4,750.3 1327.4,751.1 1326.8,752.1C1326.2,753.3 1326.4,754.7 1325.9,755.8Z"/>
+        </svg>
+      </div>
+      <p class="pl-sr" role="status">Loading Vardhan Nehru's portfolio</p>
+      <div class="pl-stall" hidden><span>This is taking longer than usual.</span><button type="button" onclick="location.reload()">Reload</button></div>
+    </div>
+    <script>
+      // Drives the loading screen's lifecycle. It opens onto the site only once the site is really ready: the app has
+      // mounted, its fonts are in and the 3D parts have set themselves up behind it (never longer than HOLD_MAX).
+      // The intro story (public/loader/vardhan-loader.js, loaded just below) plays on every full page load (moving
+      // between pages inside the site never shows this screen); reduced motion gets the still mark and opens as soon
+      // as the site is ready.
+      (function () {
+        var el = document.getElementById('preloader');
+        if (!el) return;
+        var root = document.documentElement;
+        root.classList.add('is-loading');
+        var seen = false;
+        try { seen = sessionStorage.getItem('pl-seen') === '1'; sessionStorage.setItem('pl-seen', '1'); } catch (e) {}
+        var reduce = false;
+        try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+        // Without @property the opening from the middle can't animate; fade instead.
+        if (!(window.CSS && CSS.registerProperty)) el.classList.add('pl-nomask');
+        var t0 = performance.now();
+        var MIN = seen ? 350 : 900;
+        // Shared with the story script. story: it should play; storyStarted / storyDone: set by it; target: real
+        // loading progress, 0–100, raised at each milestone below (the thread unwinds onto the bar by it); loaded:
+        // the page's load event; ready: the site is up (target 100).
+        // (#pl-at=… in the address is a review aid: the story script pins one moment and the screen stays up.)
+        var pinned = /pl-at=/.test(location.hash);
+        var pl = window.__pl = { story: !reduce || pinned, pinned: pinned, storyStarted: false, storyDone: false, target: 6, loaded: false, ready: false, finished: false, t0: t0, check: check };
+        function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+        function bump(v) { if (v > pl.target) pl.target = v; }
+
+        document.addEventListener('DOMContentLoaded', function () { bump(22); });
+        window.addEventListener('load', function () { pl.loaded = true; bump(50); check(); });
+        // The 3D parts (the traffic light, the pencil, the remote, the certificate drawer) set themselves up behind
+        // this screen and register a promise in window.__loaderHolds (holdLoader in components/ui/siteReady.ts). Wait
+        // for every one, including ones registered while waiting, so the page shows with nothing heavy left to do
+        // and the opening plays smoothly. Never longer than HOLD_MAX.
+        var HOLD_MAX = 1600;
+        function settleHolds() {
+          var holds = window.__loaderHolds || [];
+          var n = holds.length;
+          return Promise.all(holds).then(function () {
+            if ((window.__loaderHolds || []).length !== n) return settleHolds();
+          });
+        }
+        var mounted = false;
+        window.addEventListener('app:mounted', function () {
+          mounted = true;
+          bump(66);
+          var stall = el.querySelector('.pl-stall');
+          if (stall) stall.hidden = true;
+          Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), wait(1800)]).then(function () {
+            bump(82);
+            // (A short pause first, so parts that load a moment after the app have registered.)
+            return Promise.race([wait(250).then(settleHolds), wait(HOLD_MAX)]);
+          }).then(function () {
+            // Two frames, so the app's first paint is done before the screen opens.
+            requestAnimationFrame(function () { requestAnimationFrame(function () { pl.ready = true; bump(100); check(); }); });
+          });
+        }, { once: true });
+        // If the site hasn't even started after 8 s (a script failed to download, say), say so and offer a reload
+        // instead of opening onto a blank page. It carries on by itself if the app turns up after all.
+        setTimeout(function () {
+          if (mounted) { pl.ready = true; bump(100); check(); return; }
+          var stall = el.querySelector('.pl-stall');
+          if (stall) stall.hidden = false;
+        }, 8000);
+
+        // The story ends a moment after the site is ready (the last of the thread reaches the bar, then the name
+        // rises), but never more than STORY_AFTER past that; if the story script hasn't started within a second
+        // and a half (failed or slow), it isn't waited for.
+        var STORY_AFTER = 2600, readyAt = 0;
+        function check() {
+          if (pl.finished || !pl.ready || pl.pinned) return;
+          var now = performance.now(), t = now - t0;
+          if (!readyAt) readyAt = now;
+          if (t < MIN) return;
+          var storyOk = !pl.story || pl.storyDone || (!pl.storyStarted && t > 1500) || now - readyAt > STORY_AFTER;
+          if (storyOk) finish();
+        }
+        setInterval(function () { if (!pl.finished) check(); }, 120);
+
+        function finish() {
+          pl.finished = true;
+          el.classList.add('pl-out');
+          root.classList.remove('is-loading');
+          window.__siteReady = true;
+          // (Marked for performance measurements: when the screen opened.)
+          try { performance.mark('site-ready'); } catch (e) {}
+          // The story's dots fly outward as it opens.
+          window.dispatchEvent(new Event('pl:finish'));
+          // The name starts rising as the opening reaches it.
+          setTimeout(function () { window.dispatchEvent(new Event('site:ready')); }, 280);
+          setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 1100);
+        }
+      })();
+    </script>
+    <script src="/loader/vardhan-loader.js" async></script>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

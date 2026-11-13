@@ -1,0 +1,36 @@
+/* The waving flag (WavingFlag.tsx). */
+
+.wf {
+  display: block;
+  width: 40px;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
+}
+
+.wf-pole { fill: #cfc8dc; }
+.wf-knob { fill: #fed141; }
+
+.wf-strip {
+  animation: wf-wave 1.5s ease-in-out infinite;
+}
+@keyframes wf-wave {
+  0%, 100% { transform: translateY(calc(var(--amp) * -1)); }
+  50% { transform: translateY(var(--amp)); }
+}
+
+/* Light and shade in the folds, in step with each strip. */
+.wf-shade {
+  fill: #000;
+  opacity: 0;
+  animation: wf-shade 1.5s ease-in-out infinite;
+}
+@keyframes wf-shade {
+  0%, 100% { opacity: 0.16; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wf-strip,
+  .wf-shade { animation: none; }
+}

@@ -1,0 +1,408 @@
+{
+  "summary": {
+    "webAnimations": 24,
+    "cssDeclarations": 28,
+    "scrollTargets": 4,
+    "cdpAnimations": 61,
+    "canvases": 1
+  },
+  "namedAnimations": [
+    "rise",
+    "pulse",
+    "bob",
+    "blink"
+  ],
+  "scrollTriggeredElements": 4,
+  "representativeAnimations": [
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "div.side.side-jerry",
+      "targetRect": {
+        "x": 960,
+        "y": 530.03125,
+        "width": 495,
+        "height": 369.953125,
+        "top": 530.03125,
+        "right": 1455,
+        "bottom": 899.984375,
+        "left": 960
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "backgroundColor": "rgba(12, 122, 109, 0.08)",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 700,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1406.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1408.609375,
+        "bottom": 575.98388671875,
+        "left": 1406.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "2px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "13.6px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1406.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1408.609375,
+        "bottom": 575.98388671875,
+        "left": 1406.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "0.35",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "1",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1410.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1412.609375,
+        "bottom": 575.98388671875,
+        "left": 1410.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "2px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "13.6px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1410.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1412.609375,
+        "bottom": 575.98388671875,
+        "left": 1410.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "0.35",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "1",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1414.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1416.609375,
+        "bottom": 575.98388671875,
+        "left": 1414.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "2px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "13.6px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1414.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1416.609375,
+        "bottom": 575.98388671875,
+        "left": 1414.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "0.35",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "1",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1418.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1420.609375,
+        "bottom": 575.98388671875,
+        "left": 1418.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "2px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "13.6px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1418.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1420.609375,
+        "bottom": 575.98388671875,
+        "left": 1418.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "0.35",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "opacity": "1",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    },
+    {
+      "type": "CSSTransition",
+      "playState": "running",
+      "animationName": null,
+      "targetSelector": "i",
+      "targetRect": {
+        "x": 1422.609375,
+        "y": 566.35986328125,
+        "width": 2,
+        "height": 9.6240234375,
+        "top": 566.35986328125,
+        "right": 1424.609375,
+        "bottom": 575.98388671875,
+        "left": 1422.609375
+      },
+      "keyframes": [
+        {
+          "offset": 0,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "2px",
+          "computedOffset": 0
+        },
+        {
+          "offset": 1,
+          "easing": "linear",
+          "composite": "auto",
+          "height": "13.6px",
+          "computedOffset": 1
+        }
+      ],
+      "timing": {
+        "duration": 400,
+        "delay": 0,
+        "iterations": 1,
+        "easing": "cubic-bezier(0.33, 0, 0.15, 1)",
+        "direction": "normal"
+      }
+    }
+  ]
+}

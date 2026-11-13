@@ -1,0 +1,169 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "Hoefler Text",
+      "fontSize": "64.8px",
+      "fontWeight": "400",
+      "lineHeight": "67.392px",
+      "letterSpacing": "-1.4256px",
+      "color": "#0E1523",
+      "sampleText": "Hiring begins with a conversation, not a form."
+    },
+    {
+      "role": "heading",
+      "fontFamily": "Hoefler Text",
+      "fontSize": "33.6px",
+      "fontWeight": "400",
+      "lineHeight": "53.76px",
+      "letterSpacing": "-0.504px",
+      "color": "#0E1523",
+      "sampleText": "Be first through the door."
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Hoefler Text",
+      "fontSize": "22.4px",
+      "fontWeight": "400",
+      "lineHeight": "35.84px",
+      "letterSpacing": "-0.224px",
+      "color": "#0E1523",
+      "sampleText": "Talk to Tom if you're looking for a role."
+    },
+    {
+      "role": "body",
+      "fontFamily": "system-ui",
+      "fontSize": "22.4px",
+      "fontWeight": "400",
+      "lineHeight": "33.6px",
+      "letterSpacing": "normal",
+      "color": "#3A4557",
+      "sampleText": "Tom is your AI career coach. Jerry is your AI hiring partner"
+    },
+    {
+      "role": "label",
+      "fontFamily": "ui-monospace",
+      "fontSize": "13.44px",
+      "fontWeight": "700",
+      "lineHeight": "22.176px",
+      "letterSpacing": "normal",
+      "color": "#B45F09",
+      "sampleText": "Tom"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      1,
+      6,
+      8,
+      9,
+      10,
+      12,
+      14,
+      16,
+      18,
+      22,
+      24,
+      30,
+      32
+    ],
+    "baseUnit": 8
+  },
+  "radius": [
+    "3px"
+  ],
+  "shadows": [
+    {
+      "value": "rgba(14, 21, 35, 0.063) 0px 1px 2px 0px, rgba(14, 21, 35, 0.12) 0px 24px 56px -20px",
+      "count": 1
+    }
+  ],
+  "buttons": [
+    {
+      "label": "Notify me",
+      "background": "#0E1523",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#F5F7F9",
+      "padding": "11.52px 21.6px",
+      "borderRadius": "3px",
+      "border": "1px solid rgb(14, 21, 35)",
+      "boxShadow": "none",
+      "fontSize": "17.6px",
+      "fontWeight": "600",
+      "height": "53.1719px"
+    }
+  ],
+  "cards": [
+    {
+      "label": "card",
+      "background": "#FFFFFF",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#0E1523",
+      "padding": "32px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(14, 21, 35)",
+      "boxShadow": "none",
+      "fontSize": "17.6px",
+      "fontWeight": "400",
+      "height": "332.734px"
+    }
+  ],
+  "nav": {
+    "label": "navigation",
+    "background": "transparent",
+    "backgroundImage": "",
+    "backdropFilter": "",
+    "color": "#0E1523",
+    "padding": "28px 0px",
+    "borderRadius": "0px",
+    "border": "0px none rgb(14, 21, 35)",
+    "boxShadow": "none",
+    "fontSize": "17.6px",
+    "fontWeight": "400",
+    "height": "91.8438px"
+  },
+  "chips": [
+    {
+      "label": "Tom",
+      "background": "transparent",
+      "color": "#B45F09",
+      "padding": "0px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(180, 95, 9)",
+      "boxShadow": "none",
+      "fontSize": "13.44px",
+      "fontWeight": "700",
+      "height": "44.3438px"
+    },
+    {
+      "label": "You",
+      "background": "transparent",
+      "color": "#5C6675",
+      "padding": "0px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(92, 102, 117)",
+      "boxShadow": "none",
+      "fontSize": "13.44px",
+      "fontWeight": "700",
+      "height": "22.1719px"
+    },
+    {
+      "label": "Jerry",
+      "background": "transparent",
+      "color": "#0C7A6D",
+      "padding": "0px",
+      "borderRadius": "0px",
+      "border": "0px none rgb(12, 122, 109)",
+      "boxShadow": "none",
+      "fontSize": "13.44px",
+      "fontWeight": "700",
+      "height": "22.1719px"
+    }
+  ],
+  "statCells": [],
+  "tabs": [],
+  "backgrounds": [],
+  "glass": []
+}

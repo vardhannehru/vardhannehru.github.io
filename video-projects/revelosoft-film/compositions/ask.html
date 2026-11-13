@@ -1,0 +1,201 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #ebdefc;
+    }
+    #ask-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+    /* The real ReveloSoft Assistant panel (revelosoft.com), rebuilt from its measured styles at 1.9x. */
+    #ask-panel {
+      position: absolute;
+      left: 150px;
+      top: 250px;
+      width: 730px;
+      height: 560px;
+      border-radius: 30px;
+      overflow: hidden;
+      background: #171717;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 50px 90px -40px rgba(52, 21, 95, 0.7);
+      font-family: 'Inter', sans-serif;
+      color: #f8fafc;
+    }
+    #ask-panel .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 138px;
+      padding: 0 44px;
+      background: linear-gradient(to right, rgba(30, 58, 138, 0.6), rgba(0, 0, 0, 0));
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      font-size: 34px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    #ask-panel .head .x {
+      font-size: 46px;
+      font-weight: 400;
+    }
+    #ask-panel .body {
+      height: 284px;
+      padding: 34px 30px;
+      background: linear-gradient(to right bottom, rgba(35, 36, 73, 0.376), rgba(15, 15, 24, 0.44), rgba(25, 25, 50, 0.4));
+    }
+    #ask-bubble {
+      width: 566px;
+      padding: 22px 26px;
+      border-radius: 30px 30px 36px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(96, 165, 250, 0.1);
+      font-size: 28px;
+      line-height: 1.45;
+      color: #ffffff;
+    }
+    #ask-panel .form {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      height: 138px;
+      padding: 0 30px;
+      border-top: 2px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(to top, rgba(23, 37, 84, 0.1), rgba(0, 0, 0, 0));
+    }
+    #ask-input {
+      position: relative;
+      flex: 1;
+      height: 76px;
+      border-radius: 22px;
+      background: #ffffff;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      font-size: 28px;
+      color: #0e1523;
+    }
+    #ask-placeholder {
+      position: absolute;
+      left: 24px;
+      color: #9ca3af;
+    }
+    #ask-caret {
+      display: inline-block;
+      width: 3px;
+      height: 34px;
+      margin-left: 2px;
+      background: #0e1523;
+    }
+    #ask-send {
+      width: 152px;
+      height: 76px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(to right top, #3b82f6, #a855f7, #2563eb);
+      font-size: 30px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    #ask-kicker {
+      position: absolute;
+      left: 1000px;
+      top: 330px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: 0.16em;
+      color: #743bbe;
+    }
+    #ask-title {
+      position: absolute;
+      left: 996px;
+      top: 384px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: 104px;
+      line-height: 1;
+      letter-spacing: -0.035em;
+      color: #0e1523;
+    }
+    #ask-title .w {
+      display: inline-block;
+      margin-right: 0.22em;
+    }
+    #ask-sub {
+      position: absolute;
+      left: 1000px;
+      top: 530px;
+      width: 760px;
+      font-family: 'Inter', sans-serif;
+      font-size: 40px;
+      line-height: 1.35;
+      color: #3a4557;
+    }
+    #ask-cursor {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 64px;
+      height: 64px;
+    }
+    #ask-iris {
+      position: absolute;
+      inset: 0;
+      background: #b1e4e3;
+      clip-path: circle(0px at 774px 741px);
+    }
+  </style>
+  <div id="root" data-composition-id="ask" data-width="1920" data-height="1080">
+    <div id="ask-grain"></div>
+    <p id="ask-kicker">REVELOSOFT · RAG CHATBOT</p>
+    <h1 id="ask-title"><span class="w">Ask</span><span class="w">ReveloSoft.</span></h1>
+    <p id="ask-sub">The website's assistant answers from the company's own content.</p>
+
+    <div id="ask-panel">
+      <div class="head"><span>ReveloSoft Assistant</span><span class="x">×</span></div>
+      <div class="body">
+        <div id="ask-bubble"><span class="txt">Hi! I'm the ReveloSoft assistant. Ask me about our services, products, training, or how to talk to the team.</span></div>
+      </div>
+      <div class="form">
+        <div id="ask-input"><span id="ask-placeholder">Type your message...</span><span class="txt q">What AI training do you offer?</span><span id="ask-caret"></span></div>
+        <div id="ask-send">Send</div>
+      </div>
+    </div>
+
+    <svg id="ask-cursor" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M6 3 L6 25 L11.5 19.8 L15.2 28 L19 26.3 L15.4 18.4 L23 18.2 Z" fill="#0e1523" stroke="#ffffff" stroke-width="2" stroke-linejoin="round" />
+    </svg>
+    <div id="ask-iris"></div>
+  </div>
+  <script>
+    (function () {
+      document.querySelectorAll('#ask-panel .txt').forEach((el) => {
+        el.innerHTML = el.textContent.replace(/\S/g, (c) => '<span class="ch">' + c + '</span>');
+      });
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#ask-panel', { y: 160, opacity: 0, filter: 'blur(14px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, ease: 'expo.out' }, 0);
+      tl.fromTo('#ask-kicker', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, 0.3);
+      tl.fromTo('#ask-title .w', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.16, ease: 'power4.out', stagger: 0.08 }, 0.4);
+      tl.fromTo('#ask-sub', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, 0.7);
+      // The greeting appears as the bot "writes" it.
+      tl.fromTo('#ask-bubble .ch', { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: 0.012 }, 0.55);
+      // A visitor types a question.
+      tl.to('#ask-placeholder', { opacity: 0, duration: 0.05 }, 1.75);
+      tl.fromTo('#ask-input .q .ch', { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: 0.035 }, 1.8);
+      // The cursor comes in and clicks Send; the click opens onto the pipeline.
+      tl.fromTo('#ask-cursor', { x: 1300, y: 1120 }, { x: 762, y: 735, duration: 0.6, ease: 'power3.out' }, 2.7);
+      tl.to('#ask-cursor', { scale: 0.82, duration: 0.08, ease: 'power2.in' }, 3.35);
+      tl.to('#ask-send', { scale: 0.93, duration: 0.08, ease: 'power2.in' }, 3.35);
+      tl.to('#ask-cursor', { scale: 1, duration: 0.12, ease: 'power2.out' }, 3.43);
+      tl.to('#ask-send', { scale: 1, duration: 0.12, ease: 'power2.out' }, 3.43);
+      tl.to('#ask-iris', { clipPath: 'circle(2300px at 774px 741px)', duration: 0.5, ease: 'power3.in' }, 3.5);
+      window.__timelines['ask'] = tl;
+    })();
+  </script>
+</template>

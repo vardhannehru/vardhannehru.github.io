@@ -1,0 +1,215 @@
+/*
+ * Light theme contact section (PixelContact.tsx): a pixel arcade on a fine grid, in the pastel swatches:
+ *   Soft Lavender #EBDEFC (page) / ink #743BBE, Summer Green #B1E4E3 / ink #08746B, Limencello #FED141 / ink #3F260C,
+ *   body text #2A1650.
+ * Everything is centred. Sizes in container units (cqw: hundredths of the section's width).
+ */
+
+.px-stage {
+  --yellow: #fed141;
+  --yellow-ink: #3f260c;
+  --lav: #ebdefc;
+  --lav-ink: #743bbe;
+  --green: #b1e4e3;
+  --green-ink: #08746b;
+  --ink: #2a1650;
+  --stage-w: min(94vw, 1280px);
+  container-type: inline-size;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: var(--stage-w);
+  margin-inline: calc((100% - var(--stage-w)) / 2);
+  padding: clamp(56px, 8cqw, 112px) clamp(16px, 4cqw, 56px) clamp(56px, 8cqw, 112px);
+  /* Fine graph-paper grid, fading out at the edges */
+  background-image:
+    linear-gradient(rgba(116, 59, 190, 0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(116, 59, 190, 0.11) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center center;
+  -webkit-mask-image: radial-gradient(ellipse 75% 85% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 85% at 50% 50%, #000 55%, transparent 100%);
+}
+
+/* ---------- Text ---------- */
+
+.px-title {
+  margin: 0;
+  font: 400 clamp(30px, 6.6cqw, 84px) / 1.1 'Press Start 2P', ui-monospace, monospace;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+  /* A hard pixel shadow in Limencello, then ink, like an arcade title */
+  text-shadow:
+    0.07em 0.07em 0 var(--yellow),
+    0.12em 0.12em 0 var(--lav-ink);
+}
+
+/* ---------- The lane ---------- */
+
+.px-lane {
+  position: relative;
+  width: min(100%, 860px);
+  height: clamp(54px, 6.4cqw, 76px);
+  margin: clamp(44px, 6.4cqw, 84px) 0 clamp(30px, 4.6cqw, 56px);
+  touch-action: pan-y;
+}
+/* The rails above and below, like the maze walls */
+.px-lane::before,
+.px-lane::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--lav-ink) 0 8px, transparent 8px 12px);
+  opacity: 0.55;
+}
+.px-lane::before { top: -10px; }
+.px-lane::after { bottom: -10px; }
+
+.px-dots { position: absolute; inset: 0; }
+.px-dot {
+  position: absolute;
+  top: 50%;
+  width: clamp(6px, 0.62cqw, 8px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: var(--ink);
+  transition: opacity 0.4s steps(3);
+}
+.px-dot.is-eaten { opacity: 0; transition: none; }
+
+.px-sprite {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: clamp(48px, 5.6cqw, 68px);
+  aspect-ratio: 1;
+  margin-top: calc(clamp(48px, 5.6cqw, 68px) / -2);
+  transform-origin: center;
+}
+.px-sprite svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sprite colours */
+.px-o { fill: var(--ink); }
+.px-pac { fill: var(--yellow); }
+.px-ghost { fill: var(--lav-ink); transition: fill 0.2s steps(2); }
+.px-white { fill: #fff; }
+.px-hair { fill: var(--ink); }
+.px-mouth { fill: #7a1f2b; }
+.px-pupil { fill: var(--ink); }
+.px-red { fill: #e5484d; }
+.px-stem { fill: var(--green-ink); }
+
+/* Pac-Man: three frames, chomping only while he moves */
+.px-pacman { z-index: 3; cursor: pointer; }
+/* (switched off) the pixel face, drawn 1.25× the Pac-Man box */
+.px-pacman.px-pixface { width: calc(clamp(48px, 5.6cqw, 68px) * 1.25); margin-top: calc(clamp(48px, 5.6cqw, 68px) * -0.625); }
+.px-body { position: absolute; inset: 0; transform-origin: 50% 85%; will-change: transform; }
+/* (switched off) The exact portrait as the player: taller than wide (1827 × 2379 in its own units), kept inside the rails */
+.px-pacman.px-face { width: clamp(42px, 4.7cqw, 58px); aspect-ratio: 1827 / 2379; margin-top: calc(clamp(42px, 4.7cqw, 58px) * -0.651); }
+.px-pacman.px-face svg { visibility: visible; overflow: visible; }
+.px-face-mouth { fill: #4a1222; }
+.px-pacman svg { visibility: hidden; }
+.px-pacman svg:first-child { visibility: visible; }
+.px-pacman.is-moving svg:nth-child(1) { animation: px-f1 0.24s steps(1) infinite; }
+.px-pacman.is-moving svg:nth-child(2) { animation: px-f2 0.24s steps(1) infinite; }
+.px-pacman.is-moving svg:nth-child(3) { animation: px-f3 0.24s steps(1) infinite; }
+@keyframes px-f1 { 0% { visibility: visible; } 25%, 100% { visibility: hidden; } }
+@keyframes px-f2 { 0%, 24.9% { visibility: hidden; } 25% { visibility: visible; } 50%, 74.9% { visibility: hidden; } 75% { visibility: visible; } 100% { visibility: hidden; } }
+@keyframes px-f3 { 0%, 49.9% { visibility: hidden; } 50% { visibility: visible; } 75%, 100% { visibility: hidden; } }
+
+/* The ghost bobs a little; scared, it turns blue and flickers */
+.px-ghost-wrap { z-index: 2; }
+.px-ghost-wrap svg { animation: px-bob 0.5s steps(2) infinite; }
+@keyframes px-bob {
+  50% { translate: 0 -6%; }
+}
+.px-ghost-wrap.is-scared .px-ghost { fill: #4d6bff; }
+.px-ghost-wrap.is-scared .px-pupil { fill: #fff; }
+.px-ghost-wrap.is-scared svg { animation: px-bob 0.5s steps(2) infinite, px-scared 0.3s steps(1) infinite; }
+@keyframes px-scared {
+  50% { opacity: 0.55; }
+}
+
+/* The cherry, gently bouncing until it's eaten */
+.px-cherry { z-index: 1; }
+.px-cherry svg { animation: px-bounce 0.9s steps(2) infinite; }
+@keyframes px-bounce {
+  50% { translate: 0 -8%; }
+}
+.px-cherry.is-eaten { visibility: hidden; }
+
+/* ---------- Contact links: chunky pixel buttons, centred ---------- */
+
+.px-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(12px, 1.6cqw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.px-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.95em 1.25em;
+  font: 400 clamp(9px, 0.95cqw, 12px) / 1 'Press Start 2P', ui-monospace, monospace;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: #fff;
+  border: 3px solid var(--ink);
+  /* Stepped pixel corners and a hard drop shadow */
+  clip-path: polygon(
+    0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
+    calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
+    100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px),
+    calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
+    6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
+  );
+  box-shadow: inset -4px -4px 0 rgba(42, 22, 80, 0.14);
+  transition: transform 0.12s steps(2), background-color 0.12s steps(2);
+}
+/* The email as the main button, in Limencello */
+.px-links li:first-child .px-btn { background: var(--yellow); }
+.px-btn-icon { width: 1.9em; height: 1.9em; flex: none; }
+.px-btn:hover,
+.px-btn:focus-visible {
+  transform: translateY(-3px);
+  background: var(--green);
+  color: var(--green-ink);
+}
+.px-links li:first-child .px-btn:hover,
+.px-links li:first-child .px-btn:focus-visible { background: #fff; color: var(--ink); }
+.px-btn:active { transform: translateY(1px); }
+.px-btn:focus-visible { outline: 3px solid var(--lav-ink); outline-offset: 4px; }
+
+/* ---------- Narrow screens ---------- */
+
+@container (max-width: 560px) {
+  .px-title { font-size: 9.4cqw; }
+  .px-sprite { width: 11cqw; margin-top: -5.5cqw; }
+  .px-pacman.px-pixface { width: 13.75cqw; margin-top: -6.875cqw; }
+  .px-pacman.px-face { width: 10cqw; margin-top: -6.51cqw; }
+  .px-lane { height: 13cqw; }
+  .px-btn { font-size: 2.6cqw; }
+  .px-links { flex-direction: column; align-items: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-pacman.is-moving svg,
+  .px-ghost-wrap svg,
+  .px-ghost-wrap.is-scared svg,
+  .px-cherry svg { animation: none; }
+  .px-pacman.is-moving svg:first-child { visibility: visible; }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Vardhan Nehru — AI Engineer",
+  "short_name": "Vardhan",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#EBDEFC",
+  "theme_color": "#743BBE",
+  "icons": [
+    { "src": "/favicon/favicon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

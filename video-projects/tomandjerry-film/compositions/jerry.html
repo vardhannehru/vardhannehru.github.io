@@ -1,0 +1,245 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #b1e4e3;
+    }
+    #jerry-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+    .jerry-card {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 2px 4px rgba(14, 21, 35, 0.06), 0 30px 60px -24px rgba(8, 116, 107, 0.5);
+    }
+    .jerry-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+    #jerry-pane {
+      left: 930px;
+      top: 190px;
+      width: 860px;
+      height: 440px;
+      padding: 34px 40px;
+    }
+    #jerry-pane-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 28px;
+      padding-bottom: 26px;
+      border-bottom: 2px solid #dfe4eb;
+    }
+    #jerry-pane-head .who {
+      color: #0c7a6d;
+    }
+    #jerry-pane-head .for {
+      color: #5c6675;
+      margin-left: 14px;
+    }
+    #jerry-pane-head .dots {
+      color: #c9d1da;
+    }
+    .jerry-msg {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      margin-top: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 31px;
+      line-height: 1.45;
+      color: #0e1523;
+    }
+    .jerry-msg .lab {
+      font-weight: 700;
+    }
+    #jerry-q .lab {
+      color: #0c7a6d;
+    }
+    #jerry-a .lab {
+      color: #5c6675;
+    }
+    #jerry-cursor {
+      display: inline-block;
+      width: 16px;
+      height: 36px;
+      vertical-align: -6px;
+      background: #0c7a6d;
+    }
+    #jerry-caption {
+      position: absolute;
+      left: 934px;
+      top: 700px;
+      font-family: 'EB Garamond', serif;
+      font-size: 72px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #063f3a;
+    }
+    #jerry-caption .w {
+      display: inline-block;
+      margin-right: 0.22em;
+    }
+    .jerry-label {
+      font-size: 28px;
+      color: #0c7a6d;
+    }
+    #jerry-brief {
+      left: 90px;
+      top: 70px;
+      width: 420px;
+      height: 420px;
+      padding: 34px;
+    }
+    #jerry-brief .line {
+      height: 14px;
+      border-radius: 7px;
+      background: #dfe4eb;
+      margin-top: 18px;
+    }
+    #jerry-brief .ttl {
+      margin-top: 24px;
+      font-family: 'EB Garamond', serif;
+      font-size: 44px;
+      line-height: 1.05;
+      color: #0e1523;
+    }
+    #jerry-brief .send {
+      position: absolute;
+      left: 34px;
+      bottom: 30px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: #0e1523;
+    }
+    #jerry-list {
+      left: 520px;
+      top: 300px;
+      width: 390px;
+      height: 360px;
+      padding: 30px 34px;
+    }
+    .jerry-row {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: #0e1523;
+    }
+    .jerry-bar {
+      position: relative;
+      height: 18px;
+      border-radius: 9px;
+      background: #eef1f5;
+      margin-top: 8px;
+    }
+    .jerry-bar b {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 9px;
+      background: #0c7a6d;
+      transform-origin: 0 50%;
+    }
+    #jerry-sum {
+      left: 90px;
+      top: 590px;
+      width: 400px;
+      height: 230px;
+      padding: 30px 34px;
+    }
+    #jerry-sum .ok {
+      margin-top: 22px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      color: #0e1523;
+    }
+    #jerry-sum .ok span {
+      color: #0c7a6d;
+      margin-right: 10px;
+    }
+    #jerry-flood {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: #ebdefc;
+      opacity: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="jerry" data-width="1920" data-height="1080">
+    <div id="jerry-grain"></div>
+
+    <div id="jerry-pane" class="jerry-card">
+      <div id="jerry-pane-head" class="jerry-mono"><span><span class="who">JERRY</span><span class="for">FOR COMPANIES</span></span><span class="dots" data-layout-ignore>•••</span></div>
+      <div id="jerry-q" class="jerry-msg"><span class="lab">Jerry</span><span class="txt">What does great look like in this role after ninety days?</span></div>
+      <div id="jerry-a" class="jerry-msg"><span class="lab">You</span><span><span id="jerry-cursor"></span></span></div>
+    </div>
+    <p id="jerry-caption"><span class="w" style="color: #0c7a6d">Jerry</span><span class="w">—</span><span class="w">your</span><span class="w">AI</span><span class="w">hiring</span><span class="w">partner.</span></p>
+
+    <div id="jerry-brief" class="jerry-card">
+      <p class="jerry-label jerry-mono">ROLE BRIEF</p>
+      <p class="ttl">Describe the role out loud.</p>
+      <div class="line" style="width: 90%"></div>
+      <div class="line" style="width: 72%"></div>
+      <div class="line" style="width: 84%"></div>
+      <div class="line" style="width: 60%"></div>
+      <p class="send">Get a written brief back →</p>
+    </div>
+
+    <div id="jerry-list" class="jerry-card">
+      <p class="jerry-label jerry-mono">SHORTLIST</p>
+      <div class="jerry-row"><span>1</span><div>Candidate A<div class="jerry-bar" data-layout-ignore><b style="width: 94%"></b></div></div></div>
+      <div class="jerry-row"><span>2</span><div>Candidate B<div class="jerry-bar" data-layout-ignore><b style="width: 81%"></b></div></div></div>
+      <div class="jerry-row"><span>3</span><div>Candidate C<div class="jerry-bar" data-layout-ignore><b style="width: 66%"></b></div></div></div>
+      <div id="jerry-flood"></div>
+    </div>
+
+    <div id="jerry-sum" class="jerry-card">
+      <p class="jerry-label jerry-mono">SCREENING</p>
+      <p class="ok"><span>✓</span>Screening handled up front.</p>
+    </div>
+  </div>
+  <script>
+    (function () {
+      document.querySelectorAll('#jerry-pane .txt').forEach((el) => {
+        el.innerHTML = el.textContent.replace(/\S/g, (c) => '<span class="ch">' + c + '</span>');
+      });
+      const tl = gsap.timeline({ paused: true });
+      // Arrives already moving, from the whip.
+      tl.fromTo('#jerry-pane', { x: 620, opacity: 0, filter: 'blur(18px)' }, { x: 0, opacity: 1, filter: 'blur(0px)', duration: 0.55, ease: 'expo.out' }, 0);
+      tl.fromTo('#jerry-pane-head', { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.25);
+      tl.fromTo('#jerry-q .lab', { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.45);
+      tl.fromTo('#jerry-q .ch', { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: 0.022 }, 0.52);
+      tl.fromTo('#jerry-a .lab', { opacity: 0 }, { opacity: 1, duration: 0.15 }, 1.75);
+      tl.fromTo('#jerry-cursor', { opacity: 0 }, { opacity: 1, duration: 0.01 }, 1.8);
+      tl.to('#jerry-cursor', { opacity: 0, duration: 0.01, repeat: 7, yoyo: true, repeatDelay: 0.24 }, 2.1);
+      tl.fromTo('#jerry-caption .w', { opacity: 0, filter: 'blur(6px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.16, ease: 'power4.out', stagger: 0.07 }, 0.75);
+
+      // Jerry's outputs land from the left.
+      tl.fromTo('#jerry-brief', { x: -340, rotate: -8, opacity: 0, filter: 'blur(12px)' }, { x: 0, rotate: 4, opacity: 1, filter: 'blur(0px)', duration: 0.65, ease: 'expo.out' }, 1.05);
+      tl.fromTo('#jerry-list', { x: -340, rotate: -10, opacity: 0, filter: 'blur(12px)' }, { x: 0, rotate: -3, opacity: 1, filter: 'blur(0px)', duration: 0.65, ease: 'expo.out' }, 1.5);
+      tl.fromTo('.jerry-bar b', { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: 'power3.out', stagger: 0.12 }, 1.85);
+      tl.fromTo('#jerry-sum', { x: -340, rotate: -6, opacity: 0, filter: 'blur(12px)' }, { x: 0, rotate: 2, opacity: 1, filter: 'blur(0px)', duration: 0.65, ease: 'expo.out' }, 2.0);
+
+      // The shortlist becomes the world: it grows past the frame and its card turns lavender.
+      tl.to('#jerry-pane, #jerry-caption, #jerry-brief, #jerry-sum', { opacity: 0, filter: 'blur(15px)', duration: 0.3, ease: 'power2.in' }, 3.75);
+      tl.to('#jerry-list', { x: 300, y: -12, rotate: 0, scale: 5.2, borderRadius: 0, duration: 0.65, ease: 'power2.inOut' }, 3.8);
+      tl.to('#jerry-flood', { opacity: 1, duration: 0.35, ease: 'power2.in' }, 3.95);
+      window.__timelines['jerry'] = tl;
+    })();
+  </script>
+</template>
