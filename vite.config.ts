@@ -19,6 +19,23 @@ export default defineConfig(({ mode }) => {
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
       },
       assetsInclude: ['**/*.glb'],
+      build: {
+        rollupOptions: {
+          output: {
+            // The big libraries in their own files, so the browser downloads them side by side with the site's
+            // code, and they stay cached when only the site's code changes. (Packaging only: the same code runs.)
+            manualChunks(id) {
+              if (!id.includes('node_modules')) return undefined;
+              if (/node_modules[\\/]three[\\/]/.test(id)) return 'vendor-three';
+              if (/node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return 'vendor-react';
+              if (/node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/.test(id)) return 'vendor-motion';
+              if (/node_modules[\\/]gsap[\\/]/.test(id)) return 'vendor-gsap';
+              if (/node_modules[\\/](react-router|react-router-dom)[\\/]/.test(id)) return 'vendor-router';
+              return undefined;
+            },
+          },
+        },
+      },
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
