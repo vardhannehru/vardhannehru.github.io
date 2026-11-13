@@ -1,68 +1,49 @@
 // Builds the tab icon (favicon) and app icons from the face portrait: no wording, just the face.
 // Run from the project root:  node scripts/make-favicon.mjs
 //
-// The portrait is white face + black line art on transparency. On its own it vanishes on a white tab
-// (white face) and on a dark tab (black hair), so it sits on a violet badge (--accent, #743BBE).
-//
-// Writes:
-//   public/favicon.ico                    16 / 32 / 48, PNG-in-ICO (browsers ask for /favicon.ico on their own)
-//   public/favicon/favicon-{16,32,48}.png round badge, tab sizes (slightly sharpened so the eyes survive)
-//   public/favicon/favicon-{192,512}.png  round badge, for the web manifest
-//   public/favicon/maskable-512.png       full-bleed square, face inside the 80% safe zone (Android crops it)
-//   public/favicon/apple-touch-icon.png   180, full-bleed square (iOS rounds the corners itself; no transparency)
+//   Tab icon (browsers): the face alone on a transparent background, cropped square with a little room round it.
+//     public/favicon.ico                    16 / 32 / 48, PNG-in-ICO (browsers ask for /favicon.ico on their own)
+//     public/favicon/favicon-{16,32,48}.png tab sizes
+//     public/favicon/favicon-{192,512}.png  for the web manifest
+//   Home-screen icons (phones need a solid square, no transparency): the same face, large, on the site's soft lavender.
+//     public/favicon/apple-touch-icon.png   180, full-bleed (iOS rounds the corners itself)
+//     public/favicon/maskable-512.png       full-bleed, face inside the 80% safe zone (Android crops it to a shape)
 import sharp from 'sharp';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const SRC = 'logo/svg/vardhan-portrait-transparent.svg';
+const SRC = 'logo/png/vardhan-portrait-transparent.png';
 const OUT = 'public/favicon';
-const VIOLET = '#743BBE';
-const M = 1024; // master size everything is drawn at, then scaled down
+const LAVENDER = '#EBDEFC'; // the site's Soft Lavender (pastel theme background)
 
 await mkdir(OUT, { recursive: true });
 
-// The face, rendered big from the vector source and trimmed to its own edges.
-const face = await sharp(SRC, { density: 300 }).resize(2048, 2048, { fit: 'inside' }).trim().png().toBuffer();
+// The face trimmed to its own edges.
+const { data, info } = await sharp(SRC).ensureAlpha().trim({ threshold: 1 }).png().toBuffer({ resolveWithObject: true });
+const face = data;
+const long = Math.max(info.width, info.height);
 
-/** A master image: `shape` 'circle' or 'square' in violet, the face scaled to `scale` of the side. */
-async function master(shape, scale) {
-  const bg = shape === 'circle'
-    ? `<svg xmlns="http://www.w3.org/2000/svg" width="${M}" height="${M}"><circle cx="${M / 2}" cy="${M / 2}" r="${M / 2}" fill="${VIOLET}"/></svg>`
-    : shape === 'none'
-      ? `<svg xmlns="http://www.w3.org/2000/svg" width="${M}" height="${M}"/>` // transparent: the face alone
-      : `<svg xmlns="http://www.w3.org/2000/svg" width="${M}" height="${M}"><rect width="${M}" height="${M}" fill="${VIOLET}"/></svg>`;
-  const side = Math.round(M * scale);
-  const f = await sharp(face).resize(side, side, { fit: 'inside' }).png().toBuffer();
-  const { width, height } = await sharp(f).metadata();
-  if (shape === 'none' && (width > M || height > M)) {
-    // Larger than the canvas: crop the middle square, so the face fills it and the top of the hair and the beard are cut off.
-    const left = Math.max(0, Math.round((width - M) / 2)), top = Math.max(0, Math.round((height - M) / 2));
-    return sharp(f).extract({ left, top, width: Math.min(M, width), height: Math.min(M, height) }).resize(M, M).png().toBuffer();
-  }
-  return sharp(Buffer.from(bg))
-    .composite([{ input: f, left: Math.round((M - width) / 2), top: Math.round((M - height) / 2 + M * 0.01) }])
+/** The face centred in a square of `long / scale` px, on `bg` ('transparent' or a colour). */
+async function square(scale, bg) {
+  const side = Math.round(long / scale);
+  const background = bg === 'transparent' ? { r: 0, g: 0, b: 0, alpha: 0 } : bg;
+  return sharp({ create: { width: side, height: side, channels: 4, background } })
+    .composite([{ input: face, left: Math.round((side - info.width) / 2), top: Math.round((side - info.height) / 2) }])
     .png()
     .toBuffer();
 }
+const png = (buf, size) => sharp(buf).resize(size, size, { kernel: 'lanczos3' }).png({ compressionLevel: 9 }).toBuffer();
 
-/** Scale a master down to `size`; tab sizes get a light sharpen so the eyes and beard don't smear. */
-async function at(buf, size) {
-  let img = sharp(buf).resize(size, size, { kernel: 'lanczos3' });
-  if (size <= 48) img = img.sharpen({ sigma: 0.5 });
-  return img.png({ compressionLevel: 9 }).toBuffer();
+// Tab icon: transparent, with 6% of room each side.
+const tab = await square(1 / 1.12, 'transparent');
+const tabSizes = {};
+for (const s of [16, 32, 48, 192, 512]) {
+  tabSizes[s] = await png(tab, s);
+  await writeFile(`${OUT}/favicon-${s}.png`, tabSizes[s]);
 }
 
-const round = await master('none', 1.25); // face only, no badge; >1 crops the hair and beard to make the face bigger
-const square = await master('square', 0.96);
-const maskable = await master('square', 0.66);
-
-const tab = {};
-for (const s of [16, 32, 48]) {
-  tab[s] = await at(round, s);
-  await writeFile(`${OUT}/favicon-${s}.png`, tab[s]);
-}
-for (const s of [192, 512]) await writeFile(`${OUT}/favicon-${s}.png`, await at(round, s));
-await writeFile(`${OUT}/maskable-512.png`, await at(maskable, 512));
-await writeFile(`${OUT}/apple-touch-icon.png`, await at(square, 180));
+// Home-screen icons: lavender, the face filling most of the square (maskable: inside the safe zone).
+await writeFile(`${OUT}/apple-touch-icon.png`, await png(await square(0.9, LAVENDER), 180));
+await writeFile(`${OUT}/maskable-512.png`, await png(await square(0.66, LAVENDER), 512));
 
 // favicon.ico: an ICO header + directory, then the PNGs as they are (supported by every current browser).
 const sizes = [16, 32, 48];
@@ -79,10 +60,10 @@ sizes.forEach((s, i) => {
   header.writeUInt8(0, e + 3); // reserved
   header.writeUInt16LE(1, e + 4); // colour planes
   header.writeUInt16LE(32, e + 6); // bits per pixel
-  header.writeUInt32LE(tab[s].length, e + 8);
+  header.writeUInt32LE(tabSizes[s].length, e + 8);
   header.writeUInt32LE(offset, e + 12);
-  offset += tab[s].length;
+  offset += tabSizes[s].length;
 });
-await writeFile('public/favicon.ico', Buffer.concat([header, ...sizes.map((s) => tab[s])]));
+await writeFile('public/favicon.ico', Buffer.concat([header, ...sizes.map((s) => tabSizes[s])]));
 
 console.log('favicon set written to public/favicon.ico and public/favicon/');
