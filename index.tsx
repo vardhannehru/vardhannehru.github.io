@@ -1,3 +1,4 @@
+import './tailwind.css';
 import React from 'react';
 import './types';
 import ReactDOM from 'react-dom/client';

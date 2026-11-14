@@ -37,7 +37,7 @@ This note is for picking the work up in a new chat. Last updated 2026-11-09.
 
 - Vite 6, React 19, TypeScript, react-router-dom 7
 - framer-motion 11, three 0.181, `@react-three/fiber` / `drei`, Lenis (smooth scroll). GSAP is installed but not used by live components.
-- **Tailwind comes from the CDN script in `index.html`, not from a build step.** Global custom CSS (theme variables, keyframes, `.cap-*`, `.hero-fill-*`, `.diecut`, the loading screen) is in the `<style>` block of `index.html`, as are the Google Fonts links.
+- **Tailwind (3.4.17) is built with the site:** `tailwind.css` (imported first in `index.tsx`), `tailwind.config.js` (dark mode by class, scans `index.html`, root `.ts/.tsx`, `components/`, `lib/`) and `postcss.config.js`. It used to load from cdn.tailwindcss.com; moved 2026-11-14 and checked against a style snapshot of every page, both themes, desktop and phone. Style order: the `<style>` in `index.html`, then Tailwind, then the components' CSS files. Don't put two clashing classes of the same kind on one element (`gap-1.5` with `gap-2`): which wins depends on rule order, not class order. Global custom CSS (theme variables, keyframes, `.cap-*`, `.hero-fill-*`, `.diecut`, the loading screen) is in the `<style>` block of `index.html`, as are the Google Fonts links.
 - **Fonts:** Anton for display text, Inter for body text, Newsreader for stickers, Geist Mono for small labels.
 
 ## Themes (pastel is the default)
@@ -191,7 +191,7 @@ This note is for picking the work up in a new chat. Last updated 2026-11-09.
 
 ## Possible next steps
 
-1. **Move Tailwind from the CDN to a build step** (offered, the user asked what it means and what could go wrong, not yet approved). It would remove the runtime CSS compile and the console warning. Risks are low: no Tailwind classes are built from pieces in code; check that the pastel overrides in `index.html` still win, and compare screenshots of every page in both themes before and after.
+1. ~~Move Tailwind from the CDN to a build step~~ (done 2026-11-14).
 2. Further split the main bundle (for example lazy-load `TV3D` / three.js) if load time still feels slow.
 3. Add the user's own videos for the other projects when they send them.
 4. Ask the user about `git init`, so there's history to undo from.

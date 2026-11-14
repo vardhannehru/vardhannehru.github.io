@@ -24,17 +24,7 @@
         document.documentElement.style.colorScheme = t;
       })();
     </script>
-    <!-- Tailwind CDN is OK for now, but it must not block app boot.
-         Use defer so React can mount even if CDN is slow/unavailable.
-         IMPORTANT: configure darkMode='class' so `dark:` variants work. -->
-    <script>
-      // Tailwind CDN config (must exist before the CDN script runs)
-      window.tailwind = window.tailwind || {};
-      window.tailwind.config = { darkMode: 'class' };
-    </script>
-    <!-- The CDN replaces any config set before it loads, so set darkMode again once it has (otherwise
-         `dark:` styles follow the device setting instead of the site's light/dark switch). -->
-    <script src="https://cdn.tailwindcss.com" defer onload="tailwind.config = { darkMode: 'class' }"></script>
+    <!-- Tailwind is built with the site (tailwind.css, imported first in index.tsx; settings in tailwind.config.js). -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,500&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@700&family=Antic&family=Press+Start+2P&family=Noto+Sans+Devanagari&family=Noto+Sans+JP&family=Noto+Sans+SC&family=Noto+Sans+Telugu&family=Dancing+Script:wght@700&family=Geist+Sans:wght@400;700&family=Geist+Mono:wght@700&display=swap" />

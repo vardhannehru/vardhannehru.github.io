@@ -53,14 +53,18 @@ A plain record of the changes made to this portfolio in these sessions. The tech
 - Router library updated (7.13.0 to 7.18.5) to close its 3 known problems. Nothing else in the lock file changed
   except one small helper it uses.
 - Removed the unused lines in `vite.config.ts` that would have copied the Gemini key into the site's code.
-- Left as is: `sharp` (used only by the local icon scripts; its fix is a breaking upgrade) and Tailwind from its
-  outside server (see below).
+- `sharp` (icon tool) updated to 0.35.5: the icons it makes are pixel-identical. The build tools (Babel, Rollup and
+  others) updated too: `npm audit` now finds 0 problems. The built site is the same, except that the newer Rollup
+  fixes a bug where the sound switch did not silence the TV and tube sounds in the published build.
+- The README no longer asks for a Gemini key (the site doesn't use one).
+- **Tailwind is now built with the site** instead of loading from cdn.tailwindcss.com, so no outside code runs on
+  the page and the browser no longer compiles styles at startup. Checked against the saved style snapshot: all 4
+  pages, both themes, desktop and phone, match. The one exception is the "Feed ↓" chip on the separate `/hero`
+  page: it had two clashing gap sizes, and the CDN picked 6px there but 8px on the home page. It is now 8px on both.
 
 ## Not done
 
 - **3D icons:** dropped at your request. Higgsfield had too few credits.
-- **Moving Tailwind into the build:** not started. A style baseline of every page, both themes, desktop and phone,
-  is recorded in the preview browser to check it against.
 - **Small stutters** (hero letters rising, About page first scroll): fixing them would change how things look, so
   they wait for your go-ahead.
 - **Real-phone testing:** only checked at simulated phone sizes.

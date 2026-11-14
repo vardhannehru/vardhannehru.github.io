@@ -157,8 +157,8 @@ const PortfolioHero = React.forwardRef<HTMLDivElement, PortfolioHeroProps>(({ is
         <motion.a
           href="#work"
           style={{ opacity: feedOpacity }}
-          className={`pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-8 md:bottom-10 z-20 inline-flex items-center gap-1.5 transition-colors hover:text-white ${
-            BOTTOM_CHIPS ? `${glassChip} hover:border-[rgba(200,182,255,0.45)]` : "text-[15px] md:text-base font-medium text-white/80"
+          className={`pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-8 md:bottom-10 z-20 inline-flex items-center transition-colors hover:text-white ${
+            BOTTOM_CHIPS ? `${glassChip} hover:border-[rgba(200,182,255,0.45)]` : "gap-1.5 text-[15px] md:text-base font-medium text-white/80"
           }`}
         >
           {BOTTOM_CHIPS && (
