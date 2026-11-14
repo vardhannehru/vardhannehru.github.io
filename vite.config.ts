@@ -1,9 +1,8 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
+export default defineConfig(() => {
     return {
       // Use relative paths in production builds so the app works when opened from
       // a folder (file://) or hosted under a sub-path.
@@ -14,10 +13,7 @@ export default defineConfig(({ mode }) => {
         // Let ngrok tunnels (*.ngrok-free.dev, *.ngrok.app, *.ngrok.io) reach the dev server. Vite blocks unknown host names.
         allowedHosts: ['.ngrok-free.dev', '.ngrok.app', '.ngrok.io'],      },
       plugins: [react()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
+      // No secrets are passed into the site's code: anything put here is readable by every visitor.
       assetsInclude: ['**/*.glb'],
       build: {
         rollupOptions: {
