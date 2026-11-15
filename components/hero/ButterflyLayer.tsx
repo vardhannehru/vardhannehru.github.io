@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { animate } from "framer-motion";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
@@ -11,8 +11,8 @@ import { canvasDpr, isLowPower, onPinchZoom, PHONE_DPR } from "../ui/device";
 // on one: a letter dips under them and bounces back up when they leave; a sticker wobbles and flicks its
 // corner. Once in a while one flies up to a button on the nav bar and rests there instead (see navPerch.ts).
 // They rest slowly fanning their wings, then take off again, or straight away if you point at
-// the letter (or button) they're sitting on. Wings are painted in code (veins, scales, margin spots) and lit with a
-// little iridescence. Rendered with the same camera as the CSS letters, so they line up with them.
+// the letter (or button) they're sitting on. Wings are real butterflies made with Higgsfield (public/butterflies/), with
+// wings painted in code (veins, scales, margin spots) as the stand-in until they load, lit with a little iridescence. Rendered with the same camera as the CSS letters, so they line up with them.
 
 // Canvas overhang around the name: generous above, since the name (and the butterflies with it) moves
 // up the screen as it slides back along the ground while the hero is scrolled.
@@ -27,8 +27,8 @@ const ROSTER = [0, 3, 5, 4, 6, 2];
 /** When the first one arrives (s after mount, once the name has risen) and the gap between arrivals. */
 const ARRIVE_AT = 2.6;
 const ARRIVE_GAP = 0.9;
-/** Wing beats per second in flight (slow and graceful). */
-const FLAP_HZ = 3.2;
+/** Wing beats per second in flight (quick and fluttery, like a real one). */
+const FLAP_HZ = 5;
 /** Cruising speed, in letter heights per second. */
 const SPEED = 0.45;
 /** How strongly they steer toward where they're heading (lower = wider, lazier curves). */
@@ -36,9 +36,9 @@ const STEER = 0.9;
 /** The breeze they drift on: how hard it pushes (letter heights / s²). */
 const BREEZE = 0.35;
 /** Chance of heading for a landing spot each time one reaches where it was going. */
-const LAND_CHANCE = 0.45;
+const LAND_CHANCE = 0.85;
 /** Of those landings, the chance it picks a nav button (when one is free). */
-const NAV_CHANCE = 0.25;
+const NAV_CHANCE = 0.4;
 /** One wing's width when resting on a nav button (px), for a butterfly of size 1. */
 const NAV_WING_PX = 13;
 
@@ -79,6 +79,15 @@ type Species = {
   marks?: Mark[];
   iridescence: number;
   sheen: string;
+  /** A real wing (right-hand side) made with Higgsfield, in public/butterflies/. Same layout as the painted texture:
+   *  TEX_W x TEX_H with the root at the left edge. Shown once it loads; the painted wing is the stand-in until then. */
+  photo?: string;
+  /** The photo's own body and antennae (`photo` with -body), as a flat picture that doesn't flap: its size and where
+   *  its centre sits from the wing root, in wing units. */
+  body?: { w: number; h: number; x: number; y: number };
+  /** Where the forewing's back edge meets the wing's outer edge (wing units), for cutting the picture into the forewing
+   *  and the hindwing, which beat slightly out of step. */
+  split?: P;
 };
 
 const INK = "#15110b";
@@ -101,6 +110,9 @@ const SPECIES: Species[] = [
     dots: "rgba(255,255,255,0.9)",
     iridescence: 1,
     sheen: "#c8b6ff",
+    photo: "/butterflies/morpho.webp",
+    split: [0.833, -0.319],
+    body: { w: 0.5701, h: 1.2214, x: -0.0225, y: -0.1093 },
   },
   // 1. Peach: warm terracotta with a dark tip, white apex spots and small blue-eyed spots.
   {
@@ -138,6 +150,9 @@ const SPECIES: Species[] = [
     apex: { color: "#2c261f", dots: "#fffaf0" },
     iridescence: 0.35,
     sheen: "#ffffff",
+    photo: "/butterflies/pearl.webp",
+    split: [0.802, -0.38],
+    body: { w: 0.7142, h: 1.6006, x: -0.0227, y: -0.2687 },
   },
   // 3. Tiger swallowtail: lemon yellow with black tiger stripes, long black tails, a broad black margin
   //    with yellow crescents, blue scales and an orange spot by the tail.
@@ -168,6 +183,9 @@ const SPECIES: Species[] = [
     ],
     iridescence: 0,
     sheen: "#fff3c0",
+    photo: "/butterflies/tiger.webp",
+    split: [0.587, -0.37],
+    body: { w: 0.5277, h: 1.0855, x: -0.0188, y: -0.1775 },
   },
   // 4. Emerald swallowtail: velvety black-green, dusted with green scales, with glowing emerald bands
   //    across both wings and long tails.
@@ -194,6 +212,9 @@ const SPECIES: Species[] = [
     ],
     iridescence: 0.9,
     sheen: "#7dffc8",
+    photo: "/butterflies/emerald.webp",
+    split: [0.617, -0.375],
+    body: { w: 0.4719, h: 1.1694, x: -0.0187, y: -0.1623 },
   },
   // 5. Monarch: bright orange with thick black veins, a black margin with white dots, and a black tip
   //    with white and orange spots. A famous glider.
@@ -219,6 +240,9 @@ const SPECIES: Species[] = [
     ],
     iridescence: 0,
     sheen: "#ffd2a0",
+    photo: "/butterflies/monarch.webp",
+    split: [0.767, -0.467],
+    body: { w: 0.7835, h: 1.5739, x: -0.0226, y: -0.3048 },
   },
   // 6. Scarlet longwing: long, narrow velvet-black wings with a scarlet forewing band and a yellow
   //    hindwing bar. Slow, floaty wing beats.
@@ -242,6 +266,9 @@ const SPECIES: Species[] = [
     ],
     iridescence: 0.3,
     sheen: "#7d8cff",
+    photo: "/butterflies/longwing.webp",
+    split: [0.8, -0.32],
+    body: { w: 1.0839, h: 1.5932, x: -0.0225, y: -0.1555 },
   },
 ];
 
@@ -383,6 +410,35 @@ const SHAPES: Record<Shape, { fore: WingOutline; hind: WingOutline }> = {
 
 const toTex = ([x, y]: P): P => [(x / WX) * TEX_W, ((WY_TOP - y) / (WY_TOP - WY_BOTTOM)) * TEX_H];
 const PX = TEX_W / WX;
+
+/** Used when a species has no measured `split`. */
+const DEFAULT_SPLIT: P = [0.8, -0.35];
+/**
+ * Draws one part of a whole wing picture (TEX_W x TEX_H) into `out`: the forewing, or the hindwing. The cut runs from
+ * the body out to `split` along the forewing's back edge. The hindwing reaches well up under the forewing (which is
+ * drawn over it), so no gap opens between them when they beat out of step.
+ */
+function drawWingPart(out: HTMLCanvasElement, src: CanvasImageSource, split: P, part: Wing) {
+  const g = out.getContext("2d")!;
+  g.clearRect(0, 0, TEX_W, TEX_H);
+  const [nx, ny] = split;
+  const y0 = ny * 0.55;
+  const slope = (ny - y0) / nx;
+  const lift = part === "fore" ? -0.03 : 0.14;
+  const [ax, ay] = toTex([-0.1, y0 - 0.1 * slope + lift]);
+  const [bx, by] = toTex([WX + 0.2, y0 + (WX + 0.2) * slope + lift]);
+  const edge = part === "fore" ? -10 : TEX_H + 10;
+  const cut = new Path2D();
+  cut.moveTo(ax, ay);
+  cut.lineTo(bx, by);
+  cut.lineTo(bx, edge);
+  cut.lineTo(ax, edge);
+  cut.closePath();
+  g.save();
+  g.clip(cut);
+  g.drawImage(src, 0, 0, TEX_W, TEX_H);
+  g.restore();
+}
 
 function pathOf(pts: P[], close: boolean) {
   const p = new Path2D();
@@ -572,11 +628,17 @@ type Mode = "wait" | "fly" | "land" | "perch";
 type Butterfly = {
   sp: Species;
   group: THREE.Group;
-  wingL: THREE.Mesh;
-  wingR: THREE.Mesh;
+  /** The forewings and hindwings, right then left; each turns about the body. */
+  fore: THREE.Group[];
+  hind: THREE.Group[];
+  /** The wing materials (top and underside of fore- and hindwing). */
+  wingMats: THREE.MeshPhysicalMaterial[];
   shadow: THREE.Mesh;
   shadowMat: THREE.MeshBasicMaterial;
   mats: THREE.Material[];
+  /** The modelled body (spheres, capsule, antennae), and the photo body that replaces it once loaded. */
+  parts: THREE.Object3D[];
+  photoBody: THREE.Mesh | null;
   /** Position on the floor (x, y from the name's far edge) and height z. */
   pos: THREE.Vector3;
   vel: THREE.Vector3;
@@ -593,6 +655,11 @@ type Butterfly = {
   glideUntil: number;
   phase: number;
   theta: number;
+  /** The hindwings' angle: they follow the forewings a moment late. */
+  thetaH: number;
+  /** While resting, when (s after landing) it opens its wings to bask, and for how long (0: it doesn't). */
+  baskAt: number;
+  baskFor: number;
   yaw: number;
   pitch: number;
   roll: number;
@@ -664,22 +731,101 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
     }
     wingGeo.computeVertexNormals();
     const halfCanvases = SPECIES.map((sp) => paintHalf(sp));
-    const halves = halfCanvases.map((c) => {
-      const t = track(new THREE.CanvasTexture(c));
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.anisotropy = 8;
-      return t;
-    });
+    // Each flying species' wing cut into forewing and hindwing, top and underside: painted for now, the real ones once
+    // they've loaded (drawn into the same canvases).
+    type Part = { canvas: HTMLCanvasElement; tex: THREE.CanvasTexture };
+    type Parts = { fore: Part; hind: Part; foreUnder: Part; hindUnder: Part };
+    const makePart = (): Part => {
+      const canvas = document.createElement("canvas");
+      canvas.width = TEX_W;
+      canvas.height = TEX_H;
+      const tex = track(new THREE.CanvasTexture(canvas));
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 8;
+      return { canvas, tex };
+    };
+    const drawParts = (ps: Parts, top: CanvasImageSource, under: CanvasImageSource, split: P) => {
+      drawWingPart(ps.fore.canvas, top, split, "fore");
+      drawWingPart(ps.hind.canvas, top, split, "hind");
+      drawWingPart(ps.foreUnder.canvas, under, split, "fore");
+      drawWingPart(ps.hindUnder.canvas, under, split, "hind");
+      for (const part of [ps.fore, ps.hind, ps.foreUnder, ps.hindUnder]) part.tex.needsUpdate = true;
+    };
+    const wingParts = new Map<number, Parts>();
+    for (const kind of new Set(ROSTER)) {
+      const ps: Parts = { fore: makePart(), hind: makePart(), foreUnder: makePart(), hindUnder: makePart() };
+      drawParts(ps, halfCanvases[kind], halfCanvases[kind], SPECIES[kind].split ?? DEFAULT_SPLIT);
+      wingParts.set(kind, ps);
+    }
+    // Swap in the real wings as they load (only species that fly). Same size and layout as the painted ones.
+    let alive = true;
+    const photoReady = new Set<number>();
+    const loadImage = (url: string) =>
+      new Promise<HTMLImageElement>((ok, fail) => {
+        const img = new Image();
+        img.decoding = "async";
+        img.onload = () => ok(img);
+        img.onerror = fail;
+        img.src = url;
+      });
+    for (const kind of new Set(ROSTER)) {
+      const sp = SPECIES[kind];
+      if (!sp.photo) continue;
+      Promise.all([
+        loadImage(sp.photo),
+        loadImage(sp.photo.replace(/\.webp$/, "-under.webp")).catch(() => null),
+        sp.body ? loadImage(sp.photo.replace(/\.webp$/, "-body.webp")) : null,
+      ])
+        .then(([wingImg, underImg, bodyImg]) => {
+          if (!alive) return;
+          drawParts(wingParts.get(kind)!, wingImg, underImg ?? wingImg, sp.split ?? DEFAULT_SPLIT);
+          const bt = bodyTex.get(kind);
+          if (bt && bodyImg) {
+            bt.image = bodyImg;
+            bt.needsUpdate = true;
+          }
+          for (const b of flies) {
+            if (b.sp !== sp) continue;
+            // A photo already has its true colours and shine: no painted-on sheen, and only the morpho keeps a hint of
+            // its blue shimmer.
+            for (const m of b.wingMats) {
+              m.sheen = 0;
+              m.iridescence = sp.iridescence >= 1 && m.side === THREE.FrontSide ? 0.35 : 0;
+              m.roughness = 0.6;
+              m.needsUpdate = true;
+            }
+            if (b.photoBody && bodyImg) {
+              b.photoBody.visible = true;
+              for (const p of b.parts) p.visible = false;
+            }
+          }
+          photoReady.add(kind);
+        })
+        .catch(() => {});
+    }
     // The same wing as a picture, for drawing a butterfly resting on a nav button.
     const looks = new Map<Species, ButterflyLook>();
     const lookOf = (sp: Species) => {
+      const kind = SPECIES.indexOf(sp);
       let l = looks.get(sp);
+      // Rebuild once the real wing has loaded, if the painted one was handed out first.
+      if (l && photoReady.has(kind) && l.src !== sp.photo) l = undefined;
       if (!l) {
         l = {
-          src: halfCanvases[SPECIES.indexOf(sp)].toDataURL(),
+          src: photoReady.has(kind) && sp.photo ? sp.photo : halfCanvases[kind].toDataURL(),
           aspect: TEX_W / TEX_H,
           joint: WY_TOP / (WY_TOP - WY_BOTTOM),
           size: NAV_WING_PX * sp.size,
+          body:
+            photoReady.has(kind) && sp.photo && sp.body
+              ? {
+                  src: sp.photo.replace(/\.webp$/, "-body.webp"),
+                  w: sp.body.w / WX,
+                  h: sp.body.h / WX,
+                  x: sp.body.x / WX,
+                  y: sp.body.y / WX,
+                }
+              : undefined,
         };
         looks.set(sp, l);
       }
@@ -701,6 +847,16 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
         )
       )
     );
+    const planeGeo = track(new THREE.PlaneGeometry(1, 1));
+    // Photo bodies, made up front (filled in when the picture loads) so each butterfly's material can use them.
+    const bodyTex = new Map<number, THREE.Texture>();
+    for (const kind of new Set(ROSTER)) {
+      if (!SPECIES[kind].body) continue;
+      const t = track(new THREE.Texture());
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 8;
+      bodyTex.set(kind, t);
+    }
     const shadowTex = track(shadowTexture());
     const shadowGeo = track(new THREE.PlaneGeometry(1, 1));
 
@@ -708,10 +864,13 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
     const now0 = performance.now() / 1000;
     const flies: Butterfly[] = ROSTER.map((kind, n): Butterfly => {
       const sp = SPECIES[kind];
-      const wingMat = track(
+      const ps = wingParts.get(kind)!;
+      // Top faces up (front side); the underside shows from below (back side).
+      const wingMat = (tex: THREE.Texture, side: THREE.Side) =>
+        track(
         new THREE.MeshPhysicalMaterial({
-          map: halves[kind],
-          side: THREE.DoubleSide,
+          map: tex,
+          side,
           roughness: 0.42,
           metalness: 0,
           iridescence: sp.iridescence,
@@ -724,6 +883,12 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
           alphaToCoverage: true,
         })
       );
+      const wingMats = [
+        wingMat(ps.fore.tex, THREE.FrontSide),
+        wingMat(ps.foreUnder.tex, THREE.BackSide),
+        wingMat(ps.hind.tex, THREE.FrontSide),
+        wingMat(ps.hindUnder.tex, THREE.BackSide),
+      ];
       const bodyMat = track(
         new THREE.MeshPhysicalMaterial({
           color: 0x17111f,
@@ -738,9 +903,16 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
 
       const group = new THREE.Group();
       group.rotation.order = "ZXY";
-      const wingR = new THREE.Mesh(wingGeo, wingMat);
-      const wingL = new THREE.Mesh(wingGeo, wingMat);
-      wingL.scale.x = -1;
+      // Fore- and hindwing on each side, each turning about the body; the hindwing sits just under the forewing.
+      const wingPair = (top: THREE.Material, under: THREE.Material, mirror: boolean, z: number) => {
+        const g = new THREE.Group();
+        g.add(new THREE.Mesh(wingGeo, top), new THREE.Mesh(wingGeo, under));
+        if (mirror) g.scale.x = -1;
+        g.position.z = z;
+        return g;
+      };
+      const fore = [false, true].map((m) => wingPair(wingMats[0], wingMats[1], m, 0));
+      const hind = [false, true].map((m) => wingPair(wingMats[2], wingMats[3], m, -0.006 * s));
       const thorax = new THREE.Mesh(sphereGeo, bodyMat);
       thorax.scale.set(0.075 * s, 0.15 * s, 0.075 * s);
       thorax.position.y = 0.03 * s;
@@ -750,13 +922,27 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       const head = new THREE.Mesh(sphereGeo, bodyMat);
       head.scale.setScalar(0.055 * s);
       head.position.set(0, 0.2 * s, 0.01 * s);
-      group.add(wingR, wingL, thorax, abdomen, head);
+      group.add(...fore, ...hind, thorax, abdomen, head);
+      const parts: THREE.Object3D[] = [thorax, abdomen, head];
       for (const [k, side] of [-1, 1].entries()) {
-        group.add(new THREE.Mesh(antennaGeo[k], bodyMat));
+        const antenna = new THREE.Mesh(antennaGeo[k], bodyMat);
         const club = new THREE.Mesh(sphereGeo, bodyMat);
         club.scale.setScalar(Math.max(0.8, 0.02 * s));
         club.position.set(side * 0.17 * s, 0.6 * s, 0.08 * s);
-        group.add(club);
+        group.add(antenna, club);
+        parts.push(antenna, club);
+      }
+      // The real body from the photo, shown (instead of the modelled one) once its picture has loaded.
+      let photoBody: THREE.Mesh | null = null;
+      if (sp.body) {
+        const mat = track(
+          new THREE.MeshStandardMaterial({ map: bodyTex.get(kind) ?? null, side: THREE.DoubleSide, roughness: 0.8, alphaToCoverage: true })
+        );
+        photoBody = new THREE.Mesh(planeGeo, mat);
+        photoBody.scale.set(sp.body.w * s, sp.body.h * s, 1);
+        photoBody.position.set(sp.body.x * s, sp.body.y * s, 0.03 * s);
+        photoBody.visible = false;
+        group.add(photoBody);
       }
       const shadow = new THREE.Mesh(shadowGeo, shadowMat);
       floor.add(shadow, group);
@@ -769,11 +955,14 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       return {
         sp,
         group,
-        wingL,
-        wingR,
+        fore,
+        hind,
+        wingMats,
         shadow,
         shadowMat,
-        mats: [wingMat, bodyMat],
+        mats: [...wingMats, bodyMat, ...(photoBody ? [photoBody.material as THREE.Material] : [])],
+        parts,
+        photoBody,
         pos: new THREE.Vector3(fromRight ? W * 1.2 : -W * 0.2, rand(0.1, 0.9) * H, slab + rand(0.6, 1) * H),
         vel: new THREE.Vector3(fromRight ? -SPEED * H : SPEED * H, 0, 0),
         goal: new THREE.Vector3(),
@@ -784,10 +973,13 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
         perch: null,
         perchedAt: 0,
         perchUntil: 0,
-        restAfter: now0 + ARRIVE_AT + n * ARRIVE_GAP + rand(1.5, 3),
+        restAfter: now0 + ARRIVE_AT + n * ARRIVE_GAP + rand(0.8, 1.6),
         glideUntil: 0,
         phase: rand(0, Math.PI * 2),
         theta: 0.4,
+        thetaH: 0.4,
+        baskAt: 0,
+        baskFor: 0,
         yaw: fromRight ? Math.PI / 2 : -Math.PI / 2,
         pitch: 0.3,
         roll: 0,
@@ -872,7 +1064,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       }
       const letters = stage.spots.filter((p) => p.i !== stage.pointerLetter && !taken(p.x, p.y));
       const stickers = [...stage.stickers].filter((p) => p.ready && !taken(p.x, p.y));
-      if (stickers.length && (Math.random() < 0.3 || !letters.length)) {
+      if (stickers.length && (Math.random() < 0.12 || !letters.length)) {
         const st = stickers[Math.floor(Math.random() * stickers.length)];
         b.perch = { kind: "sticker", s: st, i: stage.letterIndexAt(st.x, st.y, true) };
         return true;
@@ -888,7 +1080,9 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
     const touchDown = (b: Butterfly, t: number) => {
       b.mode = "perch";
       b.perchedAt = t;
-      b.perchUntil = t + rand(3.5, 8);
+      b.baskAt = rand(0.6, 2);
+      b.baskFor = Math.random() < 0.65 ? rand(1.5, 3.5) : 0;
+      b.perchUntil = t + rand(5, 10);
       b.vel.set(0, 0, 0);
       if (b.perch?.kind === "nav") {
         // Hand over to the picture of it resting on the button (drawn above the nav).
@@ -908,7 +1102,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       b.mode = "fly";
       b.vel.set(rand(-0.25, 0.25) * H, rand(-0.25, 0.25) * H, 0.7 * H);
       randomGoal(b.goal);
-      b.restAfter = t + rand(3, 6);
+      b.restAfter = t + rand(1, 2.5);
     };
 
     // ---- Every frame ----
@@ -935,7 +1129,9 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
           const lost =
             (b.perch.kind === "sticker" && !b.perch.s.ready) ||
             (b.perch.kind === "nav" && (b.perch.n.startled || !navPoint(b.perch.n, tmpB))) ||
-            perchLetter(b.perch) === stage.pointerLetter;
+            // Only a real letter can be pointed at: a nav button or a sticker off the letters is -1, which is also what
+            // pointerLetter is when nothing is pointed at, so without the check every such landing was called off at once.
+            (perchLetter(b.perch) >= 0 && perchLetter(b.perch) === stage.pointerLetter);
           const dh = Math.hypot(spot.x - b.pos.x, spot.y - b.pos.y);
           const dist = b.pos.distanceTo(spot);
           if (lost) {
@@ -950,9 +1146,13 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
             target = tmpB.set(spot.x, spot.y, spot.z + Math.min(0.3 * H, dh * 0.8));
             maxSpeed = Math.min(maxSpeed, dist * 1.4 + 0.05 * H);
           }
-        } else if (b.pos.distanceTo(b.goal) < 0.25 * H) {
-          if (t > b.restAfter && Math.random() < LAND_CHANCE && pickPerch(b)) b.mode = "land";
-          else randomGoal(b.goal);
+        } else if (t > b.restAfter) {
+          // Time to settle somewhere (a letter, a sticker or a nav button), checked on a timer rather than only on
+          // reaching its goal: with the zig-zag flight it rarely gets close enough to a goal to ever decide.
+          if (Math.random() < LAND_CHANCE && pickPerch(b)) b.mode = "land";
+          else b.restAfter = t + rand(1, 2.5);
+        } else if (b.pos.distanceTo(b.goal) < 0.3 * H) {
+          randomGoal(b.goal);
         }
 
         if (b.mode === "fly" || b.mode === "land") {
@@ -965,6 +1165,11 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
             drift * (Math.sin(t * 0.31 + 1) * 0.4 + Math.sin(t * 0.6 + k * 1.7) + 0.5 * Math.sin(t * 1.3 + k * 0.8)),
             drift * 0.6 * (Math.sin(t * 0.9 + k * 2.6) + 0.4 * Math.sin(t * 2.1 + k))
           );
+          // Quick little zig-zags on top, the erratic way real butterflies fly (not while coming in to land).
+          if (b.mode === "fly") {
+            b.wander.x += drift * 0.9 * Math.sin(t * 3.1 + k * 4.3);
+            b.wander.y += drift * 0.9 * Math.sin(t * 2.7 + k * 1.9);
+          }
           if (t < b.glideUntil) b.wander.z -= 0.25 * H; // sinking a little while gliding
           desired.subVectors(target, b.pos);
           const d = desired.length();
@@ -990,7 +1195,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
         if (b.mode === "fly" && t > b.glideUntil + 0.6 && Math.random() < dt * 0.7 * b.sp.glide) b.glideUntil = t + rand(0.5, 1.3);
         const gliding = t < b.glideUntil;
         if (!gliding) b.phase += dt * Math.PI * 2 * FLAP_HZ * b.sp.flap * (b.mode === "land" ? 0.75 : 1);
-        const want = gliding ? 0.18 : 0.32 + 0.8 * Math.sin(b.phase);
+        const want = gliding ? 0.18 : 0.4 + 0.95 * Math.sin(b.phase);
         b.theta += (want - b.theta) * Math.min(1, dt * (gliding ? 4 : 18));
         const hv = Math.hypot(b.vel.x, b.vel.y);
         if (hv > 0.04 * H) {
@@ -998,20 +1203,27 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
           b.yaw += diff * Math.min(1, dt * 2);
           b.roll += (THREE.MathUtils.clamp(-diff * 0.8, -0.45, 0.45) - b.roll) * Math.min(1, dt * 2);
         }
-        b.pitch += (0.22 + 0.05 * Math.sin(b.phase + 1.2) - b.pitch) * Math.min(1, dt * 3);
+        b.pitch += (0.22 + 0.12 * Math.sin(b.phase + 1.2) - b.pitch) * Math.min(1, dt * 3);
       } else {
-        // Resting: wings slowly fanning open and shut.
+        // Resting like a real one: wings folded up together over its back (a little quiver), now and then opened
+        // flat for a while to bask.
         const since = t - b.perchedAt;
-        const fan = 0.5 + 0.9 * (0.5 - 0.5 * Math.cos(since * 1.1 + b.seed));
-        b.theta += (fan - b.theta) * Math.min(1, dt * 4);
+        const basking = since > b.baskAt && since < b.baskAt + b.baskFor;
+        const fan = basking ? 0.22 + 0.06 * Math.sin(since * 1.3 + b.seed) : 1.45 + 0.04 * Math.sin(since * 2.3 + b.seed);
+        b.theta += (fan - b.theta) * Math.min(1, dt * (basking ? 2.5 : 3.5));
         b.pitch += -b.pitch * Math.min(1, dt * 4);
         b.roll += -b.roll * Math.min(1, dt * 4);
       }
-      const bob = flying ? -0.03 * H * Math.sin(b.phase - 0.6) : 0;
+      // Each wing beat lifts it a little, so it bobs up and down as it flies.
+      const bob = flying ? -0.05 * H * Math.sin(b.phase - 0.6) : 0;
       b.group.position.set(b.pos.x, -b.pos.y, b.pos.z + bob);
       b.group.rotation.set(b.pitch, b.roll, b.yaw);
-      b.wingR.rotation.y = -b.theta;
-      b.wingL.rotation.y = b.theta;
+      // The hindwings follow the forewings a moment late.
+      b.thetaH += (b.theta - b.thetaH) * Math.min(1, dt * (flying ? 22 : 8));
+      b.fore[0].rotation.y = -b.theta;
+      b.fore[1].rotation.y = b.theta;
+      b.hind[0].rotation.y = -b.thetaH;
+      b.hind[1].rotation.y = b.thetaH;
 
       // Fade in on arrival.
       const f = clamp01((t - b.bornAt) / 0.8);
@@ -1065,6 +1277,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
     raf = requestAnimationFrame(loop);
 
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       io.disconnect();
       // Let go of anything they were sitting on.

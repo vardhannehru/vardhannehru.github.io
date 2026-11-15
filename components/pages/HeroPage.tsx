@@ -1,4 +1,3 @@
-import React from 'react';
 import PortfolioHero from '../hero/portfolio-hero';
 
 // The hero on its own page (/hero): the name and the stickers, with nothing below it.

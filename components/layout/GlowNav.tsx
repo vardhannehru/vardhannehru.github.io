@@ -146,11 +146,26 @@ function PerchedButterfly({ look, turn }: { look: ButterflyLook; turn: number })
       <span className="absolute inset-0" style={{ perspective: '90px', animation: 'gnav-land 0.55s cubic-bezier(0.22,1,0.36,1)' }}>
         {wing('r')}
         {wing('l')}
-        {/* The body: head, thorax and abdomen along the middle. */}
-        <span
-          className="absolute left-1/2 rounded-full"
-          style={{ width: 3, marginLeft: -1.5, top: h * (look.joint - 0.12), height: h * 0.34, background: '#17111f' }}
-        />
+        {/* The body: head, thorax and abdomen (and antennae) along the middle. */}
+        {look.body ? (
+          <img
+            src={look.body.src}
+            alt=""
+            draggable={false}
+            className="absolute max-w-none"
+            style={{
+              width: look.body.w * w,
+              height: look.body.h * w,
+              left: w + (look.body.x - look.body.w / 2) * w,
+              top: h * look.joint - (look.body.y + look.body.h / 2) * w,
+            }}
+          />
+        ) : (
+          <span
+            className="absolute left-1/2 rounded-full"
+            style={{ width: 3, marginLeft: -1.5, top: h * (look.joint - 0.12), height: h * 0.34, background: '#17111f' }}
+          />
+        )}
         {/* Its little shadow on the button. */}
         <span
           className="absolute left-1/2 -z-10 rounded-full blur-[2px]"
@@ -206,7 +221,11 @@ export default function GlowNav() {
     return { transform: `translateY(${sat}px) rotate(${TILT[i % TILT.length]}deg)`, boxShadow: slab(6 - sat, t, pastel) };
   };
   const handlers = (i: number) => ({
-    onPointerEnter: () => setHover(i),
+    // Hover is for a mouse: a finger "hovers" a button it touched until it taps somewhere else, which left the
+    // button raised (and the bar redrawing) after a tap.
+    onPointerEnter: (e: React.PointerEvent) => {
+      if (e.pointerType !== 'touch') setHover(i);
+    },
     onPointerLeave: () => {
       setHover(null);
       setPressed(null);

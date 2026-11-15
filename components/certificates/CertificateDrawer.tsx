@@ -1,20 +1,20 @@
 // Certifications as a real drawer: a green enamel steel filing cabinet seen from above (drawer/drawerScene.ts). As you
 // scroll, the drawer slides out towards you, then the certificates lift out of it one by one and land, overlapping,
 // on the cabinet top. GSAP ScrollTrigger ties it to the scroll, so scrolling back up puts everything back and closes
-// the drawer. Pointing at a landed certificate lifts it; clicking opens it full size (the viewer from
-// CertificateFolder). The scene is only built once the section is near the screen, and only renders while on screen.
+// the drawer. Pointing at a landed certificate lifts it; clicking opens it full size
+// (CertificateViewer.tsx). The scene is only built once the section is near the screen, and only renders while on screen.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CERTIFICATES } from './certificates';
-import { Viewer } from './CertificateFolder';
+import { Viewer } from './CertificateViewer';
 import { certOut, createDrawerScene, drawerOpen, type DrawerScene } from './drawerScene';
 import { whenIdle } from '../ui/siteReady';
 import { onPinchZoom } from '../ui/device';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const MONO = "'Geist Mono', ui-monospace, monospace";
+const MONO = "'Bricolage Grotesque', 'Geist', sans-serif"; // the labels' font (was a spaced-out mono)
 const DISPLAY = "'Anton', 'Inter', sans-serif";
 const pad = (k: number) => String(k).padStart(2, '0');
 
@@ -162,14 +162,14 @@ export default function CertificateDrawer() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-white/10 pb-5">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-white/45 md:text-[11px]" style={{ fontFamily: MONO }}>
+            <p className="text-[12px] font-medium tracking-[-0.01em] text-white/45 md:text-[13px]" style={{ fontFamily: MONO }}>
               Verified credentials
             </p>
             <h3 className="pastel-heading mt-2 text-[clamp(2.6rem,6vw,4.5rem)] leading-none text-white" style={{ fontFamily: DISPLAY }}>
               CERTIFICATIONS <span className="align-top text-[0.4em] text-[#c8b6ff]">({pad(n)})</span>
             </h3>
           </div>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-white/40 md:text-[11px]" style={{ fontFamily: MONO }}>
+          <p className="text-[12px] font-medium tracking-[-0.01em] text-white/40 md:text-[13px]" style={{ fontFamily: MONO }}>
             from the drawer
           </p>
         </div>
@@ -193,23 +193,23 @@ export default function CertificateDrawer() {
               pointed at, bottom centre. */}
           <div className="pointer-events-none absolute left-4 top-24 md:bottom-10 md:left-8 md:top-auto">
             {/* Colours set inline: the light theme turns `text-white` into dark ink (index.html), but these sit on a dark chip. */}
-            <div className="rounded-2xl bg-[#07040f]/75 px-4 py-2.5 backdrop-blur-sm" style={{ fontFamily: MONO, color: '#fff' }}>
-              <p className="text-[11px] uppercase tracking-[0.3em] md:text-[12px]">
-                certificates · {pad(stage.landed)} / {pad(n)}
+            <div className="pill pill-yel rounded-2xl px-4 py-2.5 shadow-[0_3px_0_rgba(63,38,12,0.25)]">
+              <p className="text-[15px] font-semibold leading-tight tracking-[-0.01em] md:text-[16px]">
+                Certificates <span className="tabular-nums opacity-70">{pad(stage.landed)}/{pad(n)}</span>
               </p>
-              <p className="mt-0.5 text-[10px] uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              <p className="mt-0.5 text-[12px] font-medium leading-tight first-letter:uppercase" style={{ opacity: 0.7 }}>
                 {hint}
               </p>
             </div>
           </div>
           <div className="pointer-events-none absolute inset-x-0 bottom-24 px-4 text-center md:bottom-10">
             {info && (
-              <div className="mx-auto inline-block max-w-[min(420px,80vw)] rounded-2xl bg-[#07040f]/80 px-5 py-3 text-left backdrop-blur-sm" style={{ color: '#fff' }}>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-[#c8b6ff]" style={{ fontFamily: MONO }}>
+              <div className="mx-auto inline-block max-w-[min(420px,80vw)] pill pill-lav rounded-2xl px-5 py-3 text-left shadow-[0_3px_0_rgba(52,21,95,0.25)]">
+                <p className="text-[13px] font-semibold" style={{ opacity: 0.75 }}>
                   {info.issuer}
                 </p>
-                <p className="mt-1 text-base font-semibold leading-snug md:text-lg">{info.title}</p>
-                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                <p className="mt-0.5 text-base font-semibold leading-snug md:text-lg">{info.title}</p>
+                <p className="text-xs" style={{ opacity: 0.65 }}>
                   {info.date}
                 </p>
               </div>

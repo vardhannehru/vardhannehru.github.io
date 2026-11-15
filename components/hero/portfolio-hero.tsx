@@ -1,11 +1,7 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-// Loaded only when SHOW_AVATAR is on: its module preloads a 2.9 MB model.
-const Avatar = lazy(() => import("./Avatar"));
 import HeroName from "./HeroName";
-import SoundToggle from "./SoundToggle";
 import HeroBackdrop, { type BackdropKind } from "./HeroBackdrop";
-import HeroStage from "./HeroStage";
 import HeroClock from "./HeroClock";
 import WavingFlag from "./WavingFlag";
 import { RECEDE_SCREENS, screenHeight } from "./nameStage";
@@ -32,15 +28,6 @@ function useIsPhone() {
   }, []);
   return phone;
 }
-// The spinning 3D avatar in the middle of the hero (off for now). Set to true to bring it back.
-const SHOW_AVATAR = false;
-// The lever switch for sound is hidden for now. Set to true to bring it back.
-const SHOW_SOUND_TOGGLE = false;
-// The band under the settled name that the Work cards fade out behind (screen heights).
-const NAME_BAND = "28svh";
-// The lit studio behind the name (HeroStage: a Higgsfield backdrop, a light beam and drifting dust). Off: the
-// plain dotted grid suits the rest of the site better. Set to true to bring it back.
-const SHOW_STAGE = false;
 // "Feed" along the bottom in a small, quiet chip. Set to false for the earlier bare link. (The flag has no chip.)
 const BOTTOM_CHIPS = true;
 const glassChip = "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-[13px] font-medium text-white/75";
@@ -65,10 +52,8 @@ const PortfolioHero = React.forwardRef<HTMLDivElement, PortfolioHeroProps>(({ is
         onCut={(e) => e.preventDefault()}
         onDragStart={(e) => e.preventDefault()}
       >
-      {SHOW_STAGE && <HeroStage progress={progress} />}
-
       {/* Dotted grid */}
-      {!SHOW_STAGE && <div
+      <div
         className="pointer-events-none absolute inset-0 opacity-[0.18]"
         style={{
           backgroundImage: "radial-gradient(rgba(var(--accent-rgb,196,181,253),0.5) 1px, transparent 1px)",
@@ -76,31 +61,13 @@ const PortfolioHero = React.forwardRef<HTMLDivElement, PortfolioHeroProps>(({ is
           maskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent)",
           WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent)",
         }}
-      />}
+      />
 
       {/* A backdrop (only on the separate /hero page; see HeroBackdrop.tsx). */}
       {backdrop && <HeroBackdrop kind={backdrop} />}
 
-      {SHOW_AVATAR && (
-        <>
-          {/* 3D avatar: pinned to the center of the screen. It sits above the name (z-0)
-              but below the page sections (z-10), so they slide over it as you scroll.
-              Keep this a plain div: a Framer Motion style would override the centering transform. */}
-          <div className="fixed z-[5] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none w-[86vw] md:w-[42vw] max-w-[560px] h-[56vh] md:h-[82vh]">
-            <motion.div
-              className="w-full h-full"
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, delay: 0.5 }}
-            >
-              <Suspense fallback={null}><Avatar className="!w-full !h-full" /></Suspense>
-            </motion.div>
-          </div>
-        </>
-      )}
-
       <main className="relative h-full flex flex-col items-center justify-center px-4 pt-6 pb-[14vh] md:pb-[16vh]">
-        {/* No z-index here, so the name's layers stack correctly against the fixed avatar. */}
+        {/* No z-index here, so the name's layers stack correctly. */}
         <div className="pointer-events-auto relative w-full flex items-center justify-center">
           {phone ? (
             // Phones: "VARDHAN" over "NEHRU", each as big as the screen allows.
@@ -130,11 +97,6 @@ const PortfolioHero = React.forwardRef<HTMLDivElement, PortfolioHeroProps>(({ is
             <HeroName text={NAME} scroll={progress} />
           )}
         </div>
-
-        {/* Sound switch, top-right. Fades out with Feed as the name slides back. */}
-        {SHOW_SOUND_TOGGLE && (
-  <SoundToggle className="pointer-events-auto absolute right-[4.75rem] md:right-[6.5rem] top-6 md:top-8 z-20" style={{ opacity: feedOpacity }} />
-        )}
 
         {/* The Indian flag on its pole, waving, bottom-left. No box round it. */}
         <motion.div

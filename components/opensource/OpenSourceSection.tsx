@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { MONO, ACCENT } from '../work/projects';
 import CustomIcon from '../icons/CustomIcon';
@@ -84,8 +83,8 @@ function Card({ c }: { c: Contribution }) {
           <span className="truncate">{c.repo}</span>
         </span>
         <span
-          className="shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] uppercase tracking-[0.15em]"
-          style={{ color: s.color, borderColor: s.color }}
+          className="shrink-0 rounded-full border px-2.5 py-0.5 text-[12px] font-semibold tracking-[-0.01em]"
+          style={{ color: s.color, borderColor: s.color, fontFamily: "'Bricolage Grotesque', 'Geist', sans-serif" }}
         >
           {s.label}
         </span>
@@ -135,7 +134,7 @@ export default function OpenSourceSection() {
     <section id="open-source" className="container mx-auto max-w-5xl scroll-mt-24 px-4 md:px-8">
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.25em] text-white/40" style={{ fontFamily: MONO }}>
+          <p className="text-[13px] font-medium tracking-[-0.01em] text-white/40" style={{ fontFamily: MONO }}>
             Open source
           </p>
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.03em] text-white md:text-5xl">Contributions</h2>

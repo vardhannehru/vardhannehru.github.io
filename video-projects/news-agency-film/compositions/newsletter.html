@@ -1,0 +1,49 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #ebdefc; }
+    #nl-grain { position: absolute; inset: 0; opacity: 0.07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    #nl-step { position: absolute; left: 150px; top: 110px; font-family: 'Inter', sans-serif; }
+    #nl-step .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.16em; color: #743bbe; margin-bottom: 10px; }
+    #nl-step h2 { font-weight: 900; font-size: 104px; line-height: 1; letter-spacing: -0.035em; color: #743bbe; }
+    #nl-step p { margin-top: 18px; font-size: 38px; color: #0e1523; }
+    #nl-md { position: absolute; left: 150px; top: 470px; width: 520px; padding: 30px 34px; border-radius: 22px; background: #0e1523; font-family: 'JetBrains Mono', monospace; font-size: 24px; line-height: 1.7; color: #b1e4e3; }
+    #nl-md .h { color: #fed141; }
+    #nl-arrow { position: absolute; left: 700px; top: 640px; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 80px; color: #743bbe; }
+    /* The styled HTML newsletter, from main.py's template */
+    #nl-page { position: absolute; left: 840px; top: 140px; width: 940px; height: 860px; border-radius: 22px; background: #ffffff; box-shadow: 0 40px 80px -36px rgba(116, 59, 190, 0.7); padding: 46px 52px; font-family: 'Inter', sans-serif; overflow: hidden; }
+    #nl-page h1 { font-size: 46px; font-weight: 900; letter-spacing: -0.02em; color: #1a202c; padding-bottom: 14px; border-bottom: 5px solid #3182ce; }
+    .nl-story { margin-top: 24px; }
+    .nl-story .t { height: 22px; width: 74%; border-radius: 6px; background: #2b6cb0; }
+    .nl-story .m { margin-top: 10px; font-size: 22px; color: #5a6578; }
+    .nl-story i { display: block; height: 12px; margin-top: 10px; border-radius: 6px; background: #e2e8f0; }
+    .nl-story .l { margin-top: 10px; font-size: 22px; font-weight: 700; color: #3182ce; }
+    #nl-done { position: absolute; left: 150px; top: 860px; padding: 16px 24px; border-radius: 14px; background: #b1e4e3; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 28px; color: #08746b; }
+  </style>
+  <div id="root" data-composition-id="newsletter" data-width="1920" data-height="1080">
+    <div id="nl-grain"></div>
+    <div id="nl-step"><p class="n">04</p><h2>Publish</h2><p>Markdown in,<br />a styled newsletter out.</p></div>
+    <div id="nl-md"><span class="h">### Headline</span><br />Date · Source<br />2–3 sentence summary<br />[Read Full Story](URL)</div>
+    <div id="nl-arrow">→</div>
+    <div id="nl-page">
+      <h1>Daily AI Newsletter</h1>
+      <div class="nl-story" id="nl-s0"><div class="t"></div><p class="m">Date · Source</p><i style="width: 96%"></i><i style="width: 82%"></i><p class="l">Read Full Story</p></div>
+      <div class="nl-story" id="nl-s1"><div class="t" style="width: 66%"></div><p class="m">Date · Source</p><i style="width: 92%"></i><i style="width: 70%"></i><p class="l">Read Full Story</p></div>
+      <div class="nl-story" id="nl-s2"><div class="t" style="width: 80%"></div><p class="m">Date · Source</p><i style="width: 88%"></i><i style="width: 76%"></i><p class="l">Read Full Story</p></div>
+      <div class="nl-story" id="nl-s3"><div class="t" style="width: 58%"></div><p class="m">Date · Source</p><i style="width: 94%"></i><i style="width: 64%"></i><p class="l">Read Full Story</p></div>
+    </div>
+    <div id="nl-done">✓ Newsletter Generated Successfully!</div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#nl-step', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.25, ease: 'power4.out' }, 0.1);
+      tl.fromTo('#nl-md', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'expo.out' }, 0.3);
+      tl.fromTo('#nl-arrow', { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, 0.8);
+      tl.fromTo('#nl-page', { x: 300, opacity: 0, rotate: 4 }, { x: 0, opacity: 1, rotate: 1, duration: 0.7, ease: 'expo.out' }, 0.85);
+      for (let k = 0; k < 4; k++) tl.fromTo('#nl-s' + k, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, 1.35 + k * 0.18);
+      tl.fromTo('#nl-done', { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.8)' }, 2.3);
+      tl.to('#nl-step, #nl-md, #nl-arrow, #nl-page, #nl-done', { opacity: 0, filter: 'blur(12px)', duration: 0.3, ease: 'power3.in' }, 4.05);
+      window.__timelines['newsletter'] = tl;
+    })();
+  </script>
+</template>

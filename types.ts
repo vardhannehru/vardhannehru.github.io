@@ -1,4 +1,3 @@
-import React from 'react';
 
 // Global type definitions for the application.
 

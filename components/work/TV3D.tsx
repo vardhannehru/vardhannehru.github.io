@@ -1109,14 +1109,13 @@ export default function TV3D({ title, videoUrl, imageUrl, channels, channel = 0,
       {/* Says it's a working TV, until someone has tried it. */}
       <div
         aria-hidden="true"
-        className={`pointer-events-none absolute bottom-[2%] left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-[9px] uppercase tracking-[0.22em] text-white/85 backdrop-blur-sm transition-all duration-500 md:text-[10px] ${
+        className={`pointer-events-none absolute bottom-[2%] left-1/2 flex -translate-x-1/2 items-center gap-2 whitespace-nowrap pill pill-lav rounded-full px-3.5 py-1.5 text-[12px] font-semibold leading-tight tracking-[-0.01em] shadow-[0_2px_0_rgba(52,21,95,0.25)] transition-all duration-500 md:text-[13px] ${
           !used ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
         }`}
-        style={{ fontFamily: MONO_FONT }}
       >
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#b9a4ff] opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#b9a4ff]" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-60" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-current" />
         </span>
         {!on
           ? `${touch ? 'Tap' : 'Click'} the TV to turn it on`

@@ -1,0 +1,274 @@
+{
+  "version": 1,
+  "historyId": "276b2bc2-bbe0-44f9-814d-cbace1558da5",
+  "currentRevision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+  "pendingChanges": false,
+  "files": {
+    "AGENTS.md": {
+      "hash": "6361e5d1b78020e6a17a9c31685104d78cb538a080907ca21fd6f88ec21b7fd3",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\63\\6361e5d1b78020e6a17a9c31685104d78cb538a080907ca21fd6f88ec21b7fd3"
+    },
+    "CLAUDE.md": {
+      "hash": "6361e5d1b78020e6a17a9c31685104d78cb538a080907ca21fd6f88ec21b7fd3",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\63\\6361e5d1b78020e6a17a9c31685104d78cb538a080907ca21fd6f88ec21b7fd3"
+    },
+    "compositions/endcard.html": {
+      "hash": "ee0292cabd1033bbc10636408a918c372e147fbdb037c393e821ffbdb99029fc",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\ee\\ee0292cabd1033bbc10636408a918c372e147fbdb037c393e821ffbdb99029fc"
+    },
+    "compositions/newsletter.html": {
+      "hash": "0fc313f0ec2cddaa9208d6a6408b11e54acce4e822cf25264d16d8faa71c8121",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\0f\\0fc313f0ec2cddaa9208d6a6408b11e54acce4e822cf25264d16d8faa71c8121"
+    },
+    "compositions/research.html": {
+      "hash": "a937d5d1c63592225347eb9772f018fe7be977e6aaa199d8a9bdeaddc71a489c",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\a9\\a937d5d1c63592225347eb9772f018fe7be977e6aaa199d8a9bdeaddc71a489c"
+    },
+    "compositions/run.html": {
+      "hash": "c2e6c025a9e4762d23192f50b50e0741d3a0374deace58cff0819acf93fc0e7a",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\c2\\c2e6c025a9e4762d23192f50b50e0741d3a0374deace58cff0819acf93fc0e7a"
+    },
+    "hyperframes.json": {
+      "hash": "35a6d4ea79ebe911f0d81705f7aace5d8ff0316b745b0311d56af50c9c237cb7",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\35\\35a6d4ea79ebe911f0d81705f7aace5d8ff0316b745b0311d56af50c9c237cb7"
+    },
+    "index.html": {
+      "hash": "5ccf94699c41425b082b72bb2894dff136c131380e1e268b2c43483e66aebda9",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\5c\\5ccf94699c41425b082b72bb2894dff136c131380e1e268b2c43483e66aebda9"
+    },
+    "meta.json": {
+      "hash": "f0c49d1a41e11a0a29e79773717c3c30953307cb9b8d9710c7011fb0e1f332da",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\f0\\f0c49d1a41e11a0a29e79773717c3c30953307cb9b8d9710c7011fb0e1f332da"
+    },
+    "package.json": {
+      "hash": "6b2378be9d4f071f0d01bb4ebc12bcfa8bc4e6d6afb2586ceedd3fb46cc592ef",
+      "content": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\6b\\6b2378be9d4f071f0d01bb4ebc12bcfa8bc4e6d6afb2586ceedd3fb46cc592ef"
+    }
+  },
+  "revisions": {
+    "300d7d97-b3dc-44c9-b7b6-496bd75b19e7": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794685783224,
+      "endedAt": 1794685783244,
+      "files": {
+        "compositions/newsletter.html": {
+          "before": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\65\\6580283ac725a1c7c2e9f7c9635971b9359749a46bf24dbdc2b388cf39aa5e74",
+          "after": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\0f\\0fc313f0ec2cddaa9208d6a6408b11e54acce4e822cf25264d16d8faa71c8121"
+        },
+        "compositions/research.html": {
+          "before": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\e6\\e6e93beffc39992fc04d0baccc1a2abb6e159741a5142542f2ec800c80f590f8",
+          "after": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\a9\\a937d5d1c63592225347eb9772f018fe7be977e6aaa199d8a9bdeaddc71a489c"
+        },
+        "compositions/run.html": {
+          "before": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\5c\\5ca8422250b4bf3c0a37d7a4b6068b0a704c7a0a2cf4434847bc390911189eee",
+          "after": "C:\\Users\\vardh\\.cache\\hyperframes\\history\\276b2bc2-bbe0-44f9-814d-cbace1558da5\\blobs\\c2\\c2e6c025a9e4762d23192f50b50e0741d3a0374deace58cff0819acf93fc0e7a"
+        }
+      }
+    }
+  },
+  "checks": {
+    "latest": {
+      "revision": null,
+      "id": "06034ff0-a1e9-4259-b224-5cdc1f495bb4"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "id": "06034ff0-a1e9-4259-b224-5cdc1f495bb4",
+        "scope": "project",
+        "report": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\checks\\06034ff0-a1e9-4259-b224-5cdc1f495bb4.json",
+        "metadata": {
+          "ok": true,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 45000,
+            "cache": true,
+            "contrast": true,
+            "craft": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto",
+            "includeUnmounted": false
+          }
+        },
+        "createdAt": 1794685751861,
+        "contentHash": "68a446be385caa14e1b3460ce4e3961cb47d27e42365dd44a94cc23df125b6ee",
+        "revision": null,
+        "inputFingerprint": "8abfa8b2af47b62e019c61142e36c11d54477a99fa237b8407d1ebfc8ede0837",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "snapshots": {
+    "latest": {
+      "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+      "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-6"
+    },
+    "revisions": {
+      "300d7d97-b3dc-44c9-b7b6-496bd75b19e7": [
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-0",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-00-at-0.5s.png",
+          "time": 0.5,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788213,
+          "contentHash": "e74e7d2bacd36ac5997dae76348bdbb844ae56d719fa1e3da7f0475ec721b524",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        },
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-1",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-01-at-2.6s.png",
+          "time": 2.6,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788213,
+          "contentHash": "4a8b00b8d66362c58f22ef5448020f127d6e9a9066d7b0acc2fa89dab9a6d0b7",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        },
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-2",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-02-at-5.5s.png",
+          "time": 5.5,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788213,
+          "contentHash": "07c3c3f7c40175cf4cc8a465bce5b2e8a1a39c8d93381ac97e3841a0324f2d8b",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        },
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-3",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-03-at-8.6s.png",
+          "time": 8.6,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788214,
+          "contentHash": "d0e3395863e3884b185c39fedcdc18aaf909d7e7d239e1b13161c18ddfcbe309",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        },
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-4",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-04-at-11.5s.png",
+          "time": 11.5,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788214,
+          "contentHash": "992633a6b97f555f0f15086aa02d6b66b15e9452928a4818a237101b953682ef",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        },
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-5",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-05-at-15s.png",
+          "time": 15,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788214,
+          "contentHash": "2549e32500cc330fbb61881a8c7720421a83a1f65ef639893c5a0ee814224a0b",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        },
+        {
+          "scope": "full",
+          "id": "8249b13c-cfe3-4e2b-b15b-02b57c0a4678-6",
+          "image": "C:\\Users\\vardh\\Desktop\\portfolio main\\video-projects\\news-agency-film\\.hyperframes\\artifacts\\snapshots\\384829fe-1489-488c-bcec-7f9b5b1668bd\\frame-06-at-16.15s.png",
+          "time": 16.15,
+          "metadata": {
+            "width": 1920,
+            "height": 1080,
+            "zoomScale": 1,
+            "browserGpuMode": "auto",
+            "warnings": [],
+            "partial": false
+          },
+          "createdAt": 1794685788215,
+          "contentHash": "2549e32500cc330fbb61881a8c7720421a83a1f65ef639893c5a0ee814224a0b",
+          "revision": "300d7d97-b3dc-44c9-b7b6-496bd75b19e7",
+          "inputFingerprint": "7d692b71b5a8ddb702bb76e3a6257677383329e0c4838e842576c4199080e8b9",
+          "inputScope": "local-project-files",
+          "attribution": "recorded-revision"
+        }
+      ]
+    },
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "4913f01c-ba5d-49bb-8e81-4239f1c05dc2",
+      "completedAt": 1794686089869,
+      "output": "C:\\Users\\vardh\\Desktop\\portfolio main\\public\\projects\\news-agency-reel.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}

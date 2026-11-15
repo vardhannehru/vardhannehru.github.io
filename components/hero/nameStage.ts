@@ -1,6 +1,6 @@
 import type { MotionValue } from "framer-motion";
 
-// Shared 3D "stage" for the hero name. The CSS 3D letters, the stickers and the WebGL keychain all
+// Shared 3D "stage" for the hero name. The CSS 3D letters and the stickers all
 // read these, so changing a value here keeps everything lined up with the letters automatically.
 
 /** How far the letters are laid back onto the floor, in degrees. */
@@ -63,6 +63,14 @@ export type PerchSpot = { i: number; x: number; y: number };
 /** A sticker a butterfly can land on: its centre on the floor, its height, and how it reacts. */
 export type StickerPerch = { x: number; y: number; z: number; ready: boolean; perch: (on: boolean) => void };
 
+/**
+ * A sticker's footprint on the floor, so stickers can stack: its bottom-centre (`bx`, `by`), its turn (`cos`, `sin`),
+ * size, the height of its top face right now, and its place in the pile (higher `layer` lies on top).
+ */
+/** A sticker's footprint for stacking: bottom-centre anchor, heading, size, height at the anchor (`top`) and the
+ *  slope of its face along its own axes (`sx`, `sy`), so one lying on it can follow a tilted sticker. */
+export type StickerBody = { bx: number; by: number; cos: number; sin: number; w: number; h: number; top: number; sx: number; sy: number; layer: number; lifted: boolean };
+
 /** Top-face height, tilt (CSS rotateY `a` / rotateX `b`, radians) and pivot of a letter right now. */
 export type LetterPose = { rise: number; top: number; a: number; b: number; cx: number; cy: number };
 /** Height of the surface under a floor point, and its slope along x and y. */
@@ -75,8 +83,8 @@ const RAD = Math.PI / 180;
 export const liveStages = new Set<NameStage>();
 
 /**
- * The name's floor and letters as one live surface. HeroName keeps it up to date; stickers and the
- * keychain ask it how high the letters are under them, so they move with the letters when pressed.
+ * The name's floor and letters as one live surface. HeroName keeps it up to date; the stickers
+ * ask it how high the letters are under them, so they move with the letters when pressed.
  */
 export class NameStage {
   letters: LetterMotion[] = [];
@@ -102,6 +110,10 @@ export class NameStage {
   spots: PerchSpot[] = [];
   /** Stickers butterflies can land on (each sticker registers itself). */
   stickers = new Set<StickerPerch>();
+  /** Every sticker's footprint, so a sticker dropped on another lies on top of it instead of through it. */
+  bodies = new Set<StickerBody>();
+  /** The last layer handed out (a sticker put down takes the next one, so it lies on top). */
+  layerCount = 0;
 
   pose(i: number): LetterPose {
     const m = this.letters[i];

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { buildPencil, LENGTH, type PencilScene } from './pencilScene';
@@ -53,6 +53,9 @@ function canUseWebGL() {
   }
 }
 
+// On phones it draws at 1.5x, not 2x: it sits next to the page's other 3D scenes there, and is still sharp at its size.
+const PEN_PHONE_DPR = Math.min(PHONE_DPR, 1.5);
+
 export default function PencilCursor() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +93,7 @@ export default function PencilCursor() {
       if (scene || broken) return !!scene;
       try {
         scene = buildPencil(canvas);
-        scene.setSize(SIZE, SIZE, canvasDpr(2, PHONE_DPR, SIZE, SIZE), UNITS);
+        scene.setSize(SIZE, SIZE, canvasDpr(2, PEN_PHONE_DPR, SIZE, SIZE), UNITS);
       } catch {
         broken = true;
         hideAll();
@@ -119,6 +122,7 @@ export default function PencilCursor() {
     let lastX = NaN;
     let lastY = NaN;
     let lastZ = '';
+    let lastPos = '';
     let lastSig = NaN;
 
     const setCursorOn = (on: boolean) => document.body.classList.toggle('pencil-cursor-on', on);
@@ -221,8 +225,26 @@ export default function PencilCursor() {
       // Where the canvas sits: centred on the card when resting, on the point when held, in between when flying
       // (with a little upward arc, as if it's lifted towards you).
       const e = anim.t;
-      const x = restBox.x + (tip.x - restBox.x) * e;
-      const y = restBox.y + (tip.y - restBox.y) * e - arc * 50;
+      // Resting, the pencil is placed in the page (position: absolute), so it scrolls with the card by itself. Fixed
+      // to the screen and moved by script instead, it lagged the card by a frame of scrolling on phones (whose
+      // scrolling runs apart from the page's script), drifting off the card while you scrolled. Lifted (a cursor),
+      // it's fixed to the screen.
+      const pos = mode === 'rest' ? 'absolute' : 'fixed';
+      if (pos !== lastPos) {
+        lastPos = pos;
+        wrap.style.position = pos;
+        lastX = NaN;
+      }
+      let ox = 0;
+      let oy = 0;
+      if (pos === 'absolute') {
+        const parent = wrap.offsetParent as HTMLElement | null;
+        const pr = parent ? parent.getBoundingClientRect() : null;
+        ox = pr ? pr.left : -window.scrollX;
+        oy = pr ? pr.top : -window.scrollY;
+      }
+      const x = restBox.x + (tip.x - restBox.x) * e - ox;
+      const y = restBox.y + (tip.y - restBox.y) * e - arc * 50 - oy;
       // (Written as "not close" so the first frame, with nothing written yet (NaN), always places it.)
       if (!(Math.abs(x - lastX) <= 0.1 && Math.abs(y - lastY) <= 0.1)) {
         lastX = x;
@@ -453,7 +475,7 @@ export default function PencilCursor() {
     // Pinch-zoomed on a phone: redraw at the zoomed resolution, so the pencil stays sharp.
     const offZoom = onPinchZoom(() => {
       if (!scene) return;
-      scene.setSize(SIZE, SIZE, canvasDpr(2, PHONE_DPR, SIZE, SIZE), UNITS);
+      scene.setSize(SIZE, SIZE, canvasDpr(2, PEN_PHONE_DPR, SIZE, SIZE), UNITS);
       scene.render();
       wake();
     });

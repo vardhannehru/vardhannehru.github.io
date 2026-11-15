@@ -867,5 +867,3 @@ export type Pose = {
   sign: number;
 };
 
-/** Which heads sit on which side of the pole (+1 right, -1 left), top to bottom. */
-export const HEAD_SIDES = HEADS.map((h) => h.side);

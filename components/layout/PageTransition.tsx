@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../ui/theme';
 
@@ -23,7 +23,8 @@ function labelFor(path: string, hash: string) {
   if (path.startsWith('/work')) return 'Work';
   if (path.startsWith('/about')) return 'About';
   if (path.startsWith('/hero')) return 'Hero';
-  return 'Home';
+  if (path.startsWith('/credits')) return 'Credits';
+  return path === '/' ? 'Home' : 'Page not found';
 }
 
 // A frame, or 100 ms if frames are paused (tab in the background), so the curtain can never get stuck up.
@@ -148,8 +149,8 @@ export default function PageTransition() {
       <div className="absolute inset-0 grid place-items-center">
         <div ref={labelRef} className="text-center" style={{ opacity: 0 }}>
           <div
-            className="text-[11px] uppercase tracking-[0.35em] md:text-[12px]"
-            style={{ fontFamily: "'Geist Mono', ui-monospace, monospace", color: colors.sub }}
+            className="text-[13px] font-medium tracking-[-0.01em] md:text-[14px]"
+            style={{ fontFamily: "'Bricolage Grotesque', 'Geist', sans-serif", color: colors.sub }}
           >
             Vardhan Nehru
           </div>

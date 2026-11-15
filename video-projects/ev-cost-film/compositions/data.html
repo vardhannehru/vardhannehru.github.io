@@ -1,0 +1,68 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #b1e4e3; }
+    #dt-grain { position: absolute; inset: 0; opacity: 0.07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    .dt-step { position: absolute; left: 150px; top: 110px; font-family: 'Inter', sans-serif; }
+    .dt-step .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.16em; color: #08746b; margin-bottom: 10px; }
+    .dt-step h2 { font-weight: 900; font-size: 104px; line-height: 1; letter-spacing: -0.035em; color: #08746b; }
+    .dt-step p { margin-top: 18px; font-size: 38px; color: #0e1523; }
+    /* The table: real rows from the dataset */
+    #dt-table { position: absolute; left: 150px; top: 440px; width: 1620px; border-radius: 22px; background: #ffffff; box-shadow: 0 30px 60px -28px rgba(8, 116, 107, 0.6); overflow: hidden; font-family: 'Inter', sans-serif; }
+    .dt-tr { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr 1fr 1.2fr; padding: 20px 30px; font-size: 28px; color: #0e1523; border-bottom: 2px solid #eef4f3; }
+    .dt-tr.head { background: #0e1523; color: #b1e4e3; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 24px; letter-spacing: 0.06em; font-size: 26px; }
+    .dt-tr .price { font-weight: 900; color: #08746b; }
+    /* One-hot encoding */
+    .dt-enc { position: absolute; padding: 14px 22px; border-radius: 999px; background: #743bbe; color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; }
+    /* The 80 / 20 split */
+    #dt-split { position: absolute; left: 150px; top: 830px; width: 1620px; height: 90px; display: flex; border-radius: 18px; overflow: hidden; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 34px; }
+    #dt-train { width: 80%; background: #08746b; color: #fff; display: flex; align-items: center; padding-left: 30px; transform-origin: left center; }
+    #dt-test { width: 20%; background: #fed141; color: #3f260c; display: flex; align-items: center; padding-left: 26px; transform-origin: left center; }
+  </style>
+  <div id="root" data-composition-id="data" data-width="1920" data-height="1080">
+    <div id="dt-grain"></div>
+    <div id="dt-s1" class="dt-step"><p class="n">01</p><h2>The data</h2><p>Real EV specs, each with its price.</p></div>
+    <div id="dt-s2" class="dt-step"><p class="n">02</p><h2>Encode</h2><p>Words become numbers (one-hot).</p></div>
+    <div id="dt-s3" class="dt-step"><p class="n">03</p><h2>Split</h2><p>80% to learn from, 20% to test.</p></div>
+
+    <div id="dt-table">
+      <div class="dt-tr head"><span>MODEL</span><span>0–100</span><span>KM/H</span><span>RANGE</span><span>DRIVE</span><span>BODY</span><span>PRICE</span></div>
+      <div class="dt-tr" id="dt-r0"><span>Tesla Model 3 LR</span><span>4.6 s</span><span>233</span><span>450 km</span><span>AWD</span><span>Sedan</span><span class="price">€55,480</span></div>
+      <div class="dt-tr" id="dt-r1"><span>Volkswagen ID.3 Pure</span><span>10 s</span><span>160</span><span>270 km</span><span>RWD</span><span>Hatchback</span><span class="price">€30,000</span></div>
+      <div class="dt-tr" id="dt-r2"><span>Polestar 2</span><span>4.7 s</span><span>210</span><span>400 km</span><span>AWD</span><span>Liftback</span><span class="price">€56,440</span></div>
+    </div>
+    <div id="dt-e0" class="dt-enc" style="left: 1060px; top: 330px">PowerTrain_AWD = 1</div>
+    <div id="dt-e1" class="dt-enc" style="left: 1100px; top: 250px">BodyStyle_Sedan = 1</div>
+
+    <div id="dt-split"><div id="dt-train">Train · 80%</div><div id="dt-test">Test · 20%</div></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const stepIn = (id, at) => tl.fromTo(id, { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, at);
+      const stepOut = (id, at) => tl.to(id, { opacity: 0, filter: 'blur(8px)', duration: 0.15, ease: 'power3.in' }, at);
+
+      // 01 The data
+      stepIn('#dt-s1', 0.1);
+      tl.fromTo('#dt-table', { y: 160, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'expo.out' }, 0.2);
+      for (let k = 0; k < 3; k++) tl.fromTo('#dt-r' + k, { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: 'power3.out' }, 0.55 + k * 0.12);
+
+      // 02 Encode: the words in Drive and Body turn into flags.
+      stepOut('#dt-s1', 1.45);
+      stepIn('#dt-s2', 1.6);
+      tl.to('#dt-table .dt-tr:not(.head) span:nth-child(5), #dt-table .dt-tr:not(.head) span:nth-child(6)', { color: '#743bbe', fontWeight: 900, duration: 0.25 }, 1.7);
+      tl.fromTo('#dt-e0', { y: 40, scale: 0.6, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.8)' }, 1.85);
+      tl.fromTo('#dt-e1', { y: 40, scale: 0.6, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.8)' }, 2.0);
+
+      // 03 Split
+      stepOut('#dt-s2', 2.85);
+      stepIn('#dt-s3', 3.0);
+      tl.to('#dt-e0, #dt-e1', { opacity: 0, duration: 0.2 }, 2.9);
+      tl.fromTo('#dt-train', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'power3.out' }, 3.1);
+      tl.fromTo('#dt-test', { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: 'power3.out' }, 3.45);
+
+      tl.to('#root', { backgroundColor: '#ebdefc', duration: 0.35, ease: 'power2.inOut' }, 4.25);
+      tl.to('#dt-s3, #dt-table, #dt-split', { opacity: 0, filter: 'blur(14px)', duration: 0.3, ease: 'power3.in' }, 4.25);
+      window.__timelines['data'] = tl;
+    })();
+  </script>
+</template>

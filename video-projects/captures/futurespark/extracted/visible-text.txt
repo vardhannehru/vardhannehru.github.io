@@ -1,0 +1,159 @@
+[div] Future Spark
+[div] International School
+[a] Academics
+[a] Admissions
+[a] Enroll Now
+[a] Home
+[a] About
+[a] Academics
+[a] Gallery
+[a] MCB
+[a] Careers
+[a] Admissions
+[a] Contact
+[a] Enroll Now
+[span] Instagram
+[span] YouTube
+[span] WhatsApp
+[span] Facebook
+[div] Re-imagining the Future of Education
+[div] 2026 Admissions are Open
+[div] CBSE Affiliation: 3630013
+[div] Limited seats only — already filling up
+[h1] Where Every
+[span] Spark
+[h1] Becomes
+[h1] a Brilliant
+[span] Sun
+[p] At Future Spark Academy, we combine cutting-edge STEM curriculum with global ethics to nurture visionary leaders.
+[a] Begin Your Journey
+[span] Campus:
+[span] Fully Air-Conditioned (AC)
+[span] Transport:
+[span] Facility Available
+[span] 50% Fee Refund Guarantee
+[span] if your ward does not show significant improvement
+[span] (T&C apply)
+[span] FUTURE SPARK INTERNATIONAL SCHOOL
+[h2] A school that blends academics, values and modern skills
+[p] Located at Kavuri Hills, Hyderabad — we focus on discipline, academic brilliance and all-round excellence through sports and co-curricular activities.
+[div] Smart Classrooms
+[div] Technology-enabled learning with digital boards and modern teaching.
+[div] Safety First
+[div] Secure campus with CC cameras, medical assistance and support staff.
+[div] Holistic Development
+[div] Sports, arts, clubs and activities that build confidence and character.
+[span] ABOUT THE SCHOOL
+[h2] Future Spark International School
+[span] Welcome to Future Spark International School.
+[p] Future Spark School is located in the serene residential area at Kavuri Hills, Hyderabad, the modern metropolitan city. The school is a co-educational institution pursuing academic brilliance and all round excellence.
+[p] The school stands for discipline, honing the skills involved in academics, sports and co curricular activities. Future Spark's aim is to build citizens that India will be proud of.
+[a] Read More
+[a] Contact Us
+[span] MCB
+[h2] My Class Board for Parents
+[p] A parent dashboard to see your child's diary, homework, attendance, notices, and class updates — all in one place.
+[li] • Daily diary note from class teacher
+[li] • Homework list with due dates
+[li] • Attendance summary & notices
+[a] Open MCB Demo
+[a] Enquire
+[div] MCB
+[div] 9:41
+[div] MY CLASS BOARD
+[div] Parent Dashboard
+[div] Today • Updates about your child
+[div] (Mockup only — real app will show actual student data.)
+[div] Student
+[div] Gayatri
+[div] Class: Grade 3 • Section A
+[div] Roll: 12
+[div] Attendance
+[div] 96%
+[div] Homework
+[div] 2 Pending
+[div] Diary
+[div] 1 New
+[div] Today
+[div] 2 Updates
+[div] Next Event
+[div] Fri
+[div] Notice
+[div] PTM
+[div] Homework
+[span] View all
+[div] Math
+[div] Complete exercises 3A & 3B
+[div] Due: Tomorrow
+[div] English
+[div] Read chapter 4 and write 5 new words
+[div] Due: Friday
+[div] Diary (Teacher Note)
+[div] Today we practiced reading aloud and worked on teamwork activities. Please ensure your child brings the art kit tomorrow.
+[div] — Class Teacher
+[div] Attendance
+[div] This month
+[div] 22/23 days
+[div] Late arrivals
+[div] Leaves
+[div] School Notice
+[div] PTM scheduled this weekend
+[div] Please confirm your preferred time slot via the school office.
+[div] Demo UI (static). Connect to backend later.
+[div] Phone UI mockup (preview)
+[div] (Mockup only — original app will look different.)
+[span] CAMPUS HIGHLIGHTS
+[h2] Photos that tell our story
+[p] Take a quick look at our campus, activities, and learning environment.
+[a] View Full Gallery
+[h2] Future Spark Progress
+[p] Admissions growth over the years
+[h3] Admissions Growth
+[tspan] 2024
+[tspan] 2025
+[tspan] 200
+[tspan] 225
+[tspan] 250
+[tspan] 275
+[tspan] 300
+[span] UPCOMING EVENTS
+[h2] What's happening at Future Spark
+[p] School events, orientations, and celebrations.
+[a] Enquire / RSVP
+[div] No upcoming events
+[div] Update the Events Google Sheet and click Refresh.
+[h2] Built for the
+[span] Future Workforce
+[p] We don't just teach subjects; we develop mindsets. Our programs are designed with industry leaders to ensure relevance in the age of AI.
+[h3] CBSE Curriculum
+[p] CBSE-aligned academic program focusing on conceptual clarity, continuous evaluation, strong fundamentals, and holistic student development.
+[div] 🖥️
+[h3] Digital Smart Classrooms
+[p] Interactive digital boards that enhance learning through visuals, animations, and smart content for better understanding.
+[h3] Sports & Physical Education
+[p] Comprehensive sports facilities and structured physical education programs that build fitness, discipline, and teamwork.
+[h2] Ready for 2026 Admissions?
+[p] Enquire now and apply for admission into the new academic year.
+[a] Apply Now
+[a] See Campus Photos
+[div] Our Location
+[div] Kavuri Hills, Jubilee Hills, Hyderabad
+[a] Open Maps
+[p] Igniting the next generation of visionary leaders through innovation, empathy, and academic excellence.
+[a] +91 89776 53606
+[a] +91 89776 51606
+[a] futuresparkint@gmail.com
+[span] CBSE Affiliation No:
+[div] Fully air-conditioned (AC)
+[a] Apply Now
+[a] Academics
+[a] Admission
+[div] Campus Video
+[a] Watch on YouTube
+[p] (c) 2026 Future Spark Academy. All rights reserved.
+[p] Website developed by
+[span] Penkey Vardhan Sai Raghavendra Nehru
+[span] (9949177805)
+[div] Future Spark
+[div] International School
+[span] 200

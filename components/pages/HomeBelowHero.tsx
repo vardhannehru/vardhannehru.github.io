@@ -1,4 +1,3 @@
-import React from "react";
 import AboutSection from "../about/AboutSection";
 import ContactSection from "../contact/ContactSection";
 import Reveal from "../ui/Reveal";

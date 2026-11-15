@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
@@ -226,9 +226,10 @@ function build(canvas: HTMLCanvasElement) {
 
 export default function RemoteCursor() {
   const wrapRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) return;
+    // With a mouse it's the cursor over the Work section. On phones and tablets it only rests on the "Work." heading
+    // (like the pencil on the About portrait).
+    const mouse = !!window.matchMedia?.('(hover: hover) and (pointer: fine)').matches;
     const wrap = wrapRef.current;
     if (!wrap) return;
 
@@ -303,6 +304,19 @@ export default function RemoteCursor() {
     const rest = { x: 0, y: 0, ok: false };
     const parked = { x: NaN, y: NaN };
     let fly = 0; // 0 resting on the heading .. 1 in the hand
+    // Where the wrap's own box starts, for placing it: the screen (fixed, in the hand) or its parent (absolute, at
+    // rest). Switches its position mode on the way.
+    let lastFixed: boolean | null = null;
+    const place = (fixed: boolean) => {
+      if (fixed !== lastFixed) {
+        lastFixed = fixed;
+        wrap.style.position = fixed ? 'fixed' : 'absolute';
+      }
+      if (fixed) return { x: 0, y: 0 };
+      const parent = wrap.offsetParent as HTMLElement | null;
+      const pr = parent ? parent.getBoundingClientRect() : null;
+      return pr ? { x: pr.left, y: pr.top } : { x: -window.scrollX, y: -window.scrollY };
+    };
     const readRest = () => {
       const el = broken ? null : document.querySelector<HTMLElement>('[data-remote-rest]');
       if (!el) {
@@ -320,7 +334,9 @@ export default function RemoteCursor() {
     const evaluate = () => {
       evalQueued = false;
       readRest();
-      if (rest.ok && (Math.abs(rest.x - parked.x) > 0.5 || Math.abs(rest.y - parked.y) > 0.5)) {
+      // (Compared in page coordinates: scrolling alone moves the heading and the resting remote together.)
+      // (Written as "not close", so the first look, with nothing parked yet (NaN), counts as moved and draws it.)
+      if (rest.ok && !(Math.abs(rest.x + window.scrollX - parked.x) <= 0.5 && Math.abs(rest.y + window.scrollY - parked.y) <= 0.5)) {
         ensureBuilt();
         startLoop();
       } else if (!rest.ok && shown > 0) startLoop();
@@ -341,7 +357,7 @@ export default function RemoteCursor() {
       startLoop();
     };
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType === 'touch') return;
+      if (!mouse || e.pointerType !== 'mouse') return;
       if (pos.has) {
         vel.x += e.clientX - pos.x;
         vel.y += e.clientY - pos.y;
@@ -352,7 +368,7 @@ export default function RemoteCursor() {
       queueEval();
     };
     const onDown = (e: PointerEvent) => {
-      if (!active || e.pointerType === 'touch' || e.button !== 0) return;
+      if (!active || !mouse || e.pointerType !== 'mouse' || e.button !== 0) return;
       held = true;
       press(remoteButtonAt(e.clientX, e.clientY), 120);
       tvClick('remote');
@@ -403,7 +419,13 @@ export default function RemoteCursor() {
       wrap.style.opacity = String(shown);
       // Under the nav and pop-ups while it rests on the heading; above everything in the hand.
       wrap.style.zIndex = fly > 0.02 ? '10000' : '44';
-      wrap.style.transform = `translate3d(${px - SIZE / 2}px, ${py - SIZE / 2}px, 0) scale(${0.7 + 0.3 * shown})`;
+      // Resting, it's placed in the page (position: absolute) so it scrolls with the heading by itself; fixed to the
+      // screen and moved by script, it lagged a frame behind the heading on phones. In the hand it's fixed.
+      const off = place(fly > 0.02);
+      // The phone heading is smaller, so the remote resting on it is too.
+      const restScale = window.innerWidth < 768 ? 0.6 : 1;
+      const k = (0.7 + 0.3 * shown) * (restScale + (1 - restScale) * s);
+      wrap.style.transform = `translate3d(${px - off.x - SIZE / 2}px, ${py - off.y - SIZE / 2}px, 0) scale(${k})`;
       if (!r && (active || rest.ok)) ensureBuilt(); // after a lost context
 
       if (r) {
@@ -463,12 +485,12 @@ export default function RemoteCursor() {
         r.renderer.render(r.scene, r.camera);
       }
       // Settled on the heading and nothing moving: stop drawing until a scroll or the pointer wakes it.
-      if (!active && rest.ok && fly === 0 && shown > 0.995 && depth === 0 && Math.abs(rest.x - parked.x) < 0.5 && Math.abs(rest.y - parked.y) < 0.5) {
+      if (!active && rest.ok && fly === 0 && shown > 0.995 && depth === 0 && Math.abs(rest.x + window.scrollX - parked.x) < 0.5 && Math.abs(rest.y + window.scrollY - parked.y) < 0.5) {
         raf = 0;
         return;
       }
-      parked.x = rest.x;
-      parked.y = rest.y;
+      parked.x = rest.x + window.scrollX;
+      parked.y = rest.y + window.scrollY;
       raf = requestAnimationFrame(loop);
     };
     const startLoop = () => {
@@ -500,7 +522,8 @@ export default function RemoteCursor() {
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[10000] hidden md:block"
+      // Shown at every width: on phones it rests on the "Work." heading.
+      className="pointer-events-none fixed left-0 top-0 z-[10000]"
       style={{ width: SIZE, height: SIZE, opacity: 0, willChange: 'transform, opacity' }}
     />
   );

@@ -28,7 +28,7 @@ const CUTOUT = '/about/vardhan-cutout.png';
 const STICKER_RATIO = '1100 / 1406';
 
 const HAND = "'Caveat', 'Dancing Script', cursive";
-const MONO = "'Geist Mono', ui-monospace, monospace";
+const MONO = "'Bricolage Grotesque', 'Geist', sans-serif"; // the labels' font (was a spaced-out mono)
 const DISPLAY = "'Anton', 'Inter', sans-serif";
 
 const SUMMARY =
@@ -284,7 +284,7 @@ export default function AboutCollage({ resumeUrl }: { resumeUrl: string }) {
           <motion.div
             {...fadeUp}
             transition={{ duration: 0.6 }}
-            className="flex items-center justify-between border-b border-black/15 pb-3 text-[10px] uppercase tracking-[0.28em] md:text-[11px]"
+            className="flex items-center justify-between border-b border-black/15 pb-3 text-[12px] font-medium tracking-[-0.01em] md:text-[13px]"
             style={{ fontFamily: MONO }}
           >
             {/* The two ends take equal room, so the marks sit in the exact middle. */}
@@ -315,7 +315,7 @@ export default function AboutCollage({ resumeUrl }: { resumeUrl: string }) {
             <motion.div
               {...fadeUp}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mb-3 hidden text-right text-[11px] uppercase tracking-[0.3em] md:block"
+              className="mb-3 hidden text-right text-[13px] font-medium tracking-[-0.01em] md:block"
               style={{ fontFamily: MONO }}
             >
               right now
@@ -419,7 +419,7 @@ export default function AboutCollage({ resumeUrl }: { resumeUrl: string }) {
               <ul className="mt-4 space-y-4">
                 {EXPERIENCE.map((item) => (
                   <li key={item.what} className="border-l-2 pl-3" style={{ borderColor: RED }}>
-                    <span className="block text-[10px] uppercase tracking-[0.25em] text-black/55" style={{ fontFamily: MONO }}>
+                    <span className="block text-[12px] font-medium tracking-[-0.01em] text-black/55" style={{ fontFamily: MONO }}>
                       {item.when}
                     </span>
                     <span className="block font-semibold">{item.what}</span>
@@ -449,7 +449,7 @@ export default function AboutCollage({ resumeUrl }: { resumeUrl: string }) {
                 EDUCATION
               </h3>
               <div className="mt-4 border-l-2 pl-3" style={{ borderColor: RED }}>
-                <span className="block text-[10px] uppercase tracking-[0.25em] text-black/55" style={{ fontFamily: MONO }}>
+                <span className="block text-[12px] font-medium tracking-[-0.01em] text-black/55" style={{ fontFamily: MONO }}>
                   2021 – 2025
                 </span>
                 <span className="block font-semibold">B.Tech CSE (AI & ML)</span>
@@ -463,7 +463,7 @@ export default function AboutCollage({ resumeUrl }: { resumeUrl: string }) {
                 {TOOLKIT.map((tool, i) => (
                   <motion.span
                     key={tool}
-                    className="cursor-default border-[1.5px] px-2.5 py-1 text-[11px] uppercase tracking-[0.12em]"
+                    className="cursor-default border-[1.5px] px-2.5 py-1 text-[13px] font-medium tracking-[-0.01em]"
                     style={{ fontFamily: MONO, borderColor: INK, rotate: `${((i * 37) % 7) - 3}deg` }}
                     whileHover={{ rotate: 0, scale: 1.08, backgroundColor: INK, color: PAPER }}
                   >

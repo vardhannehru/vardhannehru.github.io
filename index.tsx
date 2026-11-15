@@ -10,7 +10,17 @@ import App from './App';
 // /#work, say) still goes to its section; only a reload is reset.
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
-if (navEntry?.type === 'reload') {
+// Coming back after the phone unloaded the page in the background (index.html sets __plRestore): go back to where
+// you were instead, once the site is up.
+const restore = (window as { __plRestore?: { y: number } | null }).__plRestore;
+if (restore) {
+  const back = () => window.scrollTo(0, restore.y);
+  window.addEventListener('site:ready', () => {
+    back();
+    // (Again a moment later, once anything below has finished laying out.)
+    window.setTimeout(back, 400);
+  }, { once: true });
+} else if (navEntry?.type === 'reload') {
   if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
   window.scrollTo(0, 0);
 }

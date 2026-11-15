@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef } from "react";
 import { animate, motion, useAnimationFrame, useMotionValue, useTransform, type Easing, type MotionValue } from "framer-motion";
 import { playStickerLand } from "./chimes";
-import { NAME_TILT_DEG, type NameStage, type StickerPerch, type Support } from "./nameStage";
+import { NAME_TILT_DEG, type NameStage, type StickerBody, type StickerPerch, type Support } from "./nameStage";
 
 /** The hero name's live stage, so stickers can ride on the letters. */
 export const NameStageContext = createContext<NameStage | null>(null);
@@ -9,6 +9,8 @@ export const NameStageContext = createContext<NameStage | null>(null);
 const RAD = Math.PI / 180;
 // Sits this far above the surface, so it never sinks into it.
 const GAP = 2;
+// How thick a sticker counts as when another is stuck on top of it.
+const STACK = 3;
 // Colour of a sticker's backing paper, seen when a corner is peeled up.
 export const BACKING = "#ece9f2";
 const PEEL_SPRING = { type: "spring", stiffness: 260, damping: 20 } as const;
@@ -68,6 +70,8 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
   // Where a butterfly can land on it, kept up to date every frame.
   const perchSpot = useRef<StickerPerch | null>(null);
   const perchReaction = useRef<(on: boolean) => void>(() => {});
+  // Its footprint, shared with the other stickers so they can lie on top of it (and it on them).
+  const body = useRef<StickerBody | null>(null);
 
   // Paste in, once: upright facing you, then it tips over and slaps flat onto the surface.
   useEffect(() => {
@@ -132,6 +136,34 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
     // letter under it is pressed the others don't poke up through it.
     let z0 = valid.length ? -Infinity : 0;
     for (const k of valid) z0 = Math.max(z0, hits[k]!.z - s.sx * SAMPLES[k][0] * w - s.sy * SAMPLES[k][1] * h);
+    // Stickers underneath (lower in the pile): lie on top of them instead of passing through. Every sample point of
+    // this sticker that falls inside another's footprint must clear that sticker's face at that spot, following its
+    // tilt (one lying on a letter slopes, so its far edge is higher than its anchor; using only the anchor height let
+    // the two cut through each other along a straight line).
+    const me = body.current;
+    if (me) {
+      for (const o of stage.bodies) {
+        if (o === me || o.lifted || o.layer > me.layer) continue;
+        for (const [fx, fy] of SAMPLES) {
+          const ux = fx * w;
+          const uy = fy * h;
+          const dx = bx + ux * cr - uy * sr - o.bx;
+          const dy = by + ux * sr + uy * cr - o.by;
+          const lx = dx * o.cos + dy * o.sin;
+          const ly = -dx * o.sin + dy * o.cos;
+          if (Math.abs(lx) <= o.w / 2 && ly <= 0 && ly >= -o.h) {
+            const under = o.top + o.sx * lx + o.sy * ly;
+            z0 = Math.max(z0, under + STACK - GAP - s.sx * ux - s.sy * uy);
+          }
+        }
+      }
+      me.bx = bx;
+      me.by = by;
+      me.cos = cr;
+      me.sin = sr;
+      me.sx = s.sx;
+      me.sy = s.sy;
+    }
     // Rises at once when a letter comes back up under it; only settles down smoothly.
     s.z = !s.ready || z0 > s.z ? z0 : s.z + (z0 - s.z) * f;
     s.ready = true;
@@ -139,6 +171,10 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
       if (Math.abs(mv.get() - v) > 0.001) mv.set(v);
     };
     set(z, s.z + GAP + pasteLift.get());
+    if (me) {
+      me.top = z.get();
+      me.lifted = !!drag.current;
+    }
     set(rotateX, Math.asin(s.sy) / RAD + pasteTilt.get());
     set(rotateY, -Math.asin(s.sx) / RAD);
 
@@ -150,6 +186,18 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
       spot.ready = !drag.current && pasteLift.get() < 0.5 && opacity.get() > 0.95;
     }
   });
+
+  // Its footprint, for stacking. Stickers start in the order they're on the page; one put down goes on top.
+  useEffect(() => {
+    if (!stage) return;
+    const b: StickerBody = { bx: 0, by: 0, cos: 1, sin: 0, w, h, top: 0, sx: 0, sy: 0, layer: ++stage.layerCount, lifted: false };
+    body.current = b;
+    stage.bodies.add(b);
+    return () => {
+      stage.bodies.delete(b);
+      body.current = null;
+    };
+  }, [stage, w, h]);
 
   // Butterflies can land on it (see ButterflyLayer).
   useEffect(() => {
@@ -190,6 +238,8 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
     e.currentTarget.setPointerCapture(e.pointerId);
     drag.current = { id: e.pointerId, x0: x.get(), y0: y.get(), px: p.x, py: p.y, moved: false };
     stage.busy = true;
+    // Picked up: it's on top of the pile from now on, so it passes over the others while carried.
+    if (body.current) body.current.layer = ++stage.layerCount;
     animate(dragLift, Math.min(w, h) * 0.3, { type: "spring", stiffness: 300, damping: 22 });
     peelTo(peelMax * 1.3);
   };
@@ -214,6 +264,8 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
       tapEffect();
       return;
     }
+    // Put down: it now lies on top of the pile.
+    if (stage && body.current) body.current.layer = ++stage.layerCount;
     peelTo(hovered.current ? peelMax : 0);
   };
 
@@ -240,18 +292,24 @@ export default function Sticker({ width: w, height: h, left, top, rotate, lift, 
         transformOrigin: "50% 100%",
         transformStyle: "preserve-3d",
       }}
-      onPointerEnter={() => {
+      // Hover peels the corner, for a mouse only: a finger "hovers" whatever it touches until it taps somewhere
+      // else, which left the corner peeled (and the phone redrawing the name) after a tap or while scrolling past.
+      onPointerEnter={(e) => {
+        if (e.pointerType === "touch") return;
         hovered.current = true;
         if (!drag.current) peelTo(peelMax);
       }}
-      onPointerLeave={() => {
+      onPointerLeave={(e) => {
+        if (e.pointerType === "touch") return;
         hovered.current = false;
         if (!drag.current) peelTo(0);
       }}
       onClick={(e) => {
         // Keep the tap from also pressing the letter underneath.
         e.stopPropagation();
-        if (lastType.current === "touch") tapEffect();
+        // A finger tap no longer animates the sticker: on phones (seen on a Galaxy S23 Ultra) any animation inside the
+        // name's 3D scene made the whole name and the nav bar flicker while it ran. A mouse click or the S Pen still
+        // flicks the corner (endDrag).
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

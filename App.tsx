@@ -1,16 +1,15 @@
-import React, { Suspense, lazy, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import NotFoundPage from './components/pages/NotFoundPage';
+import CreditsPage from './components/pages/CreditsPage';
+import OfflinePage from './components/pages/OfflinePage';
 import SmoothCursor from './components/cursor/SmoothCursor';
 import RemoteCursor from './components/work/RemoteCursor';
 import SmoothScroll from './components/ui/SmoothScroll';
 import ClickSpark from './components/cursor/ClickSpark';
-import Navbar from './components/layout/Navbar';
 import HeroNav from './components/layout/HeroNav';
 import GlowNav from './components/layout/GlowNav';
 import PageTransition from './components/layout/PageTransition';
-
-// The floating navbar (off). Set to true to bring it back.
-const SHOW_NAVBAR = false;
 import { cn } from './lib/utils';
 import SiteLayout from './components/pages/SiteLayout';
 import HomeBelowHero from './components/pages/HomeBelowHero';
@@ -38,7 +37,7 @@ const SHOW_PENCIL_CURSOR = true;
 const PencilCursor = lazy(() => import('./components/about/pencil/PencilCursor'));
 import { useTheme } from './components/ui/theme';
 import { onSiteReady } from './components/ui/siteReady';
-import { SocialLinks, GITHUB_URL, LINKEDIN_URL } from './components/opensource/OpenSourceSection';
+import { GITHUB_URL, LINKEDIN_URL } from './components/opensource/OpenSourceSection';
 
 export default function App() {
   const isDark = useTheme() === 'dark';
@@ -78,14 +77,13 @@ export default function App() {
       {/* GlobalConfetti removed (paper effect) */}
       {/* ClickSound removed (replaced by ClickSpark) */}
 
-      {SHOW_NAVBAR && <Navbar isDark={isDark} />}
       <HeroNav />
       {/* The main nav bar, lit from behind (GlowNav.tsx). */}
       <GlowNav />
       {/* The curtain that covers the switch between pages (PageTransition.tsx). */}
       <PageTransition />
 
-      <main className={`bg-[#07040f] min-h-screen relative z-10 transition-colors ${SHOW_NAVBAR ? "pt-24 md:pt-0" : ""}`}>
+      <main className="bg-[#07040f] min-h-screen relative z-10 transition-colors">
         <Routes>
           <Route element={<SiteLayout isDark={isDark} />}>
             <Route
@@ -100,13 +98,21 @@ export default function App() {
           <Route path="/work" element={<Suspense fallback={null}><WorkPage /></Suspense>} />
           {/* The hero on its own page. The home page keeps its own hero. */}
           <Route path="/hero" element={<Suspense fallback={null}><HeroPage isDark={isDark} /></Suspense>} />
+          {/* Who and what the site builds on. */}
+          <Route path="/credits" element={<CreditsPage />} />
+          {/* Any other address: say so and offer the way home. */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
+      {/* Covers the site while the connection is down (OfflinePage.tsx). */}
+      <OfflinePage />
 
       {/* Bottom padding clears the floating nav bar (GlowNav), which otherwise covers the copyright line. */}
       <footer className="text-center pt-8 pb-32 text-zinc-400 text-sm border-t border-zinc-800 bg-[#07040f] relative z-10 transition-colors">
-        <SocialLinks className="mb-4 justify-center" />
         <p>&copy; {new Date().getFullYear()} Penkey Vardhan Sai Raghavendra Nehru. All rights reserved.</p>
+        <Link to="/credits" className="mt-2 inline-block underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-white">
+          Credits
+        </Link>
       </footer>
       {SHOW_TRAFFIC_LIGHT && (
         <Suspense fallback={null}>

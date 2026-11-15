@@ -1,0 +1,30 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #fff4cc; }
+    #send-grain { position: absolute; inset: 0; opacity: 0.07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    #send-mark { position: absolute; left: 0; right: 0; top: 318px; text-align: center; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 150px; line-height: 1; letter-spacing: -0.04em; color: #14356b; }
+    #send-mark .w { display: inline-block; }
+    #send-mark .soft { color: #a1690b; }
+    #send-what { position: absolute; left: 0; right: 0; top: 510px; text-align: center; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.02em; color: #0e1523; }
+    #send-stack { position: absolute; left: 0; right: 0; top: 612px; text-align: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.18em; color: #08746b; }
+    #send-tag { position: absolute; left: 0; right: 0; top: 666px; text-align: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.18em; color: #743bbe; }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="send-grain"></div>
+    <h2 id="send-mark"><span class="w">Shivaji</span> <span class="w">Vidya</span> <span class="w soft">Peeth</span></h2>
+    <p id="send-what">A plain, fast CBSE school website</p>
+    <p id="send-stack">HTML · CSS · JAVASCRIPT · 15 PAGES</p>
+    <p id="send-tag">FREELANCE · SHIVAJIVIDYAPEETH.IN · 2026</p>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#send-mark .w', { opacity: 0.3, filter: 'blur(5px)', y: 18 }, { opacity: 1, filter: 'blur(0px)', y: 0, duration: 0.35, ease: 'expo.out', stagger: 0.09 }, 0.1);
+      tl.fromTo('#send-what', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, 0.55);
+      tl.fromTo('#send-stack', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, 0.7);
+      tl.fromTo('#send-tag', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.2, ease: 'power4.out' }, 0.75);
+      tl.to('#send-mark, #send-what, #send-stack, #send-tag', { opacity: 0, filter: 'blur(8px)', duration: 0.22, ease: 'power3.in' }, 2.55);
+      window.__timelines['endcard'] = tl;
+    })();
+  </script>
+</template>

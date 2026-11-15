@@ -1,0 +1,487 @@
+{
+  "ok": true,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "filesScanned": 5
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 5,
+    "findings": [
+      {
+        "code": "container_overflow",
+        "severity": "info",
+        "time": 0.889,
+        "selector": "#fh-shot",
+        "message": "Element extends outside a clipping layout container.",
+        "rect": {
+          "left": 225.09,
+          "top": 192.78,
+          "right": 1701.45,
+          "bottom": 1022.98,
+          "width": 1476.35,
+          "height": 830.2
+        },
+        "containerSelector": "#fh-win",
+        "fixHint": "Resize/reposition the child or container, or mark intentional overflow with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 230,
+          "top": 140,
+          "right": 1690,
+          "bottom": 1040,
+          "width": 1460,
+          "height": 900
+        },
+        "overflow": {
+          "left": 4.91,
+          "right": 11.45
+        },
+        "dataAttributes": {
+          "data-hf-render-id": "fh-shot",
+          "data-hf-authored-opacity": ""
+        },
+        "sourceFile": "compositions/hero.html",
+        "bbox": {
+          "x": 225.09,
+          "y": 192.78,
+          "width": 1476.35,
+          "height": 830.2
+        },
+        "firstSeen": 0.889,
+        "lastSeen": 2.667,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          0.889,
+          2.667
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 2.667,
+        "selector": "#fh-url",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 307.57,
+          "top": 151,
+          "right": 579.21,
+          "bottom": 185,
+          "width": 271.64,
+          "height": 34
+        },
+        "containerSelector": "#fh-shot",
+        "text": "shivajividyapeeth.in",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "dataAttributes": {},
+        "sourceFile": "compositions/hero.html",
+        "bbox": {
+          "x": 307.57,
+          "y": 151,
+          "width": 271.64,
+          "height": 34
+        },
+        "firstSeen": 2.667,
+        "lastSeen": 2.667,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          2.667
+        ]
+      },
+      {
+        "code": "text_box_overflow",
+        "severity": "info",
+        "time": 11.556,
+        "selector": "#sb-p8",
+        "message": "Text extends outside its nearest visual/container box.",
+        "rect": {
+          "left": 1539.75,
+          "top": 539.83,
+          "right": 1820.12,
+          "bottom": 575.71,
+          "width": 280.37,
+          "height": 35.88
+        },
+        "containerSelector": "#sb-p8",
+        "text": "Mandatory Disclosure",
+        "fixHint": "Text is 280px x 36px inside 251px x 78px and overflows by up to 49px; widen the container to at least ~301px or shrink font-size from 26px to ~23px, or allow wrapping with max-width/fitTextFontSize.",
+        "containerRect": {
+          "left": 1519.37,
+          "top": 519.2,
+          "right": 1770.63,
+          "bottom": 597.56,
+          "width": 251.25,
+          "height": 78.35
+        },
+        "overflow": {
+          "right": 49.49
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/build.html",
+        "bbox": {
+          "x": 1539.75,
+          "y": 539.83,
+          "width": 280.37,
+          "height": 35.88
+        },
+        "firstSeen": 11.556,
+        "lastSeen": 11.556,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          11.556
+        ]
+      },
+      {
+        "code": "text_box_overflow",
+        "severity": "info",
+        "time": 11.556,
+        "selector": "#sb-p13",
+        "message": "Text extends outside its nearest visual/container box.",
+        "rect": {
+          "left": 1249.75,
+          "top": 749.67,
+          "right": 1498.95,
+          "bottom": 785.01,
+          "width": 249.2,
+          "height": 35.34
+        },
+        "containerSelector": "#sb-p13",
+        "text": "Academic Calendar",
+        "fixHint": "Text is 249px x 35px inside 251px x 78px and overflows by up to 18px; widen the container to at least ~270px, or allow wrapping with max-width/fitTextFontSize.",
+        "containerRect": {
+          "left": 1229.37,
+          "top": 727.82,
+          "right": 1480.63,
+          "bottom": 806.18,
+          "width": 251.25,
+          "height": 78.35
+        },
+        "overflow": {
+          "right": 18.32
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/build.html",
+        "bbox": {
+          "x": 1249.75,
+          "y": 749.67,
+          "width": 249.2,
+          "height": 35.34
+        },
+        "firstSeen": 11.556,
+        "lastSeen": 11.556,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          11.556
+        ]
+      },
+      {
+        "code": "text_box_overflow",
+        "severity": "info",
+        "time": 11.556,
+        "selector": "#sb-p14",
+        "message": "Text extends outside its nearest visual/container box.",
+        "rect": {
+          "left": 1539.75,
+          "top": 748.78,
+          "right": 1801.43,
+          "bottom": 784.33,
+          "width": 261.68,
+          "height": 35.55
+        },
+        "containerSelector": "#sb-p14",
+        "text": "Grievance Redressal",
+        "fixHint": "Text is 262px x 36px inside 251px x 78px and overflows by up to 31px; widen the container to at least ~282px or shrink font-size from 26px to ~25px, or allow wrapping with max-width/fitTextFontSize.",
+        "containerRect": {
+          "left": 1519.37,
+          "top": 727.82,
+          "right": 1770.63,
+          "bottom": 806.18,
+          "width": 251.25,
+          "height": 78.35
+        },
+        "overflow": {
+          "right": 30.8
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/build.html",
+        "bbox": {
+          "x": 1539.75,
+          "y": 748.78,
+          "width": 261.68,
+          "height": 35.55
+        },
+        "firstSeen": 11.556,
+        "lastSeen": 11.556,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          11.556
+        ]
+      }
+    ],
+    "duration": 16,
+    "samples": [
+      0.889,
+      2.667,
+      4.444,
+      6.222,
+      8,
+      9.778,
+      11.556,
+      13.333,
+      15.111
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 5,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "samples": [
+      0.889,
+      4.444,
+      8,
+      11.556,
+      15.111
+    ],
+    "checked": 49,
+    "passed": 49
+  },
+  "craft": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 2,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "film_silent",
+        "severity": "warning",
+        "message": "This 16 s film has no sound source (no <audio>, no <video> with sound): add a music bed and sounds on the visible actions unless the person asked for silence; see references/sound.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 15 text elements stay under it for 0.5 s or more, the smallest \"Academics\" at 21 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Academics",
+        "selector": "#sb-p2",
+        "dataAttributes": {},
+        "sourceFile": "compositions/build.html",
+        "bbox": {
+          "x": 1057.54,
+          "y": 404.74,
+          "width": 118.59,
+          "height": 33.81
+        },
+        "time": 9.5,
+        "times": [
+          9.375,
+          9.5,
+          9.5,
+          9.625,
+          9.75,
+          9.75,
+          9.875,
+          9.875,
+          10,
+          10,
+          10.125,
+          10.25,
+          10.25,
+          10.375,
+          10.375
+        ],
+        "fontPx": 21.44,
+        "floorPx": 28,
+        "seconds": 3.75,
+        "elements": [
+          {
+            "selector": "#sb-p2",
+            "text": "Academics",
+            "fontPx": 21.44,
+            "time": 9.5,
+            "seconds": 3.75
+          },
+          {
+            "selector": "#sb-p0",
+            "text": "Home",
+            "fontPx": 21.83,
+            "time": 9.375,
+            "seconds": 3.875
+          },
+          {
+            "selector": "#sb-p9",
+            "text": "Privacy Policy",
+            "fontPx": 22.02,
+            "time": 10,
+            "seconds": 3.25
+          },
+          {
+            "selector": "#sb-p7",
+            "text": "Contact",
+            "fontPx": 22.37,
+            "time": 9.875,
+            "seconds": 3.375
+          },
+          {
+            "selector": "#sb-p5",
+            "text": "Faculty",
+            "fontPx": 22.69,
+            "time": 9.75,
+            "seconds": 3.5
+          },
+          {
+            "selector": "#sb-p14",
+            "text": "Grievance Redressal",
+            "fontPx": 22.84,
+            "time": 10.375,
+            "seconds": 2.875
+          },
+          {
+            "selector": "#sb-p3",
+            "text": "Admissions",
+            "fontPx": 22.98,
+            "time": 9.625,
+            "seconds": 3.625
+          },
+          {
+            "selector": "#sb-p12",
+            "text": "Board Results",
+            "fontPx": 23.12,
+            "time": 10.25,
+            "seconds": 3
+          },
+          {
+            "selector": "#sb-p10",
+            "text": "Terms",
+            "fontPx": 23.37,
+            "time": 10.125,
+            "seconds": 3.125
+          },
+          {
+            "selector": "#sb-p1",
+            "text": "About",
+            "fontPx": 24.29,
+            "time": 9.5,
+            "seconds": 3.75
+          },
+          {
+            "selector": "#sb-p8",
+            "text": "Mandatory Disclosure",
+            "fontPx": 24.52,
+            "time": 10,
+            "seconds": 3.25
+          },
+          {
+            "selector": "#sb-p6",
+            "text": "Gallery",
+            "fontPx": 24.66,
+            "time": 9.875,
+            "seconds": 3.375
+          },
+          {
+            "selector": "#sb-p4",
+            "text": "Facilities",
+            "fontPx": 24.79,
+            "time": 9.75,
+            "seconds": 3.5
+          },
+          {
+            "selector": "#sb-p13",
+            "text": "Academic Calendar",
+            "fontPx": 24.85,
+            "time": 10.375,
+            "seconds": 2.875
+          },
+          {
+            "selector": "#sb-p11",
+            "text": "Fee Structure",
+            "fontPx": 24.95,
+            "time": 10.25,
+            "seconds": 3
+          }
+        ]
+      }
+    ],
+    "enabled": true,
+    "step": 0.125,
+    "samples": 128
+  },
+  "audio": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 1,
+    "findings": [
+      {
+        "code": "audio_none",
+        "severity": "info",
+        "message": "The film has no sound: no clip in it plays audio.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0
+      }
+    ]
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}

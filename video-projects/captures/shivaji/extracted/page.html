@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en" class="js">
+<head>
+<style>/* ==========================================================================
+   Shivaji Vidya Peeth High School
+   Single stylesheet for the whole site. See DESIGN.md for the rules behind it.
+
+   Contents
+     1. Tokens
+     2. Base
+     3. Layout helpers
+     4. Header and navigation
+     5. Footer
+     6. Page header
+     7. Sections and text
+     8. Cards, grids, lists
+     9. Tables
+    10. Buttons
+    11. Gallery
+    12. Contact and forms
+    13. Notices
+    14. Print
+   ========================================================================== */
+
+
+/* 1. Tokens ---------------------------------------------------------------- */
+
+:root {
+  --navy: #14356b;
+  --navy-dark: #0d2247;
+  --text: #222222;
+  --text-muted: #55606e;
+  --line: #d5dae2;
+  --bg-alt: #f4f6f9;
+
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1rem;
+  --s5: 1.5rem;
+  --s6: 2rem;
+  --s7: 3rem;
+
+  --radius: 4px;
+  --container: 1100px;
+  --measure: 70ch;
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+
+/* 2. Base ------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* The site is deliberately light only, as the school asked for a white
+   background. Declaring it stops the browser force-darkening form controls
+   and scrollbars for visitors whose device is set to dark mode. */
+html {
+  color-scheme: light;
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--navy);
+  text-decoration: underline;
+}
+
+a:hover { color: var(--navy-dark); }
+
+/* A visible focus ring on every interactive element. Never remove this
+   without putting an equivalent in its place. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+h1, h2, h3 {
+  color: var(--navy);
+  margin: 0 0 var(--s3);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+h1 { font-size: 1.875rem; line-height: 1.25; }
+h2 { font-size: 1.375rem; }
+h3 { font-size: 1.125rem; }
+
+p { margin: 0 0 var(--s4); }
+
+/* Browsers indent a figure by 40px on each side by default, which pushes
+   photographs out of line with the text beside them. */
+figure { margin: 0 0 var(--s5); }
+
+figure img { border: 1px solid var(--line); border-radius: var(--radius); }
+
+figcaption { margin-top: var(--s2); }
+
+ul, ol { margin: 0 0 var(--s4); padding-left: 1.25rem; }
+li { margin-bottom: var(--s2); }
+
+/* Skip link: off screen until it is focused by keyboard. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--navy);
+  color: #fff;
+  padding: var(--s3) var(--s4);
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+  color: #fff;
+}
+
+/* Stops a sticky header hiding an anchored heading. */
+[id] { scroll-margin-top: var(--s6); }
+
+
+/* 3. Layout helpers -------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--s4);
+}
+
+.section {
+  padding: var(--s7) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.section:last-of-type { border-bottom: 0; }
+
+.section--alt { background: var(--bg-alt); }
+
+.prose { max-width: var(--measure); }
+
+.lead {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: var(--measure);
+}
+
+.meta {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+
+/* 4. Header and navigation ------------------------------------------------- */
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  padding: var(--s4) 0;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.brand-name {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.25;
+}
+
+.brand-tagline {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* The Menu button only appears on small screens, and only when scripting is
+   available to make it work. Without JavaScript the full navigation is shown
+   instead, so a button that could do nothing is never displayed. */
+.nav-toggle {
+  display: none;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--navy);
+  border-radius: var(--radius);
+  padding: var(--s3) var(--s4);
+  min-height: 44px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.nav-toggle:hover { background: var(--bg-alt); }
+
+.site-nav { background: var(--navy); }
+
+.site-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.site-nav li { margin: 0; }
+
+.site-nav a {
+  display: block;
+  padding: var(--s3) var(--s4);
+  color: #fff;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+
+.site-nav a:hover {
+  color: #fff;
+  background: var(--navy-dark);
+}
+
+.site-nav a[aria-current="page"] {
+  border-bottom-color: #fff;
+  font-weight: 600;
+}
+
+.site-nav a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+
+/* 5. Footer ---------------------------------------------------------------- */
+
+.site-footer {
+  background: var(--navy);
+  color: #fff;
+  padding: var(--s7) 0 var(--s5);
+}
+
+.site-footer h2 {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: var(--s3);
+}
+
+.site-footer p,
+.site-footer li { color: #fff; }
+
+.site-footer a { color: #fff; }
+
+.site-footer a:hover { color: #fff; }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s5);
+}
+
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-links li { margin-bottom: var(--s2); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  margin-top: var(--s6);
+  padding-top: var(--s4);
+  font-size: 0.875rem;
+}
+
+.footer-bottom p { margin-bottom: var(--s2); }
+
+.footer-bottom p:last-child { margin-bottom: 0; }
+
+
+/* 6. Page header ----------------------------------------------------------- */
+
+.page-header {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
+  padding: var(--s6) 0;
+}
+
+.page-header p {
+  max-width: var(--measure);
+  margin-bottom: 0;
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: var(--s2);
+}
+
+
+/* 7. Home hero ------------------------------------------------------------- */
+
+.hero {
+  padding: var(--s7) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s5);
+  align-items: center;
+}
+
+.hero-image {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.hero h1 { margin-bottom: var(--s4); }
+
+/* Key facts list under the hero. */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--s4);
+  margin: 0;
+}
+
+.facts div {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--s4);
+}
+
+.facts dt {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: var(--s1);
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+
+/* 8. Cards, grids, lists --------------------------------------------------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s5);
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--s5);
+}
+
+.card h3 { margin-bottom: var(--s2); }
+
+.card p:last-child { margin-bottom: 0; }
+
+/* Numbered steps on the admissions page. */
+.steps {
+  list-style: none;
+  padding: 0;
+  counter-reset: step;
+  max-width: var(--measure);
+}
+
+.steps li {
+  counter-increment: step;
+  border-left: 3px solid var(--navy);
+  padding: 0 0 var(--s2) var(--s4);
+  margin-bottom: var(--s5);
+}
+
+.steps li h3::before {
+  content: "Step " counter(step) " · ";
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* Question and answer blocks. <details> gives us this with no JavaScript. */
+.faq {
+  max-width: var(--measure);
+  border-top: 1px solid var(--line);
+}
+
+.faq details { border-bottom: 1px solid var(--line); }
+
+.faq summary {
+  padding: var(--s4) 0;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.faq summary:hover { color: var(--navy-dark); }
+
+.faq details > p {
+  margin: 0 0 var(--s4);
+  padding-right: var(--s4);
+}
+
+/* Definition list used for contact details and disclosure facts. */
+.detail-list {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.detail-list dt {
+  font-weight: 700;
+  color: var(--navy);
+  padding-top: var(--s3);
+}
+
+.detail-list dd {
+  margin: 0 0 var(--s3);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--line);
+}
+
+
+/* 9. Tables ---------------------------------------------------------------- */
+
+/* Wide tables scroll inside this box rather than stretching the page.
+   The box carries tabindex="0" in the HTML so that someone using a keyboard
+   can scroll it too, which is why it needs a focus ring of its own. */
+.table-scroll {
+  overflow-x: auto;
+  margin-bottom: var(--s5);
+}
+
+.table-scroll:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+caption {
+  text-align: left;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: var(--s3);
+}
+
+th, td {
+  border: 1px solid var(--line);
+  padding: var(--s3);
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th,
+tbody th {
+  background: var(--bg-alt);
+  font-weight: 700;
+}
+
+/* Disclosure tables are label-and-value pairs, so the label column is fixed. */
+.disclosure-table th { width: 40%; }
+
+.disclosure-table td { min-width: 220px; }
+
+
+/* 10. Buttons -------------------------------------------------------------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+}
+
+.btn {
+  display: inline-block;
+  padding: var(--s3) var(--s5);
+  min-height: 44px;
+  border: 1px solid var(--navy);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--navy-dark);
+  border-color: var(--navy-dark);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--navy);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-alt);
+  color: var(--navy-dark);
+}
+
+
+/* 11. Gallery -------------------------------------------------------------- */
+
+/* Tiles are capped at 320px and packed from the left, so the grid looks
+   deliberate whether there are two photographs or twenty. auto-fit collapses
+   unused columns, so a short row never leaves gaps sitting in the layout. */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
+  justify-content: start;
+  gap: var(--s4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gallery li { margin: 0; }
+
+.gallery figure {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* The frame is drawn on the figure here, so the image itself needs none. */
+.gallery img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  border: 0;
+  border-radius: 0;
+}
+
+.gallery figcaption {
+  padding: var(--s3);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--line);
+}
+
+
+/* 12. Contact and forms ---------------------------------------------------- */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s6);
+}
+
+.map-frame {
+  width: 100%;
+  height: 320px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.form-field { margin-bottom: var(--s4); }
+
+.form-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--s2);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--s3);
+  min-height: 44px;
+}
+
+.form-field textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.form-hint {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: var(--s1);
+}
+
+
+/* 13. Notices -------------------------------------------------------------- */
+
+/* Used where CBSE requires a section that the school has not supplied yet.
+   The left rule marks it as an editorial note rather than page content. */
+.notice {
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--navy);
+  border-radius: var(--radius);
+  padding: var(--s4);
+  margin-bottom: var(--s5);
+  max-width: var(--measure);
+}
+
+.notice p:last-child { margin-bottom: 0; }
+
+/* News and notice board on the home page. */
+.news {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: var(--measure);
+  border-top: 1px solid var(--line);
+}
+
+.news li {
+  margin: 0;
+  padding: var(--s4) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.news time {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: var(--s1);
+}
+
+.news h3 { margin-bottom: var(--s1); }
+
+.news p { margin-bottom: 0; }
+
+/* One certificate in a disclosure table cell. A cell may hold several. */
+.doc-link { display: block; margin-bottom: var(--s2); }
+
+.doc-link:last-child { margin-bottom: 0; }
+
+
+/* 14. Responsive ----------------------------------------------------------- */
+
+@media (min-width: 600px) {
+  .card-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.5rem; }
+}
+
+@media (min-width: 900px) {
+  .hero-grid { grid-template-columns: 1.1fr 0.9fr; gap: var(--s6); }
+  .contact-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Under 900px the navigation collapses behind the Menu button.
+   Everything here is gated on the .js class, which script.js adds from the
+   <head> before the page is drawn. So: no JavaScript means no .js class, which
+   means the menu is never hidden and the Menu button never appears. The links
+   stay reachable either way, and there is no flash of an open menu on load. */
+@media (max-width: 899px) {
+  .js .nav-toggle { display: block; }
+
+  .js .site-nav { display: none; }
+
+  .js .site-nav.is-open { display: block; }
+
+  .site-nav ul { flex-direction: column; }
+
+  .site-nav li + li { border-top: 1px solid rgba(255, 255, 255, 0.25); }
+
+  .site-nav a { padding: var(--s3) var(--s4); }
+
+  .site-nav a[aria-current="page"] {
+    border-bottom-color: transparent;
+    background: var(--navy-dark);
+  }
+}
+
+@media (max-width: 599px) {
+  .section, .hero { padding: var(--s6) 0; }
+  .brand-logo { width: 48px; height: 48px; }
+  .brand-name { font-size: 1rem; }
+  .btn { width: 100%; }
+
+  /* One photograph per row on a phone, filling the width. */
+  .gallery { grid-template-columns: 1fr; }
+
+  /* On a phone the long CBSE row labels would be crushed into a narrow
+     column, so give both columns a floor and let the table scroll sideways
+     inside its own box instead. */
+  .disclosure-table th { width: auto; min-width: 190px; }
+}
+
+
+/* 15. Print ---------------------------------------------------------------- */
+
+@media print {
+  .site-nav,
+  .nav-toggle,
+  .skip-link,
+  .actions { display: none; }
+
+  body { color: #000; }
+
+  .site-footer { background: #fff; color: #000; }
+
+  .site-footer h2,
+  .site-footer p,
+  .site-footer a,
+  .site-footer li { color: #000; }
+
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.8em; }
+}
+</style>
+<script src="script.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "School",
+  "name": "Shivaji Vidya Peeth High School",
+  "slogan": "Pride of Excellence",
+  "telephone": "+91-89776-53606",
+  "email": "shivajividyapeeth.sch@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Plot No. 25, 49 Avenue 1, Road No. 11, Guttala Begumpet",
+    "addressLocality": "Kavuri Hills, Madhapur, Hyderabad",
+    "addressRegion": "Telangana",
+    "postalCode": "500081",
+    "addressCountry": "IN"
+  },
+  "identifier": {
+    "@type": "PropertyValue",
+    "name": "CBSE Affiliation Number",
+    "value": "3630013"
+  },
+  "educationalCredentialAwarded": "CBSE Class X and Class XII",
+  "gender": "Coeducational"
+}
+</script>
+</head>
+<body>
+
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">
+      <img class="brand-logo" src="https://shivajividyapeeth.in/assets/logo.jpg" alt="" width="112" height="112">
+      <span>
+        <span class="brand-name" translate="no">Shivaji Vidya Peeth High School</span>
+        <span class="brand-tagline">CBSE · Kavuri Hills, Madhapur, Hyderabad</span>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+  </div>
+</header>
+
+<nav class="site-nav" id="primary-nav" aria-label="Main">
+  <div class="container">
+    <ul>
+      <li><a aria-current="page" href="/">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/academics">Academics</a></li>
+      <li><a href="/admissions">Admissions</a></li>
+      <li><a href="/facilities">Facilities</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/contact">Contact</a></li>
+      <li><a href="/mandatory-disclosure">Mandatory Disclosure</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <h1>A CBSE education, from Nursery to Class&nbsp;XII</h1>
+      <p class="lead">Shivaji Vidya Peeth High School is a co-educational, English medium
+        school in Kavuri Hills, Madhapur. A child can join us in Nursery and leave after
+        the Class&nbsp;XII board examination without ever changing school.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/admissions">Apply for Admission</a>
+        <a class="btn btn-secondary" href="tel:+918977653606">Call +91&nbsp;89776&nbsp;53606</a>
+      </div>
+    </div>
+    <img class="hero-image" src="https://shivajividyapeeth.in/assets/campus-1.jpg" alt="The main entrance and building of Shivaji Vidya Peeth High School" width="360" height="360" fetchpriority="high">
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>Welcome to Our School</h2>
+    <p class="lead">Our motto is <strong>Pride of Excellence</strong>, and we mean it
+      plainly: steady teaching, proper practical work, and room for children to grow into
+      more than a set of marks. We follow the curriculum of the Central Board of Secondary
+      Education under affiliation number <span translate="no">3630013</span>.</p>
+
+    <dl class="facts">
+      <div><dt>Board</dt><dd>CBSE</dd></div>
+      <div><dt>Affiliation No.</dt><dd translate="no">3630013</dd></div>
+      <div><dt>Classes</dt><dd>Nursery to XII</dd></div>
+      <div><dt>Medium</dt><dd>English</dd></div>
+      <div><dt>Type</dt><dd>Co-ed day school</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <h2>About the School</h2>
+    <p class="lead">One school for the whole of a child’s education, so there is no
+      hunting for a new place at Class&nbsp;VI or Class&nbsp;XI, and no starting over with
+      new friends.</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>One School, Every Year</h3>
+        <p>Nursery through Class&nbsp;XII on a single campus. Children keep their teachers,
+           their friends and their routine.</p>
+      </div>
+      <div class="card">
+        <h3>CBSE Affiliated</h3>
+        <p>A national curriculum that travels with the family and lines up with the
+           entrance examinations that follow Class&nbsp;XII.</p>
+      </div>
+      <div class="card">
+        <h3>More Than Marks</h3>
+        <p>Sport, arts and activity sit alongside academics rather than after them.</p>
+      </div>
+    </div>
+    <p><a href="/about">Read more about the school</a></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>Academics</h2>
+    <p class="lead">Each stage builds on the one before it, inside the same school and the
+      same curriculum.</p>
+    <div class="table-scroll" tabindex="0" role="region" aria-labelledby="tbl-stages">
+      <table>
+        <caption id="tbl-stages">Stages of school</caption>
+        <thead>
+          <tr>
+            <th scope="col">Stage</th>
+            <th scope="col">Classes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Pre-Primary</th><td>Nursery, LKG, UKG</td></tr>
+          <tr><th scope="row">Primary</th><td>I to V</td></tr>
+          <tr><th scope="row">Middle</th><td>VI to VIII</td></tr>
+          <tr><th scope="row">Secondary</th><td>IX and X</td></tr>
+          <tr><th scope="row">Senior Secondary</th><td>XI and XII</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><a href="/academics">See the full academic programme</a></p>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <h2>Facilities</h2>
+    <p class="lead">Classrooms, laboratories and open ground, all on one site.</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Classrooms &amp; Library</h3>
+        <p>Spacious, well-lit classrooms and a reading room stocked for every stage of
+           school.</p>
+      </div>
+      <div class="card">
+        <h3>Laboratories</h3>
+        <p>Science and computer laboratories used as part of regular teaching, not kept
+           for inspections.</p>
+      </div>
+      <div class="card">
+        <h3>Hall &amp; Playground</h3>
+        <p>A multipurpose hall for assembly and events, and open ground for games and
+           physical education.</p>
+      </div>
+    </div>
+    <p><a href="/facilities">See all facilities</a></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>Admissions Open</h2>
+    <p class="lead">Admission is open from Nursery through to Class&nbsp;XII, subject to
+      seats being available. There is no entrance examination. The first step is a phone
+      call to the school office.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/admissions">How to Apply</a>
+      <a class="btn btn-secondary" href="/contact">Contact the Office</a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <h2>Latest News</h2>
+
+    <!-- NOTICE BOARD
+         To add a notice, copy one <li> block below and change the date, the
+         heading and the sentence. Keep the newest notice at the top. The
+         datetime attribute is written as YYYY-MM-DD; the text inside the
+         <time> tag is what readers see. Delete a notice by removing its
+         whole <li> block. -->
+    <ul class="news">
+      <li>
+        <time datetime="2026-08-18">18 August 2026</time>
+        <h3>Admissions Open for the Coming Academic Year</h3>
+        <p>Seats are open from Nursery to Class&nbsp;XII. Call the office to check
+           availability for your child’s class before visiting.</p>
+      </li>
+      <li>
+        <time datetime="2026-08-18">18 August 2026</time>
+        <h3>Affiliation Extended to 2029</h3>
+        <p>The school’s CBSE general affiliation has been extended and is valid up
+           to 31 March 2029. The letter is published on the
+           <a href="/mandatory-disclosure">Mandatory Public Disclosure</a> page.</p>
+      </li>
+      <li>
+        <time datetime="2026-08-18">18 August 2026</time>
+        <h3>Mandatory Public Disclosure Published</h3>
+        <p>School information and statutory documents required by the CBSE Affiliation
+           Bye-Laws are now published on this website.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h2 translate="no">Shivaji Vidya Peeth High School</h2>
+        <p>
+          Plot No. 25, 49 Avenue 1, Road No. 11,<br>
+          Guttala Begumpet, Kavuri Hills, Madhapur,<br>
+          Hyderabad, Telangana 500081
+        </p>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul class="footer-links">
+          <li>Phone: <a href="tel:+918977653606">+91&nbsp;89776&nbsp;53606</a></li>
+          <li>Email: <a href="mailto:shivajividyapeeth.sch@gmail.com">shivajividyapeeth.sch@gmail.com</a></li>
+          <li><a href="https://wa.me/918977653606" rel="noopener">WhatsApp</a></li>
+          <li><a href="/contact">Contact page</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>School</h2>
+        <ul class="footer-links">
+          <li><a href="/about">About</a></li>
+          <li><a href="/academics">Academics</a></li>
+          <li><a href="/admissions">Admissions</a></li>
+          <li><a href="/facilities">Facilities</a></li>
+          <li><a href="/faculty">Faculty</a></li>
+          <li><a href="/gallery">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Statutory</h2>
+        <ul class="footer-links">
+          <li><a href="/mandatory-disclosure">Mandatory Disclosure</a></li>
+          <li><a href="/fee-structure">Fee Structure</a></li>
+          <li><a href="/results">Board Results</a></li>
+          <li><a href="/academic-calendar">Academic Calendar</a></li>
+          <li><a href="/grievance">Grievance Redressal</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        <strong>CBSE Affiliation No. <span translate="no">3630013</span></strong>
+        &nbsp;·&nbsp; School Code <span translate="no">57510</span>
+        &nbsp;·&nbsp; Co-educational, English medium, Nursery to Class&nbsp;XII
+      </p>
+      <p>
+        <a href="/privacy">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="/terms">Terms &amp; Conditions</a>
+      </p>
+      <p>© <span id="year">2026</span> Shivaji Vidya Peeth High School. All rights reserved.
+         Fee, admission and calendar details on this website are indicative; the school
+         office holds the authoritative version.</p>
+    </div>
+  </div>
+</footer>
+
+
+
+</body>
+</html>

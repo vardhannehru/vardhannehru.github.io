@@ -1,4 +1,4 @@
-// The certificates in the folder showcase (CertificateFolder.tsx). Pictures are in public/certificates/: a small
+// The certificates in the drawer (CertificateDrawer.tsx). Pictures are in public/certificates/: a small
 // `thumb` for the fan and a large `full` for the viewer. Details are as printed on each certificate.
 
 export type Certificate = {

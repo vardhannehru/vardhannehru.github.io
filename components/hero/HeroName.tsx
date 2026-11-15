@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { animate, motion, motionValue, useMotionValueEvent, useTransform, type MotionValue } from "framer-motion";
 import { paintHeroScene } from "./heroScene";
-import KeychainLayer, { RING_DIR } from "./KeychainLayer";
 import HeroStickers from "./HeroStickers";
-import GroundCaption from "./GroundCaption";
 import ButterflyLayer from "./ButterflyLayer";
 import { playNote, primeAudio } from "./chimes";
 import { nextNote } from "./melody";
@@ -33,12 +31,8 @@ import {
 // Show a picture inside the letters (off by default: a solid lit face reads more clearly as 3D).
 // When on, drop any image at public/hero/fill.jpg to use it instead of the painted scene.
 const SCENE_IN_LETTERS = false;
-// The keychain hooked through the last letter (off). Set to true to bring it back.
-const SHOW_KEYCHAIN = false;
 // Small butterflies fluttering around the name, landing on letters and stickers. Set to false to hide them.
 const SHOW_BUTTERFLIES = true;
-// "Feed ↓ · 2026 · Portfolio" printed on the ground in front of the name (off). Set to true to bring it back.
-const SHOW_GROUND_CAPTION = false;
 // The letters play Für Elise as crystal chimes with its bass, one note per letter, like a music box: a
 // press rings clearly, a hover softly. Set either to false for silence.
 const CHIME_LETTERS = true;
@@ -68,7 +62,7 @@ const FILL_SCALE_Y = 1.3;
 
 // The name lies flat on a floor, receding in perspective, as thick 3D slabs. Each letter is a stack
 // of thin copies lifted off the floor (real CSS 3D), so the thickness shows along the front edge.
-// Tilt, thickness and camera live in nameStage.ts so the stickers and keychain stay lined up.
+// Tilt, thickness and camera live in nameStage.ts so the stickers stay lined up.
 const SLAB_BOTTOM = [26, 17, 66];
 const SLAB_TOP = [112, 92, 190];
 // Light comes from the upper left: the top face is brightest there, with a soft sheen across it.
@@ -120,7 +114,11 @@ function slabFill(cx: number, W: number, H: number, h: number, reach: number, sl
     const g = (j / FILL_SHADOWS) * reach;
     const k = g / (camZ - h + g);
     const color = slabShade(Math.max(0, h - g) / slab);
-    shadows.push(`calc(${SLAB_RISE} * ${(-px * k).toFixed(2)}px) calc(${SLAB_RISE} * ${(-py * k).toFixed(2)}px) 0 ${color}`);
+    // Scaled by the rise only, not by the press: text-shadows have to be re-painted whenever they change, and with
+    // the press in them every pressed letter re-painted all its copies' shadows on every frame of the press (a click
+    // presses a letter and waves through six more), which made the name stutter. Pressed, a letter only squashes a
+    // little, so shadows sized for the full slab still fill it (overlapping a touch more).
+    shadows.push(`calc(var(--rise) * ${(-px * k).toFixed(2)}px) calc(var(--rise) * ${(-py * k).toFixed(2)}px) 0 ${color}`);
   }
   return shadows.join(", ");
 }
@@ -151,7 +149,6 @@ const RECEDE_DISTANCE = 6;
 /** The browser can drive animations from the scroll position (see the slide-back in HeroName). */
 const SCROLL_TIMELINE = typeof window !== "undefined" && "ScrollTimeline" in window;
 
-type HoleSpot = { i: number; x: number; y: number; r: number; wall: number; edge: number };
 
 // The glyph's baseline in its line box: the font's content box is centred in the line box, like CSS.
 function glyphBaseline(g: CanvasRenderingContext2D, ch: string, fontPx: number, boxH: number) {
@@ -210,38 +207,7 @@ function findPerchSpots(text: string, fontPx: number, boxes: LetterBox[], boxH: 
   return spots;
 }
 
-// Where to drill the keychain hole: a solid spot near the corner the ring leaves toward, with a wall
-// all round it. Also returns how far the letter continues past the hole in that direction.
-function findHoleSpot(ch: string, fontPx: number, boxW: number, boxH: number, r: number, dir: number) {
-  const solid = glyphSolid(ch, fontPx, boxW, boxH);
-  if (!solid) return null;
-  const wall = r + Math.max(2, r * 0.6);
-  const dx = Math.cos(dir);
-  const dy = Math.sin(dir);
-  let best: { x: number; y: number } | null = null;
-  let bestScore = -Infinity;
-  for (let y = boxH * 0.3; y < boxH - wall; y += 1) {
-    for (let x = boxW * 0.3; x < boxW - wall; x += 1) {
-      if (!solid(x, y)) continue;
-      let fits = true;
-      for (let k = 0; k < 16 && fits; k++) {
-        const a = (k / 16) * Math.PI * 2;
-        fits = solid(x + Math.cos(a) * wall, y + Math.sin(a) * wall);
-      }
-      const score = x * dx + y * dy;
-      if (fits && score > bestScore) {
-        bestScore = score;
-        best = { x, y };
-      }
-    }
-  }
-  if (!best) return null;
-  let edge = wall;
-  while (edge < boxW + boxH && solid(best.x + dx * edge, best.y + dy * edge)) edge += 0.5;
-  return { ...best, wall, edge };
-}
-
-// Each letter's inked area on the floor, so the keychain rests on the letters, not their boxes.
+// Each letter's inked area on the floor, so things rest on the letters, not their boxes.
 function measureInk(text: string, fontPx: number, boxes: LetterBox[], boxH: number): InkBox[] {
   const g = document.createElement("canvas").getContext("2d");
   if (!g) return [];
@@ -257,8 +223,6 @@ function measureInk(text: string, fontPx: number, boxes: LetterBox[], boxH: numb
     return { x0, x1, y0: base - m.actualBoundingBoxAscent, y1: base + m.actualBoundingBoxDescent };
   });
 }
-
-const mix = (a: number[], b: number[], f: number) => `rgb(${a.map((v, k) => Math.round(v + (b[k] - v) * f)).join(",")})`;
 
 /**
  * A letter's top face in holographic foil, lit from the light's spot (--sx, --sy, in the plane's coordinates, set on each face). Both layers are
@@ -322,9 +286,8 @@ export default function HeroName({
   const [size, setSize] = useState<Size | null>(null);
   const [letterBoxes, setLetterBoxes] = useState<LetterBox[]>([]);
   const [ink, setInk] = useState<InkBox[]>([]);
-  const [hole, setHole] = useState<HoleSpot | null>(null);
 
-  // Live press state of every letter, shared with the stickers and keychain through the stage.
+  // Live press state of every letter, shared with the stickers through the stage.
   const [motions] = useState<LetterMotion[]>(() =>
     text.split("").map(() => ({
       rise: motionValue(0),
@@ -360,7 +323,7 @@ export default function HeroName({
     );
   }, []);
 
-  // Scrolling slides the name (and its floor, stickers and keychain) away from you along the ground.
+  // Scrolling slides the name (and its floor and stickers) away from you along the ground.
   const fallbackScroll = useState(() => motionValue(0))[0];
   const progress = scroll ?? fallbackScroll;
   const heightRef = useRef(0);
@@ -410,7 +373,7 @@ export default function HeroName({
   const slab = size ? Math.max(8, size.H * NAME_SLAB_DEPTH) : 24;
   const layerCount = Math.max(SLAB_MIN_LAYERS, Math.round(slab / SLAB_STEP));
 
-  // Keep the shared stage current (it's read every frame by the stickers and keychain).
+  // Keep the shared stage current (it's read every frame by the stickers).
   stage.letters = motions;
   stage.boxes = letterBoxes;
   stage.ink = ink;
@@ -565,8 +528,7 @@ export default function HeroName({
     };
   }, [motions]);
 
-  // Find each letter's inked area, and where to drill the keychain hole (in the last letter), once
-  // fonts and layout are ready.
+  // Find each letter's inked area once fonts and layout are ready.
   useEffect(() => {
     const h1 = h1Ref.current;
     if (!size || !h1 || letterBoxes.length === 0) return;
@@ -578,24 +540,11 @@ export default function HeroName({
       stage.text = text;
       stage.fontPx = fontPx;
       stage.spots = findPerchSpots(text, fontPx, letterBoxes, size.H);
-      const i = text.length - 1;
-      const box = letterBoxes[i];
-      if (!box) return;
-      const r = Math.max(3, size.H * 0.032);
-      const spot = findHoleSpot(text[i], fontPx, box.w, size.H, r, RING_DIR);
-      setHole({ i, r, ...(spot ?? { x: box.w * 0.8, y: size.H * 0.75, wall: r * 1.6, edge: r * 2 }) });
     });
     return () => {
       cancelled = true;
     };
   }, [size, letterBoxes, text, stage]);
-
-  // Punches the keychain hole through every layer of that letter's slab.
-  const holeMask = (i: number): React.CSSProperties => {
-    if (!SHOW_KEYCHAIN || !hole || hole.i !== i) return {};
-    const mask = `radial-gradient(circle at ${hole.x}px ${hole.y}px, transparent ${hole.r}px, #000 ${hole.r + 0.75}px)`;
-    return { maskImage: mask, WebkitMaskImage: mask };
-  };
 
   // Use the user's image if one exists, otherwise paint the built-in scene.
   useEffect(() => {
@@ -703,16 +652,6 @@ export default function HeroName({
   return (
     <NameStageContext.Provider value={stage}>
       <div ref={wrapRef} className="relative inline-block" onPointerMove={onPointerMove} onPointerDown={onPointerDown} onPointerLeave={onPointerLeave} onClick={onClick}>
-        {SHOW_KEYCHAIN && size && hole && letterBoxes[hole.i] && (
-          <KeychainLayer
-            W={size.W}
-            H={size.H}
-            stage={stage}
-            letter={hole.i}
-            hole={{ x: letterBoxes[hole.i].x + hole.x, y: hole.y, r: hole.r, wall: hole.wall, edge: hole.edge }}
-            slab={slab}
-          />
-        )}
         {butterflies && size && <ButterflyLayer W={size.W} H={size.H} slab={slab} stage={stage} />}
         {/* Filter sits outside the 3D scene: a filter on a 3D element would flatten it. */}
         {/* No filter here: a filter around a scene that moves while you scroll is re-painted every frame. */}
@@ -812,10 +751,10 @@ export default function HeroName({
                       transition={{ duration: 0.25, delay: 0.3 + (i + delayOffset) * 0.15 }}
                     >
                       {/* Contact shadow on the floor. */}
-                      <span aria-hidden="true" className="absolute inset-0" style={{ color: "var(--hn-shadow, rgba(4,2,12,0.55))", filter: "blur(12px)", transform: "translate(0.06em, 0.05em)", ...holeMask(i) }}>
+                      <span aria-hidden="true" className="absolute inset-0" style={{ color: "var(--hn-shadow, rgba(4,2,12,0.55))", filter: "blur(12px)", transform: "translate(0.06em, 0.05em)" }}>
                         {ch}
                       </span>
-                      <span aria-hidden="true" className="absolute inset-0" style={{ color: "var(--hn-shadow-core, rgba(2,1,8,0.9))", filter: "blur(2px)", ...holeMask(i) }}>
+                      <span aria-hidden="true" className="absolute inset-0" style={{ color: "var(--hn-shadow-core, rgba(2,1,8,0.9))", filter: "blur(2px)" }}>
                         {ch}
                       </span>
                       {/* The slab tips toward the pressure point: the edge under the cursor goes down. */}
@@ -837,7 +776,6 @@ export default function HeroName({
                                   SLAB_FILL && size && ch.trim()
                                     ? slabFill((letterBoxes[i]?.x ?? 0) + halfW, size.W, size.H, h, step * (l === 0 ? 1 : FILL_REACH), slab)
                                     : undefined,
-                                ...holeMask(i),
                                 transform: `translateZ(calc(var(--rise) * ${SLAB_SQUASH} * ${h.toFixed(2)}px)) ${slabTilt(SLAB_FILL ? f : l / layerCount, slab, halfW, halfH)}`,
                               }}
                             >
@@ -861,7 +799,6 @@ export default function HeroName({
                                     ? litFace(letterBoxes[i]?.x ?? 0, size)
                                     : { backgroundImage: TOP_FACE }),
                               filter: "brightness(calc(1 - var(--press) * 0.1 - var(--push) * 0.12))",
-                              ...holeMask(i),
                               ...(fillUrl && size
                                 ? {
                                     backgroundImage: `url(${fillUrl})`,
@@ -881,7 +818,6 @@ export default function HeroName({
                 })}
               </h1>
               {/* "Feed ↓ · 2026 · Portfolio" printed on the ground in front of the name. */}
-              {SHOW_GROUND_CAPTION && size && <GroundCaption H={size.H} delay={0.3 + text.length * 0.15 + 0.3} />}
               {size && siteReady && (
                 <HeroStickers
                   variant={stickerSet}

@@ -8,10 +8,10 @@ import { projects, Mockup, KindLabel, MONO, ACCENT, type Project } from '../work
 
 const SANS = "'Geist', 'Inter', sans-serif";
 
-/** Small uppercase mono heading, used for every sub-section. */
+/** Small label heading, used for every sub-section. */
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="text-[11px] uppercase tracking-[0.25em] text-white/40" style={{ fontFamily: MONO }}>
+    <h4 className="text-[13px] font-medium tracking-[-0.01em] text-white/40" style={{ fontFamily: MONO }}>
       {children}
     </h4>
   );
@@ -131,7 +131,7 @@ function ProjectDetail({ project, index }: { project: Project; index: number }) 
             <dl className="mt-4 border-t border-white/[0.08]">
               {project.stack.map((s) => (
                 <div key={s.layer} className="grid grid-cols-[7.5rem_1fr] gap-4 border-b border-white/[0.08] py-3">
-                  <dt className="pt-0.5 text-[11px] uppercase tracking-[0.18em] text-white/40" style={{ fontFamily: MONO }}>
+                  <dt className="pt-0.5 text-[13px] font-medium tracking-[-0.01em] text-white/40" style={{ fontFamily: MONO }}>
                     {s.layer}
                   </dt>
                   <dd className="text-[15px] text-white/85">{s.tech}</dd>
@@ -187,7 +187,7 @@ export default function WorkPage() {
     <div className="relative px-5 pb-24 pt-28 md:px-12 md:pt-36" style={{ fontFamily: SANS }} data-remote-zone>
       <Link
         to="/"
-        className="group inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.25em] text-white/45 transition-colors hover:text-white"
+        className="group inline-flex items-center gap-2 text-[14px] font-medium tracking-[-0.01em] text-white/45 transition-colors hover:text-white"
         style={{ fontFamily: MONO }}
       >
         <span className="transition-transform duration-300 group-hover:-translate-x-1" style={{ color: ACCENT }}>

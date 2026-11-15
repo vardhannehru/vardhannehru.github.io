@@ -1,0 +1,258 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "Space Grotesk",
+      "fontSize": "108px",
+      "fontWeight": "900",
+      "lineHeight": "108px",
+      "letterSpacing": "-5.4px",
+      "color": "#0F172A",
+      "sampleText": "Where Every Spark Becomes a Brilliant Sun."
+    },
+    {
+      "role": "heading",
+      "fontFamily": "Space Grotesk",
+      "fontSize": "54px",
+      "fontWeight": "700",
+      "lineHeight": "54px",
+      "letterSpacing": "normal",
+      "color": "#240C67",
+      "sampleText": "A school that blends academics, values and modern skills"
+    },
+    {
+      "role": "heading-2",
+      "fontFamily": "Space Grotesk",
+      "fontSize": "40.5px",
+      "fontWeight": "700",
+      "lineHeight": "45px",
+      "letterSpacing": "normal",
+      "color": "#0F172A",
+      "sampleText": "Future Spark International School"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontSize": "27px",
+      "fontWeight": "700",
+      "lineHeight": "36px",
+      "letterSpacing": "normal",
+      "color": "#0F172A",
+      "sampleText": "CBSE Curriculum"
+    },
+    {
+      "role": "body",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontSize": "22.5px",
+      "fontWeight": "500",
+      "lineHeight": "31.5px",
+      "letterSpacing": "normal",
+      "color": "#334155",
+      "sampleText": "At Future Spark Academy, we combine cutting-edge STEM curric"
+    },
+    {
+      "role": "heading-3",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontSize": "18px",
+      "fontWeight": "700",
+      "lineHeight": "27px",
+      "letterSpacing": "normal",
+      "color": "#FFFFFF",
+      "sampleText": "Admissions Growth"
+    },
+    {
+      "role": "heading-4",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontSize": "15.75px",
+      "fontWeight": "700",
+      "lineHeight": "22.5px",
+      "letterSpacing": "normal",
+      "color": "#FFFFFF",
+      "sampleText": "Company"
+    },
+    {
+      "role": "label",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontSize": "15.75px",
+      "fontWeight": "800",
+      "lineHeight": "22.5px",
+      "letterSpacing": "1.575px",
+      "color": "#240C67",
+      "sampleText": "🔥 2026 Admissions are Open"
+    },
+    {
+      "role": "link",
+      "fontFamily": "Plus Jakarta Sans",
+      "fontSize": "15px",
+      "fontWeight": "600",
+      "lineHeight": "22.5px",
+      "letterSpacing": "normal",
+      "color": "#334155",
+      "sampleText": "Home"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      2,
+      5,
+      7,
+      9,
+      10,
+      14,
+      18,
+      23,
+      27,
+      36,
+      45,
+      72,
+      192
+    ],
+    "baseUnit": 8
+  },
+  "radius": [
+    "13.5px",
+    "9999px"
+  ],
+  "shadows": [
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "count": 15
+    },
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+      "count": 11
+    },
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
+      "count": 6
+    },
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+      "count": 3
+    },
+    {
+      "value": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(36, 12, 103, 0.2) 0px 25px 50px -12px",
+      "count": 1
+    }
+  ],
+  "buttons": [],
+  "cards": [],
+  "nav": {
+    "label": "navigation",
+    "background": "transparent",
+    "backgroundImage": "",
+    "backdropFilter": "",
+    "color": "#0F172A",
+    "padding": "0px",
+    "borderRadius": "0px",
+    "border": "0px solid rgb(229, 231, 235)",
+    "boxShadow": "none",
+    "fontSize": "18px",
+    "fontWeight": "400",
+    "height": "106px"
+  },
+  "chips": [
+    {
+      "label": "🔥 2026 Admissions are O",
+      "background": "#A079FF",
+      "color": "#240C67",
+      "padding": "6.75px 18px",
+      "borderRadius": "9999px",
+      "border": "1px solid rgba(160, 121, 255, 0.3)",
+      "boxShadow": "none",
+      "fontSize": "15.75px",
+      "fontWeight": "800",
+      "height": "38px"
+    },
+    {
+      "label": "CBSE Affiliation: 363001",
+      "background": "#FFFFFF",
+      "color": "#240C67",
+      "padding": "6.75px 18px",
+      "borderRadius": "9999px",
+      "border": "1px solid rgba(255, 255, 255, 0.3)",
+      "boxShadow": "none",
+      "fontSize": "15.75px",
+      "fontWeight": "800",
+      "height": "38px"
+    },
+    {
+      "label": "Limited seats only — alr",
+      "background": "#F43F5E",
+      "color": "#881337",
+      "padding": "6.75px 18px",
+      "borderRadius": "9999px",
+      "border": "1px solid rgba(251, 113, 133, 0.3)",
+      "boxShadow": "none",
+      "fontSize": "15.75px",
+      "fontWeight": "800",
+      "height": "38px"
+    },
+    {
+      "label": "FUTURE SPARK INTERNATION",
+      "background": "#A079FF",
+      "color": "#A079FF",
+      "padding": "4.5px 18px",
+      "borderRadius": "9999px",
+      "border": "0px solid rgb(229, 231, 235)",
+      "boxShadow": "none",
+      "fontSize": "15.75px",
+      "fontWeight": "700",
+      "height": "31.5px"
+    }
+  ],
+  "statCells": [],
+  "tabs": [],
+  "backgrounds": [
+    {
+      "value": "radial-gradient(900px 600px at 15% 10%, rgba(160, 121, 255, 0.22), rgba(0, 0, 0, 0) 60%), radial-gradient(800px 560px at 85% 15%, rgba(50, 227, 255, 0.18), rgba(0, 0, 0, 0) 60%), radial-gradient(900px 600px at 50% 90%, rgba(36, 12, 103, 0.1), rgba(0, 0, 0, 0) 65%), linear-gradient(rgb(248, 250, 252), rgb(238, 242, 255) 45%, rgb(248, 250, 252))",
+      "area": 2073600
+    },
+    {
+      "value": "linear-gradient(120deg, rgba(160, 121, 255, 0.08), rgba(50, 227, 255, 0.06), rgba(255, 255, 255, 0))",
+      "area": 2073600
+    },
+    {
+      "value": "linear-gradient(to top, rgba(248, 250, 252, 0.55), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0))",
+      "area": 1866240
+    },
+    {
+      "value": "linear-gradient(to right, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0))",
+      "area": 1866240
+    },
+    {
+      "value": "linear-gradient(to right, rgb(36, 12, 103), rgb(160, 121, 255))",
+      "area": 460132
+    },
+    {
+      "value": "linear-gradient(rgb(248, 250, 252), rgb(255, 255, 255))",
+      "area": 569266
+    }
+  ],
+  "glass": [
+    {
+      "backdropFilter": "blur(24px)",
+      "background": "rgba(255, 255, 255, 0.6)",
+      "border": "1px solid rgb(226, 232, 240)",
+      "borderRadius": "18px",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+      "area": 624546
+    },
+    {
+      "backdropFilter": "blur(24px)",
+      "background": "rgba(255, 255, 255, 0.7)",
+      "border": "1px solid rgb(226, 232, 240)",
+      "borderRadius": "18px",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+      "area": 577263
+    },
+    {
+      "backdropFilter": "blur(24px)",
+      "background": "rgba(255, 255, 255, 0.7)",
+      "border": "1px solid rgb(226, 232, 240)",
+      "borderRadius": "36px",
+      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+      "area": 541671
+    }
+  ]
+}

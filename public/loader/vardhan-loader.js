@@ -22,13 +22,14 @@
   var canvas = el.querySelector('.pl-canvas');
   var brand = el.querySelector('.pl-brand');
   var rule = el.querySelector('.pl-rule');
-  if (!canvas || !brand || !rule || !canvas.transferControlToOffscreen || !window.Worker) { pl.story = false; return; }
+  // (index.html sets pl-story before the first paint; take it off again when the story can't play.)
+  if (!canvas || !brand || !rule || !canvas.transferControlToOffscreen || !window.Worker) { pl.story = false; el.classList.remove('pl-story'); return; }
 
   var worker, off;
   try {
     worker = new Worker('/loader/loader-worker.js');
     off = canvas.transferControlToOffscreen();
-  } catch (e) { pl.story = false; return; }
+  } catch (e) { pl.story = false; el.classList.remove('pl-story'); return; }
   pl.storyStarted = true;
   pl.storyStartedAt = Math.round(performance.now()); // (for timing checks)
   el.classList.add('pl-story');

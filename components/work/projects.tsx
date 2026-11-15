@@ -352,8 +352,9 @@ export const projects: Project[] = [
     year: '2025',
     core: ['Python', 'scikit-learn', 'Regression'],
     domain: 'github.com/vardhannehru',
-    imageUrl: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=80&w=1800&auto=format&fit=crop',
-    poster: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?q=70&w=480&h=270&auto=format&fit=crop',
+    videoUrl: '/projects/ev-cost-reel.mp4',
+    poster: '/projects/ev-cost-thumb.jpg',
+    bare: true,
     tint: '#5aa9e6',
     overview: ['A machine learning project that predicts the cost of electric vehicles with a regression model.'],
     highlights: [],
@@ -372,6 +373,9 @@ export const projects: Project[] = [
     year: '2026',
     core: ['CrewAI', 'OpenAI', 'Python'],
     domain: 'github.com/vardhannehru',
+    videoUrl: '/projects/news-agency-reel.mp4',
+    poster: '/projects/news-agency-thumb.jpg',
+    bare: true,
     tint: '#6dc3a0',
     overview: [
       'A CrewAI crew of specialised agents (a researcher, a writer and an editor) that gathers news on a topic, drafts an article and reviews it for accuracy and tone. A personal / freelance build.',
@@ -397,6 +401,9 @@ export const projects: Project[] = [
     year: '2026',
     core: ['Website', 'Freelance', 'Deployed'],
     domain: 'shivajividyapeeth.in',
+    videoUrl: '/projects/shivaji-reel.mp4',
+    poster: '/projects/shivaji-thumb.jpg',
+    bare: true,
     tint: '#e0b24f',
     overview: [
       'A freelance build for Shivaji Vidya Peeth: I built the school’s website and deployed it live.',
@@ -412,7 +419,7 @@ export const projects: Project[] = [
 ];
 
 export const LABELS: Record<Kind, string> = { intern: 'Internship · ReveloSoft', ai: 'AI Project', project: 'Project', 'case-study': 'Freelance · Client work', lab: 'In progress' };
-export const MONO = "'Geist Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace";
+export const MONO = "'Bricolage Grotesque', 'Geist', sans-serif"; // the labels' font (was a spaced-out mono)
 export const ACCENT = 'var(--accent,#c8b6ff)';
 
 /**
@@ -776,7 +783,7 @@ function RetroTV({ project }: { project: Project }) {
             ))}
           </div>
           {/* Power light */}
-          <span className="flex items-center gap-2 text-[8px] uppercase tracking-[0.2em] md:text-[9px]" style={{ fontFamily: MONO, color: F.text }}>
+          <span className="flex items-center gap-2 text-[10px] font-medium tracking-[-0.01em] md:text-[11px]" style={{ fontFamily: MONO, color: F.text }}>
             <span
               className="h-[6px] w-[6px] rounded-full transition-all duration-300"
               style={{ background: on ? '#ff5a4f' : '#7a4a48', boxShadow: on ? '0 0 8px #ff5a4f' : 'none' }}
@@ -880,7 +887,7 @@ export function TestCard({ name, compact = false }: { name: string; compact?: bo
           <p className="truncate uppercase leading-none" style={{ fontFamily: "Anton, Impact, sans-serif", fontSize: '7cqw', color: '#FFFFFF' }}>
             {name}
           </p>
-          <p className="uppercase" style={{ fontFamily: MONO, fontSize: '2.2cqw', fontWeight: 600, letterSpacing: '0.3em', marginTop: '1.6cqw', color: '#FED141' }}>
+          <p className="uppercase" style={{ fontFamily: "'Geist Mono', ui-monospace, monospace", fontSize: '2.2cqw', fontWeight: 600, letterSpacing: '0.3em', marginTop: '1.6cqw', color: '#FED141' }}>
             {TEST_LABEL}
           </p>
         </div>
@@ -892,7 +899,7 @@ export function TestCard({ name, compact = false }: { name: string; compact?: bo
 /** "● AI PROJECT · 2026" */
 export function KindLabel({ project }: { project: Project }) {
   return (
-    <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.22em]" style={{ fontFamily: MONO, color: ACCENT }}>
+    <p className="flex items-center gap-2 text-[13px] font-medium tracking-[-0.01em]" style={{ fontFamily: MONO, color: ACCENT }}>
       <span className="h-1.5 w-1.5" style={{ background: ACCENT, boxShadow: `0 0 10px ${ACCENT}` }} />
       {LABELS[project.kind]} · {project.year}
     </p>

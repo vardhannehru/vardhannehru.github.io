@@ -1,0 +1,59 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #ebdefc; }
+    #run-grain { position: absolute; inset: 0; opacity: 0.07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    #run-kicker { position: absolute; left: 150px; top: 140px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.16em; color: #743bbe; }
+    #run-title { position: absolute; left: 150px; top: 190px; font-family: 'Inter', sans-serif; font-weight: 900; font-size: 96px; line-height: 1.02; letter-spacing: -0.035em; color: #0e1523; }
+    #run-title .soft { color: #743bbe; }
+    /* The Streamlit dashboard, rebuilt from app.py */
+    #run-app { position: absolute; left: 960px; top: 430px; width: 820px; height: 470px; border-radius: 26px; background: #ffffff; box-shadow: 0 34px 70px -34px rgba(116, 59, 190, 0.7); overflow: hidden; font-family: 'Inter', sans-serif; }
+    #run-side { position: absolute; left: 0; top: 0; bottom: 0; width: 290px; background: #f0f2f6; padding: 34px 26px; }
+    #run-side h4 { font-size: 26px; font-weight: 800; color: #0e1523; }
+    #run-side .info { margin-top: 20px; padding: 16px 18px; border-radius: 12px; background: #dbeafe; font-size: 24px; line-height: 1.45; color: #1e3a8a; }
+    #run-btn { position: absolute; left: 26px; top: 250px; width: 238px; padding: 16px 0; border-radius: 12px; background: #ff4b4b; color: #fff; text-align: center; font-size: 22px; font-weight: 700; }
+    #run-main { position: absolute; left: 330px; top: 38px; right: 34px; }
+    #run-main h3 { font-size: 34px; font-weight: 900; letter-spacing: -0.02em; color: #0e1523; }
+    #run-main p { margin-top: 12px; font-size: 24px; line-height: 1.4; color: #4b5563; }
+    #run-status { margin-top: 28px; padding: 18px 20px; border-radius: 14px; border: 2px solid #e5e7eb; font-size: 24px; font-weight: 700; color: #0e1523; }
+    #run-cursor { position: absolute; left: 0; top: 0; width: 40px; height: 40px; }
+  </style>
+  <div id="root" data-composition-id="run" data-width="1920" data-height="1080">
+    <div id="run-grain"></div>
+    <p id="run-kicker">NEWS DIGITAL AGENCY</p>
+    <h1 id="run-title">One click.<br /><span class="soft">This week's AI news,</span><br />written up.</h1>
+    <div id="run-app">
+      <div id="run-side">
+        <h4>Agent Controls</h4>
+        <div class="info">Brain: Claude Haiku<br />Framework: CrewAI</div>
+        <div id="run-btn">Run Newsletter Crew</div>
+      </div>
+      <div id="run-main">
+        <h3>AI Daily Newsletter Dashboard</h3>
+        <p>Watch your CrewAI team research, verify, and write in real-time.</p>
+        <div id="run-status">AI Agents are actively researching…</div>
+      </div>
+    </div>
+    <svg id="run-cursor" viewBox="0 0 40 40"><path d="M6 4 L6 32 L14 25 L20 37 L25 35 L19 23 L30 23 Z" fill="#0e1523" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" /></svg>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // The title is already up on the first frame (it's the thumbnail); it settles in place.
+      tl.fromTo('#run-title', { y: 14 }, { y: 0, duration: 0.6, ease: 'expo.out' }, 0);
+      tl.fromTo('#run-app', { y: 200, opacity: 0, rotate: 3 }, { y: 0, opacity: 1, rotate: 0, duration: 0.7, ease: 'expo.out' }, 0.55);
+      tl.set('#run-status', { opacity: 0 }, 0);
+      // The cursor comes in and presses Run.
+      tl.fromTo('#run-cursor', { x: 1700, y: 1020, opacity: 0 }, { x: 1135, y: 700, opacity: 1, duration: 0.8, ease: 'power3.inOut' }, 1.25);
+      tl.to('#run-btn', { scale: 0.94, duration: 0.08, ease: 'power2.in' }, 2.1);
+      tl.to('#run-btn', { scale: 1, backgroundColor: '#743bbe', duration: 0.2, ease: 'back.out(2)' }, 2.18);
+      tl.to('#run-status', { opacity: 1, duration: 0.25, ease: 'power2.out' }, 2.3);
+      tl.to('#run-status', { borderColor: '#743bbe', duration: 0.3 }, 2.4);
+      // Zoom through the dashboard into the crew.
+      tl.to('#run-cursor', { opacity: 0, duration: 0.15 }, 2.9);
+      tl.to('#run-app', { scale: 2.6, x: -260, y: -60, opacity: 0, filter: 'blur(10px)', duration: 0.45, ease: 'power3.in' }, 3.05);
+      tl.to('#run-kicker, #run-title', { opacity: 0, filter: 'blur(10px)', duration: 0.3, ease: 'power3.in' }, 3.0);
+      tl.to('#root', { backgroundColor: '#b1e4e3', duration: 0.3, ease: 'power2.inOut' }, 3.25);
+      window.__timelines['run'] = tl;
+    })();
+  </script>
+</template>

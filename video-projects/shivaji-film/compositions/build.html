@@ -1,0 +1,54 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #ebdefc; }
+    #sb-grain { position: absolute; inset: 0; opacity: 0.07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    #sb-step { position: absolute; left: 150px; top: 110px; font-family: 'Inter', sans-serif; }
+    #sb-step .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.16em; color: #14356b; margin-bottom: 10px; }
+    #sb-step h2 { font-weight: 900; font-size: 96px; line-height: 1; letter-spacing: -0.035em; color: #14356b; }
+    #sb-step p { margin-top: 16px; font-size: 38px; color: #222222; }
+    /* The three files that make the whole site */
+    .sb-file { position: absolute; top: 400px; width: 200px; height: 120px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 40px; color: #ffffff; }
+    /* The 15 pages, as paper sheets */
+    .sb-page { position: absolute; width: 300px; height: 74px; border-radius: 12px; background: #ffffff; border: 2px solid #d5dae2; display: flex; align-items: center; padding: 0 16px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 25px; color: #14356b; white-space: nowrap; box-shadow: 0 14px 24px -16px rgba(20, 53, 107, 0.5); }
+    .sb-page.cbse { border-color: #e0b24f; background: #fff4cc; }
+    #sb-cbse { position: absolute; left: 150px; top: 900px; padding: 16px 26px; border-radius: 999px; background: #14356b; color: #fff; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 32px; }
+    #sb-cbse b { color: #fed141; }
+  </style>
+  <div id="root" data-composition-id="build" data-width="1920" data-height="1080">
+    <div id="sb-grain"></div>
+    <div id="sb-step"><p class="n">HOW IT'S BUILT</p><h2>Plain HTML, CSS &amp; JS.</h2><p>No framework, no build step. Copy the files, and it's live.</p></div>
+    <div class="sb-file" id="sb-f0" style="left: 150px; background: #e34c26">.html</div>
+    <div class="sb-file" id="sb-f1" style="left: 380px; background: #264de4">.css</div>
+    <div class="sb-file" id="sb-f2" style="left: 610px; background: #a1690b">.js</div>
+    <div id="sb-pages"></div>
+    <div id="sb-cbse">CBSE Mandatory Public Disclosure, published · <b>Affiliation 3630013</b></div>
+  </div>
+  <script>
+    (function () {
+      // The site's 15 pages (README.md); the last four are the ones the CBSE disclosure links to.
+      const pages = ['Home', 'About', 'Academics', 'Admissions', 'Facilities', 'Faculty', 'Gallery', 'Contact', 'Mandatory Disclosure', 'Privacy Policy', 'Terms', 'Fee Structure', 'Board Results', 'Academic Calendar', 'Grievance Redressal'];
+      const host = document.getElementById('sb-pages');
+      pages.forEach((name, i) => {
+        const d = document.createElement('div');
+        d.className = 'sb-page' + (i === 8 || i >= 11 ? ' cbse' : '');
+        d.id = 'sb-p' + i;
+        d.textContent = name;
+        const col = i % 3, row = Math.floor(i / 3);
+        d.style.left = 860 + col * 310 + 'px';
+        d.style.top = 370 + row * 98 + 'px';
+        host.appendChild(d);
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#sb-step', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.3, ease: 'power4.out' }, 0.05);
+      ['#sb-f0', '#sb-f1', '#sb-f2'].forEach((f, i) => tl.fromTo(f, { y: 120, scale: 0.6, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' }, 0.3 + i * 0.12));
+      // The files deal out the 15 pages.
+      pages.forEach((_, i) => tl.fromTo('#sb-p' + i, { x: -500 + (i % 3) * -305, y: 120, rotate: -8, opacity: 0, scale: 0.6 }, { x: 0, y: 0, rotate: (i % 2 ? 1 : -1), opacity: 1, scale: 1, duration: 0.5, ease: 'expo.out' }, 0.9 + i * 0.07));
+      tl.to('.sb-page.cbse', { y: -10, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.out', stagger: 0.06 }, 2.35);
+      tl.fromTo('#sb-cbse', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.6)' }, 2.5);
+      tl.to('#sb-step, .sb-file, .sb-page, #sb-cbse', { opacity: 0, filter: 'blur(12px)', duration: 0.3, ease: 'power3.in' }, 4.45);
+      tl.to('#root', { backgroundColor: '#fff4cc', duration: 0.3, ease: 'power2.inOut' }, 4.45);
+      window.__timelines['build'] = tl;
+    })();
+  </script>
+</template>

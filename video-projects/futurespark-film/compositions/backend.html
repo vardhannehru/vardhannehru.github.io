@@ -1,0 +1,77 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #b1e4e3; }
+    #fb-grain { position: absolute; inset: 0; opacity: 0.07; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    #fb-step { position: absolute; left: 150px; top: 100px; font-family: 'Inter', sans-serif; }
+    #fb-step .n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; letter-spacing: 0.16em; color: #08746b; margin-bottom: 10px; }
+    #fb-step h2 { font-weight: 900; font-size: 96px; line-height: 1; letter-spacing: -0.035em; color: #08746b; }
+    #fb-step p { margin-top: 16px; font-size: 38px; color: #0e1523; }
+    /* The admissions enquiry form */
+    #fb-form { position: absolute; left: 150px; top: 420px; width: 520px; padding: 32px; border-radius: 24px; background: #ffffff; box-shadow: 0 30px 60px -28px rgba(8, 116, 107, 0.6); font-family: 'Inter', sans-serif; }
+    #fb-form h3 { font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: #240c67; }
+    .fb-field { margin-top: 18px; height: 64px; border-radius: 14px; border: 3px solid #e4e1ee; position: relative; overflow: hidden; }
+    .fb-field i { position: absolute; left: 18px; top: 24px; height: 14px; border-radius: 7px; background: #a079ff; transform-origin: left center; }
+    #fb-send { margin-top: 22px; padding: 18px 0; border-radius: 14px; background: #240c67; color: #fff; text-align: center; font-size: 30px; font-weight: 800; }
+    /* Google Apps Script, then the Sheet */
+    #fb-gas { position: absolute; left: 780px; top: 520px; width: 360px; padding: 30px; border-radius: 24px; background: #0e1523; color: #fff; font-family: 'Inter', sans-serif; text-align: center; }
+    #fb-gas b { display: block; font-size: 38px; font-weight: 900; letter-spacing: -0.02em; }
+    #fb-gas span { display: block; margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; color: #fed141; }
+    #fb-sheet { position: absolute; left: 1250px; top: 380px; width: 540px; border-radius: 22px; background: #ffffff; box-shadow: 0 30px 60px -28px rgba(8, 116, 107, 0.6); overflow: hidden; font-family: 'Inter', sans-serif; }
+    #fb-sheet .hd { padding: 20px 26px; background: #0f9d58; color: #fff; font-weight: 900; font-size: 32px; }
+    .fb-row { height: 64px; border-bottom: 2px solid #e6efe9; display: flex; align-items: center; gap: 16px; padding: 0 22px; }
+    .fb-row i { height: 14px; border-radius: 7px; background: #cfd8d3; }
+    #fb-new { background: #fff4cc; }
+    #fb-new i { background: #a079ff; }
+    .fb-dot { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: #a079ff; border: 6px solid #fff; }
+    #fb-line { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    #fb-extra { position: absolute; left: 150px; top: 900px; display: flex; gap: 14px; }
+    #fb-extra span { padding: 14px 24px; border-radius: 999px; background: #ffffff; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 30px; color: #08746b; }
+  </style>
+  <div id="root" data-composition-id="backend" data-width="1920" data-height="1080">
+    <div id="fb-grain"></div>
+    <div id="fb-step"><p class="n">HOW AN ENQUIRY REACHES THE SCHOOL</p><h2>No server. No database.</h2><p>Google runs the backend.</p></div>
+    <svg id="fb-line" viewBox="0 0 1920 1080" data-layout-ignore><path id="fb-path" d="M670 760 C 730 760, 730 640, 780 640 M1140 640 C 1200 640, 1190 620, 1250 620" fill="none" stroke="#08746b" stroke-width="6" stroke-linecap="round" stroke-dasharray="560" stroke-dashoffset="560" /></svg>
+    <div id="fb-form">
+      <h3>Admission enquiry</h3>
+      <div class="fb-field"><i id="fb-f0" style="width: 62%"></i></div>
+      <div class="fb-field"><i id="fb-f1" style="width: 44%"></i></div>
+      <div class="fb-field"><i id="fb-f2" style="width: 54%"></i></div>
+      <div id="fb-send">Submit</div>
+    </div>
+    <div id="fb-gas"><b>Google Apps Script</b><span>web app</span></div>
+    <div id="fb-sheet">
+      <div class="hd">Google Sheet</div>
+      <div class="fb-row"><i style="width: 34%"></i><i style="width: 22%"></i><i style="width: 26%"></i></div>
+      <div class="fb-row"><i style="width: 28%"></i><i style="width: 30%"></i><i style="width: 20%"></i></div>
+      <div class="fb-row"><i style="width: 36%"></i><i style="width: 18%"></i><i style="width: 28%"></i></div>
+      <div class="fb-row" id="fb-new"><i style="width: 32%"></i><i style="width: 26%"></i><i style="width: 24%"></i></div>
+    </div>
+    <div class="fb-dot" id="fb-dot"></div>
+    <div id="fb-extra"><span>Events from a Sheet</span><span>Gallery from Drive</span><span>Hosted on Netlify</span></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#fb-step', { opacity: 0, filter: 'blur(8px)' }, { opacity: 1, filter: 'blur(0px)', duration: 0.3, ease: 'power4.out' }, 0.05);
+      tl.fromTo('#fb-form', { y: 220, opacity: 0, rotate: -3 }, { y: 0, opacity: 1, rotate: -1, duration: 0.7, ease: 'expo.out' }, 0.15);
+      tl.fromTo('#fb-gas', { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' }, 0.45);
+      tl.fromTo('#fb-sheet', { x: 240, opacity: 0, rotate: 3 }, { x: 0, opacity: 1, rotate: 1, duration: 0.7, ease: 'expo.out' }, 0.6);
+      tl.set('#fb-new', { opacity: 0 }, 0);
+      // A parent fills it in and sends it.
+      ['#fb-f0', '#fb-f1', '#fb-f2'].forEach((f, i) => tl.fromTo(f, { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: 'power2.out' }, 1.0 + i * 0.3));
+      tl.to('#fb-send', { scale: 0.94, duration: 0.08 }, 2.0);
+      tl.to('#fb-send', { scale: 1, backgroundColor: '#a079ff', duration: 0.2, ease: 'back.out(2)' }, 2.08);
+      // It travels to Apps Script, then lands as a new row in the Sheet.
+      tl.to('#fb-path', { attr: { 'stroke-dashoffset': 0 }, duration: 0.9, ease: 'power2.inOut' }, 2.15);
+      tl.fromTo('#fb-dot', { x: 670, y: 760, scale: 0 }, { x: 960, y: 640, scale: 1, duration: 0.5, ease: 'power2.inOut' }, 2.15);
+      tl.to('#fb-gas', { scale: 1.08, duration: 0.15, yoyo: true, repeat: 1 }, 2.6);
+      tl.to('#fb-dot', { x: 1520, y: 615 + 64 * 3 + 70, duration: 0.55, ease: 'power2.inOut' }, 2.7);
+      tl.to('#fb-dot', { scale: 0, duration: 0.2 }, 3.2);
+      tl.fromTo('#fb-new', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.35, ease: 'back.out(1.8)' }, 3.2);
+      tl.fromTo('#fb-extra span', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.6)', stagger: 0.12 }, 3.6);
+      tl.to('#fb-step, #fb-form, #fb-gas, #fb-sheet, #fb-line, #fb-extra', { opacity: 0, filter: 'blur(12px)', duration: 0.3, ease: 'power3.in' }, 4.85);
+      tl.to('#root', { backgroundColor: '#ebdefc', duration: 0.3, ease: 'power2.inOut' }, 4.85);
+      window.__timelines['backend'] = tl;
+    })();
+  </script>
+</template>

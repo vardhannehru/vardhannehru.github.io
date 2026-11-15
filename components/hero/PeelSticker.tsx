@@ -50,7 +50,10 @@ export default function PeelSticker({ width: w, height: h, left, top, rotate, co
           }}
         >
           {children}
-          <div className="pointer-events-none absolute inset-0 mix-blend-overlay" style={{ backgroundImage: GRAIN, opacity: 0.5 }} />
+          {/* The grain as a plain see-through layer, not a blend mode: a blend inside the name's 3D scene made phones
+              recombine the sticker with the whole name behind it on every frame it moved (a tap flickered the name and
+              the nav bar). */}
+          <div className="pointer-events-none absolute inset-0" style={{ backgroundImage: GRAIN, opacity: 0.22 }} />
           <div
             className="pointer-events-none absolute inset-0"
             style={{ background: "linear-gradient(125deg, rgba(255,255,255,0.4), rgba(255,255,255,0) 40%, rgba(255,255,255,0.08) 70%, rgba(255,255,255,0) 85%)" }}

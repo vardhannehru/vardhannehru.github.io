@@ -15,6 +15,9 @@ export type ButterflyLook = {
   joint: number;
   /** One wing's width on screen (px). */
   size: number;
+  /** The real body and antennae as a picture: its size, and where its centre sits from the wing root (x right, y up),
+   *  all as fractions of one wing's width. Without it a plain dark body is drawn. */
+  body?: { src: string; w: number; h: number; x: number; y: number };
 };
 
 export type NavPerch = {
