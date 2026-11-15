@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Briefcase, Home, Mail, User } from 'lucide-react';
 import { navPerches, type ButterflyLook, type NavPerch } from './navPerch';
@@ -10,8 +10,8 @@ import { useTheme } from '../ui/theme';
 // The labels are carved into the faces, dark and crisp. A round VN badge (my name slowly turning around it)
 // leads the row. Each button rests at its own slight angle; pointing at one pops it up (taller side, straightened
 // out) and pressing pushes it right down. The page you're on stays half pressed in.
-// Now and then one of the hero's butterflies flies up and settles on a button, slowly fanning its wings, and the
-// button dips a little under it; it flies off after a while, or as soon as you point at that button.
+// Now and then one of the hero's butterflies flies up and settles on a button, wings folded like a real one resting, and
+// the button dips a little under it; it flies off after a while, or as soon as you point at that button.
 // On phones the row sits at the bottom, icons only.
 
 const LINKS = [
@@ -120,10 +120,34 @@ const carved = (t: Tone) => ({
   filter: `drop-shadow(0 -1px 0 ${t.cut}) drop-shadow(0 1px 0 rgba(255,255,255,0.75))`,
 });
 
-/** A butterfly resting on top of a button, wings slowly fanning open and shut. */
+/**
+ * A butterfly resting on top of a button. It takes over from the flying 3D butterfly at exactly the spot, size and
+ * angle it landed at (look.at etc.), wings already folded up, then rests like a real one: wings closed over its back
+ * with a slight quiver, opening flat now and then to bask.
+ */
 function PerchedButterfly({ look, turn }: { look: ButterflyLook; turn: number }) {
   const w = look.size;
   const h = w / look.aspect;
+  const joint = look.joint * h;
+  // Where the wing root goes, relative to this picture's corner on the button: measured from a zero-size marker at
+  // that corner, so the button's own tilt and position are taken into account. Null until measured.
+  const marker = useRef<HTMLSpanElement>(null);
+  const [off, setOff] = useState<{ x: number; y: number } | null>(null);
+  useLayoutEffect(() => {
+    const m = marker.current;
+    if (!m || !look.at) return;
+    const r = m.getBoundingClientRect();
+    setOff({ x: look.at.x - r.left, y: look.at.y - r.top });
+  }, [look]);
+  const placed = !!look.at;
+  if (placed && !off) return <span ref={marker} aria-hidden="true" className="pointer-events-none absolute left-0 top-0" />;
+  // Without a landing pose (shouldn't happen), sit centred on top of the button like before.
+  const x = off ? off.x : null;
+  const y = off ? off.y : null;
+  const angle = placed ? look.angle ?? 0 : turn;
+  const squash = placed ? look.squash ?? 1 : 1;
+  // The wing angle it arrived with (degrees up from flat), so the picture starts the same; then the rest cycle.
+  const start = Math.round(((look.theta ?? 1.36) * 180) / Math.PI);
   const wing = (side: 'r' | 'l') => (
     <span
       className="absolute top-0 h-full"
@@ -131,48 +155,63 @@ function PerchedButterfly({ look, turn }: { look: ButterflyLook; turn: number })
         width: w,
         [side === 'r' ? 'left' : 'right']: '50%',
         transformOrigin: side === 'r' ? '0% 50%' : '100% 50%',
-        animation: `gnav-fan-${side} 2.8s ease-in-out infinite`,
+        transform: `rotateY(${side === 'r' ? -start : start}deg)`,
+        animation: `gnav-rest-${side} 9s ease-in-out 0.25s infinite`,
       }}
     >
       <img src={look.src} alt="" draggable={false} className="h-full w-full" style={side === 'l' ? { transform: 'scaleX(-1)' } : undefined} />
     </span>
   );
   return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 z-10"
-      style={{ top: -h * 0.62, width: w * 2, height: h, marginLeft: -w, transform: `rotate(${turn}deg)` }}
-    >
-      <span className="absolute inset-0" style={{ perspective: '90px', animation: 'gnav-land 0.55s cubic-bezier(0.22,1,0.36,1)' }}>
-        {wing('r')}
-        {wing('l')}
-        {/* The body: head, thorax and abdomen (and antennae) along the middle. */}
-        {look.body ? (
-          <img
-            src={look.body.src}
-            alt=""
-            draggable={false}
-            className="absolute max-w-none"
-            style={{
-              width: look.body.w * w,
-              height: look.body.h * w,
-              left: w + (look.body.x - look.body.w / 2) * w,
-              top: h * look.joint - (look.body.y + look.body.h / 2) * w,
-            }}
-          />
-        ) : (
+    <>
+      {placed && <span ref={marker} aria-hidden="true" className="pointer-events-none absolute left-0 top-0" />}
+      <span
+        aria-hidden="true"
+        className={placed ? 'pointer-events-none absolute z-10' : 'pointer-events-none absolute left-1/2 z-10'}
+        style={
+          placed
+            ? {
+                left: x! - w,
+                top: y! - joint,
+                width: w * 2,
+                height: h,
+                transformOrigin: `${w}px ${joint}px`,
+                transform: `rotate(${angle}deg) scaleY(${squash})`,
+              }
+            : { top: -h * 0.62, width: w * 2, height: h, marginLeft: -w, transform: `rotate(${turn}deg)` }
+        }
+      >
+        <span className="absolute inset-0" style={{ perspective: `${Math.round(w * 6)}px` }}>
+          {wing('r')}
+          {wing('l')}
+          {/* The body: head, thorax and abdomen (and antennae) along the middle. */}
+          {look.body ? (
+            <img
+              src={look.body.src}
+              alt=""
+              draggable={false}
+              className="absolute max-w-none"
+              style={{
+                width: look.body.w * w,
+                height: look.body.h * w,
+                left: w + (look.body.x - look.body.w / 2) * w,
+                top: joint - (look.body.y + look.body.h / 2) * w,
+              }}
+            />
+          ) : (
+            <span
+              className="absolute left-1/2 rounded-full"
+              style={{ width: 3, marginLeft: -1.5, top: h * (look.joint - 0.12), height: h * 0.34, background: '#17111f' }}
+            />
+          )}
+          {/* Its little shadow on the button. */}
           <span
-            className="absolute left-1/2 rounded-full"
-            style={{ width: 3, marginLeft: -1.5, top: h * (look.joint - 0.12), height: h * 0.34, background: '#17111f' }}
+            className="absolute -z-10 rounded-full blur-[2px]"
+            style={{ width: w * 0.9, height: w * 0.35, left: w * 0.55, top: joint + w * 0.25, background: 'rgba(30,15,70,0.3)' }}
           />
-        )}
-        {/* Its little shadow on the button. */}
-        <span
-          className="absolute left-1/2 -z-10 rounded-full blur-[2px]"
-          style={{ width: w * 1.4, height: h * 0.35, marginLeft: -w * 0.7, top: h * 0.62, background: 'rgba(30,15,70,0.35)' }}
-        />
+        </span>
       </span>
-    </span>
+    </>
   );
 }
 

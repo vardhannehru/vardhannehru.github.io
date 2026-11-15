@@ -18,6 +18,13 @@ export type ButterflyLook = {
   /** The real body and antennae as a picture: its size, and where its centre sits from the wing root (x right, y up),
    *  all as fractions of one wing's width. Without it a plain dark body is drawn. */
   body?: { src: string; w: number; h: number; x: number; y: number };
+  /** Where the flying butterfly was on screen when it landed, so the picture starts exactly there: its wing root (page
+   *  px), which way its head pointed (deg, 0 = up), how much the view squashed it front to back (1 = not at all), and
+   *  its wing angle (radians, 0 = open flat). */
+  at?: { x: number; y: number };
+  angle?: number;
+  squash?: number;
+  theta?: number;
 };
 
 export type NavPerch = {

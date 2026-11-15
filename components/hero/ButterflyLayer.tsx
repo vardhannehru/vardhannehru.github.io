@@ -660,6 +660,13 @@ type Butterfly = {
   /** While resting, when (s after landing) it opens its wings to bask, and for how long (0: it doesn't). */
   baskAt: number;
   baskFor: number;
+  /** Distance to where it's landing (only while landing). */
+  landDist: number;
+  /** Landed on a nav button: when to hide the 3D one, a moment after its picture on the button has appeared. */
+  hideAt: number;
+  /** Extra size factor: shrinks it as it comes in to a nav button, so it settles there at a natural size (the button
+   *  spot is high up and close to the camera, where it would look huge), and eases back to 1 after it leaves. */
+  k: number;
   yaw: number;
   pitch: number;
   roll: number;
@@ -980,6 +987,9 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
         thetaH: 0.4,
         baskAt: 0,
         baskFor: 0,
+        landDist: Infinity,
+        hideAt: 0,
+        k: 1,
         yaw: fromRight ? Math.PI / 2 : -Math.PI / 2,
         pitch: 0.3,
         roll: 0,
@@ -1077,6 +1087,32 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       return false;
     };
 
+    /**
+     * Where the butterfly is on screen right now: its wing root (page px), one open wing's width, which way its head
+     * points (deg, 0 = up), how much the view squashes it front to back, and its wing angle. The picture of it resting
+     * on a nav button starts from exactly this, so the handover doesn't jump.
+     */
+    const screenPose = (b: Butterfly) => {
+      b.group.updateMatrixWorld(true);
+      const rect = canvas.getBoundingClientRect();
+      const toScreen = (x: number, y: number) => {
+        const v = new THREE.Vector3(x, y, 0).applyMatrix4(b.group.matrixWorld).project(camera);
+        return { x: rect.left + ((v.x + 1) / 2) * rect.width, y: rect.top + ((1 - v.y) / 2) * rect.height };
+      };
+      const root = toScreen(0, 0);
+      const tip = toScreen(WX * s, 0);
+      const head = toScreen(0, 0.6 * s);
+      const span = Math.hypot(tip.x - root.x, tip.y - root.y);
+      const axis = Math.hypot(head.x - root.x, head.y - root.y);
+      return {
+        at: root,
+        size: span,
+        angle: (Math.atan2(head.x - root.x, root.y - head.y) * 180) / Math.PI,
+        squash: Math.max(0.35, Math.min(1, axis / ((span * 0.6) / WX))),
+        theta: b.theta,
+      };
+    };
+
     const touchDown = (b: Butterfly, t: number) => {
       b.mode = "perch";
       b.perchedAt = t;
@@ -1086,12 +1122,15 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       b.vel.set(0, 0, 0);
       if (b.perch?.kind === "nav") {
         // Hand over to the picture of it resting on the button (drawn above the nav).
-        b.perch.n.land(lookOf(b.sp));
-        b.group.visible = false;
-        b.shadow.visible = false;
+        // Hand over to the picture of it resting on the button (drawn above the nav), placed exactly where it is now.
+        // The 3D one stays a moment longer, until the picture is on screen, so there's no blink in between.
+        b.perch.n.land({ ...lookOf(b.sp), ...screenPose(b) });
+        b.hideAt = t + 0.08;
       } else if (b.perch) react(b.perch, true);
     };
     const takeOff = (b: Butterfly, t: number) => {
+      b.hideAt = 0;
+      b.landDist = Infinity;
       if (b.perch?.kind === "nav") {
         b.perch.n.leave();
         b.perch.n.busy = false;
@@ -1117,6 +1156,10 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
 
       if (b.mode === "perch" && b.perch) {
         b.pos.copy(perchPoint(b.perch, tmpA, rest * b.sp.size));
+        if (b.hideAt && t > b.hideAt) {
+          b.hideAt = 0;
+          if (b.perch.kind === "nav") b.group.visible = b.shadow.visible = false;
+        }
         const startled =
           (perchLetter(b.perch) >= 0 && perchLetter(b.perch) === stage.pointerLetter) || (b.perch.kind === "nav" && b.perch.n.startled);
         const gone = (b.perch.kind === "sticker" && !b.perch.s.ready) || (b.perch.kind === "nav" && !navPoint(b.perch.n, tmpB));
@@ -1134,6 +1177,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
             (perchLetter(b.perch) >= 0 && perchLetter(b.perch) === stage.pointerLetter);
           const dh = Math.hypot(spot.x - b.pos.x, spot.y - b.pos.y);
           const dist = b.pos.distanceTo(spot);
+          b.landDist = dist;
           if (lost) {
             if (b.perch.kind === "nav") b.perch.n.busy = false;
             b.perch = null;
@@ -1195,8 +1239,10 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
         if (b.mode === "fly" && t > b.glideUntil + 0.6 && Math.random() < dt * 0.7 * b.sp.glide) b.glideUntil = t + rand(0.5, 1.3);
         const gliding = t < b.glideUntil;
         if (!gliding) b.phase += dt * Math.PI * 2 * FLAP_HZ * b.sp.flap * (b.mode === "land" ? 0.75 : 1);
-        const want = gliding ? 0.18 : 0.4 + 0.95 * Math.sin(b.phase);
-        b.theta += (want - b.theta) * Math.min(1, dt * (gliding ? 4 : 18));
+        // Coming in to a nav button, it folds its wings up as it settles, the way it will rest there.
+        const settling = b.mode === "land" && b.perch?.kind === "nav" && b.landDist < 0.35 * H;
+        const want = settling ? 1.4 : gliding ? 0.18 : 0.4 + 0.95 * Math.sin(b.phase);
+        b.theta += (want - b.theta) * Math.min(1, dt * (settling ? 7 : gliding ? 4 : 18));
         const hv = Math.hypot(b.vel.x, b.vel.y);
         if (hv > 0.04 * H) {
           const diff = wrapAngle(Math.atan2(-b.vel.x, -b.vel.y) - b.yaw);
@@ -1218,6 +1264,15 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       const bob = flying ? -0.05 * H * Math.sin(b.phase - 0.6) : 0;
       b.group.position.set(b.pos.x, -b.pos.y, b.pos.z + bob);
       b.group.rotation.set(b.pitch, b.roll, b.yaw);
+      let wantK = 1;
+      if (b.mode === "land" && b.perch?.kind === "nav" && b.landDist < 0.8 * H) {
+        b.group.scale.setScalar(b.sp.size * b.k);
+        const span1 = screenPose(b).size / b.k;
+        const target = Math.min(1, (NAV_WING_PX * 1.3 * b.sp.size) / Math.max(1, span1));
+        wantK = 1 + (target - 1) * clamp01(1 - b.landDist / (0.8 * H));
+      } else if (b.mode === "perch" && b.perch?.kind === "nav") wantK = b.k;
+      b.k += (wantK - b.k) * Math.min(1, dt * (wantK < b.k ? 8 : 2));
+      b.group.scale.setScalar(b.sp.size * b.k);
       // The hindwings follow the forewings a moment late.
       b.thetaH += (b.theta - b.thetaH) * Math.min(1, dt * (flying ? 22 : 8));
       b.fore[0].rotation.y = -b.theta;
@@ -1233,7 +1288,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       const ground = surfaceAt(b.pos.x, b.pos.y);
       const k = clamp01(1 - Math.max(0, b.pos.z - ground) / (1.4 * H));
       b.shadow.position.set(b.pos.x, -b.pos.y, ground + 0.6);
-      b.shadow.scale.setScalar(s * b.sp.size * (1.6 + (1 - k) * 1.4) * (0.55 + 0.45 * Math.abs(Math.cos(b.theta))));
+      b.shadow.scale.setScalar(s * b.sp.size * b.k * (1.6 + (1 - k) * 1.4) * (0.55 + 0.45 * Math.abs(Math.cos(b.theta))));
       b.shadowMat.opacity = 0.42 * k * k * f;
     };
 
