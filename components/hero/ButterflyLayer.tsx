@@ -626,7 +626,7 @@ type Butterfly = {
   fore: THREE.Group[];
   hind: THREE.Group[];
   /** The wing materials (top and underside of fore- and hindwing). */
-  wingMats: THREE.MeshPhysicalMaterial[];
+  wingMats: THREE.MeshStandardMaterial[];
   shadow: THREE.Mesh;
   shadowMat: THREE.MeshBasicMaterial;
   mats: THREE.Material[];
@@ -780,14 +780,6 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
           }
           for (const b of flies) {
             if (b.sp !== sp) continue;
-            // A photo already has its true colours and shine: no painted-on sheen, and only the morpho keeps a hint of
-            // its blue shimmer.
-            for (const m of b.wingMats) {
-              m.sheen = 0;
-              m.iridescence = sp.iridescence >= 1 && m.side === THREE.FrontSide ? 0.35 : 0;
-              m.roughness = 0.6;
-              m.needsUpdate = true;
-            }
             if (b.photoBody && bodyImg) {
               b.photoBody.visible = true;
               for (const p of b.parts) p.visible = false;
@@ -832,39 +824,34 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       const sp = SPECIES[kind];
       const ps = wingParts.get(kind)!;
       // Top faces up (front side); the underside shows from below (back side).
+      // Plain lit materials: the photos already have the wings' true colours and shine. Only the morpho's top keeps
+      // a hint of its blue shimmer (the costlier kind of material). Fewer, simpler materials are much quicker to get
+      // ready: every time the home page opened, preparing sheen-and-shimmer materials for all the wings froze the page
+      // (and the sounds playing) for about a third of a second.
       const wingMat = (tex: THREE.Texture, side: THREE.Side) =>
         track(
-        new THREE.MeshPhysicalMaterial({
-          map: tex,
-          side,
-          roughness: 0.42,
-          metalness: 0,
-          iridescence: sp.iridescence,
-          iridescenceIOR: 1.35,
-          iridescenceThicknessRange: [180, 420],
-          sheen: 0.6,
-          sheenRoughness: 0.4,
-          sheenColor: new THREE.Color(sp.sheen),
-          envMapIntensity: 0.9,
-          alphaToCoverage: true,
-        })
-      );
+          sp.iridescence >= 1 && side === THREE.FrontSide
+            ? new THREE.MeshPhysicalMaterial({
+                map: tex,
+                side,
+                roughness: 0.6,
+                metalness: 0,
+                iridescence: 0.35,
+                iridescenceIOR: 1.35,
+                iridescenceThicknessRange: [180, 420],
+                envMapIntensity: 0.9,
+                alphaToCoverage: true,
+              })
+            : new THREE.MeshStandardMaterial({ map: tex, side, roughness: 0.6, metalness: 0, envMapIntensity: 0.9, alphaToCoverage: true })
+        );
       const wingMats = [
         wingMat(ps.fore.tex, THREE.FrontSide),
         wingMat(ps.foreUnder.tex, THREE.BackSide),
         wingMat(ps.hind.tex, THREE.FrontSide),
         wingMat(ps.hindUnder.tex, THREE.BackSide),
       ];
-      const bodyMat = track(
-        new THREE.MeshPhysicalMaterial({
-          color: 0x17111f,
-          roughness: 0.75,
-          sheen: 1,
-          sheenRoughness: 0.45,
-          sheenColor: new THREE.Color(0x8d7bb0),
-          alphaToCoverage: true,
-        })
-      );
+      // The stand-in body, shown only until the photo body has loaded.
+      const bodyMat = track(new THREE.MeshStandardMaterial({ color: 0x17111f, roughness: 0.75, alphaToCoverage: true }));
       const shadowMat = track(new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0 }));
 
       const group = new THREE.Group();
@@ -902,7 +889,7 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
       let photoBody: THREE.Mesh | null = null;
       if (sp.body) {
         const mat = track(
-          new THREE.MeshStandardMaterial({ map: bodyTex.get(kind) ?? null, side: THREE.DoubleSide, roughness: 0.8, alphaToCoverage: true })
+          new THREE.MeshStandardMaterial({ map: bodyTex.get(kind) ?? null, side: THREE.FrontSide, roughness: 0.8, alphaToCoverage: true })
         );
         photoBody = new THREE.Mesh(planeGeo, mat);
         photoBody.scale.set(sp.body.w * s, sp.body.h * s, 1);
@@ -957,11 +944,18 @@ export default function ButterflyLayer({ W, H, slab, stage }: Props) {
     // shaders. Left to the first frame a butterfly appears in, that took 130–350 ms and froze the name as it rose.
     // (One frame drawn with every butterfly showing and wiped straight away, so nothing is ever seen. Synchronous on
     // purpose: compileAsync keeps polling materials that get disposed if this layer is rebuilt, and throws.)
-    for (const b of flies) b.group.visible = b.shadow.visible = true;
+    for (const b of flies) {
+      b.group.visible = b.shadow.visible = true;
+      // The photo body too, so its material is ready before it's first shown.
+      if (b.photoBody) b.photoBody.visible = true;
+    }
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
     renderer.clear();
-    for (const b of flies) b.group.visible = b.shadow.visible = false;
+    for (const b of flies) {
+      b.group.visible = b.shadow.visible = false;
+      if (b.photoBody) b.photoBody.visible = false;
+    }
 
     // ---- Where they go ----
     const roam = { x0: -0.05 * W, x1: 1.05 * W, y0: -0.3 * H, y1: 1.25 * H, z0: slab + 0.3 * H, z1: slab + 1.05 * H };

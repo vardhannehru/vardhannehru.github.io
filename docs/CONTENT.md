@@ -27,7 +27,7 @@ updated in one place.
 | When | What | Notes |
 |---|---|---|
 | May – Oct 2026 | AI Intern · ReveloSoft, Hyderabad | TomandJerry.ai agents, enterprise RAG chatbot |
-| Freelance | Websites for clients | VimanOne, Future Spark, Shivaji Vidya Peeth |
+| Jun 2025 – Apr 2026 | Freelance Web Developer | After graduating, designed, built and launched client websites: VimanOne, Future Spark, Shivaji Vidya Peeth |
 
 ### Education
 

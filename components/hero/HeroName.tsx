@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
 import { animate, motion, motionValue, useMotionValueEvent, useTransform, type MotionValue } from "framer-motion";
 import { paintHeroScene } from "./heroScene";
 import HeroStickers from "./HeroStickers";
@@ -47,6 +47,48 @@ const MOVING_LIGHT = true;
 // Pressing a letter sends rings rippling out across the floor, and a small wave through its neighbours.
 const PRESS_RIPPLES = true;
 const PRESS_WAVE = true;
+
+type RippleHandle = { add: (x: number, y: number) => void };
+/**
+ * Rings rippling out across the floor from a pressed letter. Kept in its own little component with its own list,
+ * so a press (and each ripple finishing) redraws only the rings, not the whole name: on phones redrawing the whole
+ * name on every tap made the letters stutter and the chimes break up.
+ */
+const FloorRipples = memo(
+  forwardRef<RippleHandle, { H: number }>(function FloorRipples({ H }, ref) {
+    const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+    const nextId = useRef(0);
+    useImperativeHandle(ref, () => ({ add: (x, y) => setRipples((all) => [...all.slice(-5), { id: ++nextId.current, x, y }]) }), []);
+    return (
+      <>
+        {ripples.map((r) => (
+          <React.Fragment key={r.id}>
+            {[0, 1].map((k) => (
+              <motion.span
+                key={k}
+                aria-hidden="true"
+                className="pointer-events-none absolute rounded-full"
+                style={{
+                  left: r.x,
+                  top: r.y,
+                  width: H * 0.5,
+                  height: H * 0.5,
+                  marginLeft: -H * 0.25,
+                  marginTop: -H * 0.25,
+                  border: `${Math.max(1, H * 0.008).toFixed(1)}px solid rgba(200,182,255,${k ? 0.25 : 0.5})`,
+                }}
+                initial={{ scale: 0.15, opacity: 1 }}
+                animate={{ scale: k ? 5.2 : 3.6, opacity: 0 }}
+                transition={{ duration: k ? 1.5 : 1.1, delay: k * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                onAnimationComplete={k ? () => setRipples((all) => all.filter((x) => x.id !== r.id)) : undefined}
+              />
+            ))}
+          </React.Fragment>
+        ))}
+      </>
+    );
+  })
+);
 
 // A letter's place along the name, not counting spaces.
 const keyOf = (text: string, i: number) => text.slice(0, i).replace(/ /g, "").length;
@@ -304,8 +346,7 @@ export default function HeroName({
 
   const h1Ref = useRef<HTMLHeadingElement>(null);
   const planeRef = useRef<HTMLDivElement>(null);
-  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
-  const rippleId = useRef(0);
+  const rippleLayer = useRef<RippleHandle>(null);
   const waveTimers = useRef<number[]>([]);
   const [fillUrl, setFillUrl] = useState<string | null>(null);
 
@@ -422,8 +463,7 @@ export default function HeroName({
   // A press sends rings out across the floor from the spot pressed...
   const ripple = (x: number, y: number) => {
     if (!PRESS_RIPPLES) return;
-    const id = ++rippleId.current;
-    setRipples((all) => [...all.slice(-5), { id, x, y }]);
+    rippleLayer.current?.add(x, y);
   };
   // ...and a little wave through the letters on either side, smaller the further away they are.
   const wave = (i: number) => {
@@ -695,32 +735,7 @@ export default function HeroName({
                 }}
               />
               {/* Rings rippling out across the floor from a pressed letter. */}
-              {PRESS_RIPPLES &&
-                size &&
-                ripples.map((r) => (
-                  <React.Fragment key={r.id}>
-                    {[0, 1].map((k) => (
-                      <motion.span
-                        key={k}
-                        aria-hidden="true"
-                        className="pointer-events-none absolute rounded-full"
-                        style={{
-                          left: r.x,
-                          top: r.y,
-                          width: size.H * 0.5,
-                          height: size.H * 0.5,
-                          marginLeft: -size.H * 0.25,
-                          marginTop: -size.H * 0.25,
-                          border: `${Math.max(1, size.H * 0.008).toFixed(1)}px solid rgba(200,182,255,${k ? 0.25 : 0.5})`,
-                        }}
-                        initial={{ scale: 0.15, opacity: 1 }}
-                        animate={{ scale: k ? 5.2 : 3.6, opacity: 0 }}
-                        transition={{ duration: k ? 1.5 : 1.1, delay: k * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                        onAnimationComplete={k ? () => setRipples((all) => all.filter((x) => x.id !== r.id)) : undefined}
-                      />
-                    ))}
-                  </React.Fragment>
-                ))}
+              {PRESS_RIPPLES && size && <FloorRipples ref={rippleLayer} H={size.H} />}
               <h1
                 ref={h1Ref}
                 aria-label={text.split(" ").map((w) => w.charAt(0) + w.slice(1).toLowerCase()).join(" ")}

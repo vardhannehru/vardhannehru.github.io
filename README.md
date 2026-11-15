@@ -1,19 +1,26 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Vardhan Nehru — Portfolio
 
-# Run and deploy your AI Studio app
+**Live: [vardhannehru.github.io](https://vardhannehru.github.io)**
 
-This contains everything you need to run your app locally.
+![Vardhan Nehru, AI Engineer](public/og-image.jpg)
 
-View your app in AI Studio: https://ai.studio/apps/drive/1njHXq7-jKyxOuFtIuiWd5hRqQPfukHyy
+My personal portfolio as an AI Engineer: AI agents, RAG chatbots, real-time voice AI and websites, each with how it
+works and what it's made of.
 
-## Run Locally
+## Built with
 
-**Prerequisites:**  Node.js
+React 19, Vite, Tailwind CSS, three.js, GSAP and Framer Motion. Illustrations and the butterflies were made with
+Higgsfield; full credits are on the site's [Credits](https://vardhannehru.github.io/credits) page.
 
+## Run it locally
 
-1. Install dependencies:
-   `npm install`
-2. Run the app:
-   `npm run dev`
+Needs Node.js.
+
+```bash
+npm install
+npm run dev
+```
+
+## Deploy
+
+Every push to `main` builds the site and publishes it to GitHub Pages (`.github/workflows/deploy.yml`).

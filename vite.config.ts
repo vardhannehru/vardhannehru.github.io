@@ -25,7 +25,6 @@ export default defineConfig(() => {
         { name: 'site-url', transformIndexHtml: { order: 'pre', handler: (html: string) => html.replaceAll('%SITE_URL%', siteUrl) } },
       ],
       // No secrets are passed into the site's code: anything put here is readable by every visitor.
-      assetsInclude: ['**/*.glb'],
       build: {
         rollupOptions: {
           output: {

@@ -19,8 +19,32 @@ const BASS_BOOST_DB = 6;
 const REVERB = 0.26;
 /** Hovered notes closer together than this (s) are skipped, so a fast sweep doesn't turn into a blur. */
 const HOVER_GAP = 0.11;
+/** Phones and tablets (a touch screen as the main pointer): their audio has less headroom, so the engine is lighter
+ *  there. Taps on the name made the chimes crackle and break up while the page was also animating. */
+const PHONE = typeof window !== "undefined" && !!window.matchMedia?.("(pointer: coarse)").matches;
 /** At most this many notes ring at once. */
-const MAX_VOICES = 14;
+const MAX_VOICES = PHONE ? 8 : 14;
+/** Reverb length (s): shorter on phones, where a long reverb is a big part of the audio's work. */
+const REVERB_SECONDS = PHONE ? 1.8 : 3.2;
+
+/** The reverb's impulse (stereo noise fading away), made ahead of time when the page is idle, so building the engine
+ *  on the first tap doesn't stall the page (it took ~0.1 s on a laptop, several times that on a phone). */
+let irCache: { rate: number; data: Float32Array[] } | null = null;
+function impulse(rate: number) {
+  if (irCache && irCache.rate === rate) return irCache.data;
+  const len = Math.round(rate * REVERB_SECONDS);
+  const data = [0, 1].map(() => {
+    const d = new Float32Array(len);
+    let y = 0;
+    for (let i = 0; i < len; i++) {
+      y = y * 0.55 + (Math.random() * 2 - 1) * 0.45; // a gentle low-pass, so the tail isn't hissy
+      d[i] = y * (1 - i / len) ** 4;
+    }
+    return d;
+  });
+  irCache = { rate, data };
+  return data;
+}
 
 let ctx: AudioContext | null = null;
 let out: GainNode | null = null;
@@ -38,7 +62,13 @@ function engine() {
   if (ctx && out) return { ctx, out };
   const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!AC) return null;
-  ctx = new AC();
+  // Phones: a roomier audio buffer ("playback"), so a busy moment on the page doesn't make the sound crackle. A
+  // few milliseconds more delay before a note isn't noticeable on a tap.
+  try {
+    ctx = new AC({ latencyHint: PHONE ? "playback" : "interactive" });
+  } catch {
+    ctx = new AC();
+  }
   out = ctx.createGain();
   out.gain.value = muted ? 0 : VOLUME;
   bassOut = ctx.createGain();
@@ -50,16 +80,9 @@ function engine() {
 
   // Long, soft, darkened reverb (stereo, so it feels spacious), with a short pre-delay.
   const reverb = ctx.createConvolver();
-  const len = Math.round(ctx.sampleRate * 3.2);
-  const ir = ctx.createBuffer(2, len, ctx.sampleRate);
-  for (let c = 0; c < 2; c++) {
-    const d = ir.getChannelData(c);
-    let y = 0;
-    for (let i = 0; i < len; i++) {
-      y = y * 0.55 + (Math.random() * 2 - 1) * 0.45; // a gentle low-pass, so the tail isn't hissy
-      d[i] = y * (1 - i / len) ** 4;
-    }
-  }
+  const irData = impulse(ctx.sampleRate);
+  const ir = ctx.createBuffer(2, irData[0].length, ctx.sampleRate);
+  irData.forEach((d, c) => ir.getChannelData(c).set(d));
   reverb.buffer = ir;
   const pre = ctx.createDelay(0.1);
   pre.delayTime.value = 0.025;
@@ -199,6 +222,13 @@ export type TuneNote = { freq: number; bass?: number[] };
  * starts the audio engine on that first interaction, so hovered notes can play from then on.
  */
 export function primeAudio() {
+  // Make the reverb ahead of time, while nothing else is happening (most phones and laptops run audio at 48 kHz).
+  if (!irCache) {
+    const idle = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+    const make = () => void impulse(48000);
+    if (idle) idle(make, { timeout: 4000 });
+    else window.setTimeout(make, 1500);
+  }
   const unlock = () => {
     const e = engine();
     if (e && e.ctx.state === "suspended") void e.ctx.resume();

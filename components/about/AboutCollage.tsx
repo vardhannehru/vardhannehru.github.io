@@ -47,7 +47,12 @@ const EXPERIENCE: ExperienceItem[] = [
       { label: 'stripe/ai #560', href: 'https://github.com/stripe/ai/pull/560' },
     ],
   },
-  { when: 'Freelance', what: 'Websites for clients', note: 'VimanOne, Future Spark, Shivaji Vidya Peeth' },
+  // The months between graduating (May 2025) and the internship, so the timeline has no unexplained gap.
+  {
+    when: 'Jun 2025 – Apr 2026',
+    what: 'Freelance Web Developer',
+    note: 'After graduating, designed, built and launched client websites: VimanOne, Future Spark, Shivaji Vidya Peeth',
+  },
 ];
 const TOOLKIT = [
   'Claude',

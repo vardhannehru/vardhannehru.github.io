@@ -2,8 +2,6 @@
 // Global type definitions for the application.
 
 declare global {
-  type Page = 'home' | 'work' | 'about' | 'contact';
-
   interface ContactInfo {
     email: string;
     linkedin: string;
