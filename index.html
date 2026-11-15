@@ -359,32 +359,6 @@
   /* Over the About section the cursor is the 3D pencil (components/about/pencil/PencilCursor.tsx). */
   body.pencil-cursor-on .smooth-cursor { opacity: 0; }
 
-  /* A butterfly resting on a nav button (GlowNav.tsx), like a real one: wings folded up over its back with a slight
-     quiver, opening flat for a while to bask, then folding again. (rotateY: up toward you is negative on the right.) */
-  @keyframes gnav-rest-r {
-    0%, 100% { transform: rotateY(-78deg); }
-    6% { transform: rotateY(-72deg); }
-    12% { transform: rotateY(-79deg); }
-    28% { transform: rotateY(-77deg); }
-    40%, 66% { transform: rotateY(-10deg); }
-    52% { transform: rotateY(-16deg); }
-    80% { transform: rotateY(-78deg); }
-    88% { transform: rotateY(-73deg); }
-  }
-  @keyframes gnav-rest-l {
-    0%, 100% { transform: rotateY(78deg); }
-    6% { transform: rotateY(72deg); }
-    12% { transform: rotateY(79deg); }
-    28% { transform: rotateY(77deg); }
-    40%, 66% { transform: rotateY(10deg); }
-    52% { transform: rotateY(16deg); }
-    80% { transform: rotateY(78deg); }
-    88% { transform: rotateY(73deg); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [style*="gnav-rest"] { animation: none !important; }
-  }
-  
   * {
     cursor: none !important;
   }
